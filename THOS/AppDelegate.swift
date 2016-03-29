@@ -1,21 +1,67 @@
 //
 //  AppDelegate.swift
-//  THOS
+//  Jobie
 //
-//  Created by daylonvanwel on 25-03-16.
+//  Created by daylonvanwel on 05-02-16.
 //  Copyright © 2016 daylon wel. All rights reserved.
 //
 
 import UIKit
+import ParseFacebookUtilsV4
 
 @UIApplicationMain
+
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
+    var userFriendsArray = [String]()
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
+        // Override point for customization after application launch.\
+        
+        let settings = UIUserNotificationSettings(forTypes: [.Alert, .Badge , .Sound], categories: nil)
+        application.registerUserNotificationSettings(settings)
+        application.registerForRemoteNotifications()
+        
+        application.applicationIconBadgeNumber = 0
+        
+        FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
+        
+        Parse.setApplicationId("95JkWTOujhkZNxbuVgIeCzOkN99VxR2Kli1s64HS", clientKey: "YXiPbEl8GGh4U0Bi2gDCETS3dvFXbMHToz2ByVjk")
+        
+        PFFacebookUtils.initializeFacebookWithApplicationLaunchOptions(launchOptions)
+                
+//        Parse.initializeWithConfiguration(ParseClientConfiguration(block: { (configuration:ParseMutableClientConfiguration) -> Void in
+//            
+//            configuration.server = "https://jobies.herokuapp.com/parse"
+//            configuration.applicationId = "Jobie1234"
+//            configuration.clientKey = "345hb3jb34tweavasd"
+//            
+//            
+//        }))
+        
+//        PFUser.logOut()
+        
+        if PFUser.currentUser() != nil {
+            
+            let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+           
+            let helpController = storyBoard.instantiateViewControllerWithIdentifier("helpSeekertabBarVC")
+            let seekController = storyBoard.instantiateViewControllerWithIdentifier("SeekingJobTabbarVC")
+
+            let userType = PFUser.currentUser()!["userType"] as! String
+
+            if userType == "seeker"{
+                
+                self.window?.rootViewController = helpController
+
+            } else if userType == "helper" {
+                
+                self.window?.rootViewController = seekController
+            }
+            
+            self.upDataFacebookFriends()
+        }
         return true
     }
 
@@ -31,16 +77,113 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+        
     }
 
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        
+        FBSDKAppEvents.activateApp()
+
     }
 
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
+        
+        
+//        if LISDKCallbackHandler.shouldHandleUrl(url) {
+//            
+//            return LISDKCallbackHandler.application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
+//        }
+        
+        return FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
+    }
+    
+    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+        
+        let installation = PFInstallation.currentInstallation()
+        installation.setDeviceTokenFromData(deviceToken)
+        
+        if PFUser.currentUser() != nil {
+          
+            installation["user"] = PFUser.currentUser()
 
+        }
+        
+        installation.saveInBackground()
+    }
+    
+    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+//        PFPush.handlePush(userInfo)
+        
+        // todo push type helper/seeker ? handle different ?
+//        print(userInfo)
+        if application.applicationState == .Active {
+            
+            let typeString = userInfo["type"] as! String
+          
+            if typeString == "jobHelperMessage" {
+                
+                print("helper message")
+                
+                let notification = NSNotification(name: "message", object: typeString, userInfo: userInfo)
+                NSNotificationCenter.defaultCenter().postNotificationName("messageFromJobHelperRecieved", object: notification)
+                
+            } else if typeString == "jobPosterMessage" {
+                
+                print("poster message")
+                
+                let notification = NSNotification(name: "message", object: typeString, userInfo: userInfo)
+                NSNotificationCenter.defaultCenter().postNotificationName("messageFromJobPosterRecieved", object: notification)
+            }
+        }
+    }
+    
+    func upDataFacebookFriends() {
+        
+        if PFFacebookUtils.isLinkedWithUser(PFUser.currentUser()!){
+        
+        FBSDKGraphRequest.init(graphPath: "/me", parameters: ["fields": "friends"], HTTPMethod: "GET").startWithCompletionHandler { (connection, result, error) -> Void in
+
+            //  todo crasht when no internet connectoin
+            if result.valueForKey("friends") != nil {
+                
+                
+                var index = 0
+                
+                let friendsArray: AnyObject? = result.valueForKey("friends")?.valueForKey("data")
+                
+                while index < friendsArray?.count {
+                    
+                    let userID = friendsArray?[index].valueForKey("id") as! String
+                    
+                    self.userFriendsArray.append(userID)
+                    index += 1
+                }
+            }
+            
+            
+            PFUser.currentUser()!["friendsArray"] = self.userFriendsArray
+            
+            PFUser.currentUser()?.saveInBackgroundWithBlock({ (succes, error ) -> Void in
+                
+                if error != nil {
+                    
+                    print(error?.localizedDescription)
+                } else {
+                    
+                    if succes == true {
+                        
+                        print("saved")
+                    }
+                }
+            })
+     
+            }
+        }
+    }
 }
 
