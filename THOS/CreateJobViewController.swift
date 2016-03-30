@@ -97,9 +97,26 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
             let action = UIAlertAction(title: "Use", style: .Default, handler: { (action) -> Void in
                 
                 let textField = controller.textFields![0]
-                let zipCodeText = textField.text!
+                var zipCodeText = textField.text!
+                
+                var index = 0
+                for character in zipCodeText.characters {
+                    
+                    if character == " " {
+                        
+                        zipCodeText.removeAtIndex(zipCodeText.startIndex.advancedBy(index))
+                        
+                        index -= 1
+
+                    }
+                    
+                    index += 1
+                }
+                
+                print(zipCodeText)
                 
                 let zipCode = NSURL(string: "https://maps.googleapis.com/maps/api/geocode/json?address=\(zipCodeText)&sensor=true")
+                
                 let downloadTask = NSURLSession.sharedSession().dataTaskWithURL(zipCode!, completionHandler: { (data , responce, error) -> Void in
                     
                     do {
@@ -108,14 +125,12 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
 
                         let locationArray = dict.valueForKey("results")?.valueForKey("geometry")?.valueForKey("location")
                         
-                        if locationArray!.count == 1{
+                        if locationArray!.count == 1 {
                         
                             let latitude = locationArray?.objectAtIndex(0).valueForKey("lat")
                             let longtitude = locationArray?.objectAtIndex(0).valueForKey("lng")
                         
                             self.jobPFGeoPoint = PFGeoPoint(latitude: Double(latitude! as! NSNumber), longitude: Double(longtitude! as! NSNumber))
-                        
-                            print(self.jobPFGeoPoint)
                             
                         } else {
                             
@@ -132,7 +147,7 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
 
                     } catch let error as NSError {
                        
-                        NSErrorPointer().memory = error
+                        print(error)
                     }
                     
                     
@@ -519,6 +534,28 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         return true
     }
     
+
+    
+    func textFieldDidBeginEditing(textField: UITextField) {
+    
+        self.jobDescriptionTextView.userInteractionEnabled = false
+        self.jobLocationSegmentedControl.userInteractionEnabled = false
+        self.addImagebuttton.userInteractionEnabled = false
+        self.houseKeepingButton.userInteractionEnabled = false
+        self.labourButton.userInteractionEnabled = false
+        
+        if textField == self.priceTextField {
+            
+            let numberToolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 50))
+            numberToolbar.barStyle = .Default
+            numberToolbar.items = [UIBarButtonItem(title: "Done", style: .Plain, target: self, action: #selector(CreateJobViewController.resignNumberpad))]
+            numberToolbar.sizeToFit()
+            self.priceTextField.inputAccessoryView = numberToolbar
+            
+        }
+    }
+
+
     func textViewShouldBeginEditing(textView: UITextView) -> Bool {
         
         return true
@@ -533,27 +570,6 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         }
         return true
     }
-    
-    func textFieldDidBeginEditing(textField: UITextField) {
-    
-        self.jobDescriptionTextView.userInteractionEnabled = false
-        self.jobLocationSegmentedControl.userInteractionEnabled = false
-        self.addImagebuttton.userInteractionEnabled = false
-        self.houseKeepingButton.userInteractionEnabled = false
-        self.labourButton.userInteractionEnabled = false
-        
-        if textField == self.priceTextField {
-            
-            let numberToolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 50))
-            numberToolbar.barStyle = .Default
-            numberToolbar.items = [UIBarButtonItem(title: "Done", style: .Plain, target: self, action: Selector("resignNumberpad"))]
-            numberToolbar.sizeToFit()
-            self.priceTextField.inputAccessoryView = numberToolbar
-            
-        }
-    }
-
-
     
     func resignNumberpad() {
         

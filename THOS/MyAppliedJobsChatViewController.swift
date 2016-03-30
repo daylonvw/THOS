@@ -182,7 +182,7 @@ class MyAppliedJobsChatViewController: JSQMessagesViewController, UIImagePickerC
         
     }
     
-    func sendMessage(var text: String, video: NSURL?, picture: UIImage?, jobDate: NSDate?) {
+    func sendMessage(text: String, video: NSURL?, picture: UIImage?, jobDate: NSDate?) {
         
         self.phoneNumberEntered = false
         
@@ -200,43 +200,43 @@ class MyAppliedJobsChatViewController: JSQMessagesViewController, UIImagePickerC
         
         if phoneNumberEntered == false {
             
-            var videoFile: PFFile!
-            var pictureFile: PFFile!
-        
-            if let video = video {
-                text = "[Video message]"
-                videoFile = PFFile(name: "video.mp4", data: NSFileManager.defaultManager().contentsAtPath(video.path!)!)
-            
-                videoFile.saveInBackgroundWithBlock({ (succeeed, error) -> Void in
-                    if error != nil {
-                    // error
-                    }
-                })
-            }
-        
-            if let picture = picture {
-                text = "[Picture message]"
-                pictureFile = PFFile(name: "picture.jpg", data: UIImageJPEGRepresentation(picture, 0.6)!)
-                pictureFile.saveInBackgroundWithBlock({ (suceeded, error) -> Void in
-                    if error != nil {
-                    // error
-                    }
-                })
-            }
+//            var videoFile: PFFile!
+//            var pictureFile: PFFile!
+//        
+//            if let video = video {
+//                text = "[Video message]"
+//                videoFile = PFFile(name: "video.mp4", data: NSFileManager.defaultManager().contentsAtPath(video.path!)!)
+//            
+//                videoFile.saveInBackgroundWithBlock({ (succeeed, error) -> Void in
+//                    if error != nil {
+//                    // error
+//                    }
+//                })
+//            }
+//        
+//            if let picture = picture {
+//                text = "[Picture message]"
+//                pictureFile = PFFile(name: "picture.jpg", data: UIImageJPEGRepresentation(picture, 0.6)!)
+//                pictureFile.saveInBackgroundWithBlock({ (suceeded, error) -> Void in
+//                    if error != nil {
+//                    // error
+//                    }
+//                })
+//            }
         
             let object = PFObject(className: PF_CHAT_CLASS_NAME)
         
             object[PF_CHAT_USER] = PFUser.currentUser()
             object[PF_CHAT_GROUPID] = self.jobId
             object[PF_CHAT_TEXT] = text
-       
-            if let videoFile = videoFile {
-                object[PF_CHAT_VIDEO] = videoFile
-            }
-            if let pictureFile = pictureFile {
-                object[PF_CHAT_PICTURE] = pictureFile
-            }
-        
+//       
+//            if let videoFile = videoFile {
+//                object[PF_CHAT_VIDEO] = videoFile
+//            }
+//            if let pictureFile = pictureFile {
+//                object[PF_CHAT_PICTURE] = pictureFile
+//            }
+//        
             if let jobDate = jobDate {
             
                 object[PF_JOB_DATE] = jobDate
@@ -322,7 +322,7 @@ class MyAppliedJobsChatViewController: JSQMessagesViewController, UIImagePickerC
         
         
         dateButton = UIButton(frame: CGRect(x: 10, y: 0, width: view.frame.size.width - 20, height: 50))
-        dateButton.addTarget(self, action: Selector("sendjobDate"), forControlEvents: .TouchUpInside)
+        dateButton.addTarget(self, action: #selector(MyAppliedJobsChatViewController.sendjobDate), forControlEvents: .TouchUpInside)
         dateButton.center = CGPointMake(view.center.x, view.frame.size.height - 120)
         dateButton.setTitle("OK", forState: .Normal)
         dateButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
@@ -330,7 +330,7 @@ class MyAppliedJobsChatViewController: JSQMessagesViewController, UIImagePickerC
         
         
         dateCancelButton = UIButton(frame: CGRect(x: 10, y: 0, width: view.frame.size.width - 20, height: 50))
-        dateCancelButton.addTarget(self, action: Selector("dismissDatePickerView"), forControlEvents: .TouchUpInside)
+        dateCancelButton.addTarget(self, action: #selector(MyAppliedJobsChatViewController.dismissDatePickerView), forControlEvents: .TouchUpInside)
         dateCancelButton.center = CGPointMake(view.center.x, view.frame.size.height - 60)
         dateCancelButton.setTitle("Cancel", forState: .Normal)
         dateCancelButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)

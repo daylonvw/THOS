@@ -105,8 +105,8 @@ class MyJobsAppliedViewController: UIViewController, UITableViewDataSource, UITa
         
         let object  = self.myAppliedJobsArray[indexPath.row]
         
-        cell.goToChatButton.addTarget(self, action: Selector("chatButtonPressed:"), forControlEvents: .TouchUpInside)
-        cell.addToCalenderButton.addTarget(self, action: Selector("addToCalenderButtonPressed:"), forControlEvents: .TouchUpInside)
+        cell.goToChatButton.addTarget(self, action: #selector(MyJobsAppliedViewController.chatButtonPressed(_:)), forControlEvents: .TouchUpInside)
+        cell.addToCalenderButton.addTarget(self, action: #selector(MyJobsAppliedViewController.addToCalenderButtonPressed(_:)), forControlEvents: .TouchUpInside)
         
         let image = cell.addToCalenderButton.imageView?.image?.jsq_imageMaskedWithColor(UIColor.ThosColor())
         cell.addToCalenderButton.setImage(image, forState: .Normal)

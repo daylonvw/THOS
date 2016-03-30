@@ -133,9 +133,9 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
             cell.interestedHandyUserView.hidden = true
             cell.interestedUsersLabel.hidden = true
             
-            cell.GoToChatButton.addTarget(self, action: Selector("chatButtonPressed:"), forControlEvents: .TouchUpInside)
+            cell.GoToChatButton.addTarget(self, action: #selector(MyPostedJobsViewController.chatButtonPressed(_:)), forControlEvents: .TouchUpInside)
             
-            cell.addToCalenderButton.addTarget(self, action: Selector("addToCalenderButtonPressed:"), forControlEvents: .TouchUpInside)
+            cell.addToCalenderButton.addTarget(self, action: #selector(MyPostedJobsViewController.addToCalenderButtonPressed(_:)), forControlEvents: .TouchUpInside)
 
 
             let image = cell.addToCalenderButton.imageView?.image?.jsq_imageMaskedWithColor(UIColor.ThosColor())
@@ -159,7 +159,7 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
                 usersView.center = CGPointMake(120, 30)
                 
                 
-                let tapGesture = UITapGestureRecognizer(target: self, action: Selector("getUser:"))
+                let tapGesture = UITapGestureRecognizer(target: self, action: #selector(MyPostedJobsViewController.getUser(_:)))
                 tapGesture.numberOfTapsRequired = 1
                 usersView.addGestureRecognizer(tapGesture)
                 cell.interestedHandyUserView.addSubview(usersView)
@@ -206,7 +206,7 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
                                     
                                         usersView.addSubview(imageView)
                                         
-                                        index++
+                                        index += 1
                                         
                                     }
                                     
@@ -334,12 +334,12 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
         userView.ratingView.hidden = true
         userView.acceptButton.frame = CGRectMake(0, 0, self.view.frame.size.width - 20, 40)
         userView.acceptButton.center = CGPointMake(self.view.center.x, self.view.frame.height - 110)
-        userView.acceptButton.addTarget(self, action: Selector("acceptUserForJob"), forControlEvents: .TouchUpInside)
+        userView.acceptButton.addTarget(self, action: #selector(MyPostedJobsViewController.acceptUserForJob), forControlEvents: .TouchUpInside)
         
         userView.declineButton.frame = CGRectMake(0, 0, self.view.frame.size.width - 20, 40)
         userView.declineButton.center = CGPointMake(self.view.center.x, self.view.frame.height - 60)
 
-        userView.declineButton.addTarget(self, action: Selector("dismissUserView"), forControlEvents: .TouchUpInside)
+        userView.declineButton.addTarget(self, action: #selector(MyPostedJobsViewController.dismissUserView), forControlEvents: .TouchUpInside)
       
         
         let query = PFQuery(className: "UserRating")
@@ -394,7 +394,7 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
                     let user = sharedResult[index]
                 
                     self.getSharedFriendsInfoWith(index + 1 , userId: user as! String)
-                    index++
+                    index += 1
 
                 }
             }

@@ -20,10 +20,13 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
     @IBOutlet var houseKeepingButton: UIButton!
     @IBOutlet var labourButton: UIButton!
     
+    @IBOutlet var searchBarButton: UIBarButtonItem!
     
     @IBOutlet var searchZipCodeButton: UIButton!
     @IBOutlet var zipCodeTextField: UITextField!
     @IBOutlet var searchCurrentLocationButton: UIButton!
+    @IBOutlet var startSearchLabel: UILabel!
+    @IBOutlet var orLabel: UILabel!
     
     
     var MapViewLocationManager:CLLocationManager! = CLLocationManager()
@@ -41,8 +44,6 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
         super.viewDidLoad()
         // setup default design
         
-        self.view.backgroundColor = UIColor.ThosColor()
-
         self.jobSearchBar.delegate = self
         self.jobSearchBar.returnKeyType = .Done
         self.jobSearchBar.enablesReturnKeyAutomatically = true
@@ -52,8 +53,11 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
         self.labourButton.hidden = true
         self.houseKeepingButton.hidden = true
         
-//        getlocation()
-        self.openSearchView()
+        self.searchZipCodeButton.layer.cornerRadius = 4
+        self.searchCurrentLocationButton.layer.cornerRadius = 4
+        self.zipCodeTextField.layer.borderColor = UIColor.ThosColor().CGColor
+        self.zipCodeTextField.layer.borderWidth = 1.0
+        self.zipCodeTextField.layer.cornerRadius = 4
         
     }
 
@@ -61,10 +65,131 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
         super.didReceiveMemoryWarning()
     }
     
-    func openSearchView() {
+    @IBAction func searchByZipCodeButtonPressed(sender: AnyObject) {
         
+        self.zipCodeTextField.resignFirstResponder()
+        var zipCodeText = zipCodeTextField.text!
         
+        var index = 0
+        for character in zipCodeText.characters {
+           
+            if character == " " {
+            
+                zipCodeText.removeAtIndex(zipCodeText.startIndex.advancedBy(index))
+                
+                index -= 1
+
+            }
+            
+            index += 1
+        }
+        
+        print(zipCodeText)
+        
+        // todo use removeAtIndex also at creating a job ( price, zipcode )
+        self.dismmissSearchItems()
+
+        let zipCode = NSURL(string: "https://maps.googleapis.com/maps/api/geocode/json?address=\(zipCodeText)&sensor=true")
+        
+        let downloadTask = NSURLSession.sharedSession().dataTaskWithURL(zipCode!, completionHandler: { (data , responce, error) -> Void in
+            
+            do {
+                
+                let dict = try NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments)
+                
+                let locationArray = dict.valueForKey("results")?.valueForKey("geometry")?.valueForKey("location")
+                // todo loop through characters from string and delete spaced ( crasher when there is a space )
+                print(locationArray?.count)
+
+                if (locationArray!.count != nil) {
+                
+                    let latitude = locationArray?.objectAtIndex(0).valueForKey("lat") as! Double
+                    let longtitude = locationArray?.objectAtIndex(0).valueForKey("lng") as! Double
+    
+                    self.geoPoint = PFGeoPoint(latitude: latitude, longitude: longtitude)
+                    
+                    self.mapView.showsUserLocation = true
+                    self.mapView.delegate = self
+                    self.MapViewLocationManager.delegate = self
+                    self.MapViewLocationManager.startUpdatingLocation()
+                    self.mapView.region = MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2D(latitude: latitude, longitude: longtitude), 15000, 15000)
+                    
+                    self.getJobs()
+                    
+                } else {
+                
+                    let controller = UIAlertController(title: "Zipcode not found", message: "Please try again", preferredStyle: .Alert)
+                    let ok = UIAlertAction(title: "Ok", style: .Default, handler: { (action) -> Void in
+                        
+                        self.dismissViewControllerAnimated(true, completion: nil)
+                    })
+                    
+                    controller.addAction(ok)
+                    
+                    self.presentViewController(controller, animated: true, completion: nil)
+                }
+            
+            } catch let error as NSError {
+                
+                print(error)
+            }
+            
+            
+            
+        })
+        
+        downloadTask.resume()
+
     }
+    
+    
+    @IBAction func searchCurrentLocationButtonPressed(sender: AnyObject) {
+        
+        self.dismmissSearchItems()
+        self.getlocation()
+    }
+    
+    func dismmissSearchItems() {
+        print("1")
+
+        searchZipCodeButton.hidden = true
+        zipCodeTextField.hidden = true
+        searchCurrentLocationButton.hidden = true
+        orLabel.hidden = true
+        startSearchLabel.hidden = true
+        
+        self.mapView.hidden = false
+        self.jobSearchBar.hidden = false
+        self.labourButton.hidden = false
+        self.houseKeepingButton.hidden = false
+
+        print("2")
+
+    }
+    
+    @IBAction func addSearchItems(sender: AnyObject) {
+        
+        self.zipCodeTextField.text = ""
+        
+        self.geoPoint = nil
+        self.jobsArray.removeAll(keepCapacity: true)
+        self.mapView.removeAnnotations(self.mapView.annotations)
+        
+        searchZipCodeButton.hidden = false
+        zipCodeTextField.hidden = false
+        searchCurrentLocationButton.hidden = false
+        orLabel.hidden = false
+        startSearchLabel.hidden = false
+        
+        self.mapView.hidden = true
+        self.jobSearchBar.hidden = true
+        self.labourButton.hidden = true
+        self.houseKeepingButton.hidden = true
+        
+        
+
+    }
+    
     
     func getlocation() {
         
@@ -143,8 +268,6 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
         let identifier = "pin"
         var view: MKAnnotationView
     
-        
-        
         if annotation.title! == "Current Location" {
             
             view = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
@@ -424,6 +547,7 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
         
         locationManager.stopUpdatingLocation()
         
+//        print("updateing")
         
         if self.geoPoint == nil {
             

@@ -23,7 +23,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        let gestureRecognizer = UITapGestureRecognizer(target: self, action: Selector("selectImagePressed"))
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(CreateAccountViewController.selectImagePressed))
         gestureRecognizer.numberOfTapsRequired = 1
         self.userImageView.userInteractionEnabled = true
         self.userImageView.addGestureRecognizer(gestureRecognizer)
