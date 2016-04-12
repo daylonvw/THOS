@@ -65,8 +65,6 @@ class JobSeekerProfileViewController: UIViewController {
                 print(error?.localizedDescription)
             } else {
                 
-                
-                // todo new class querie for rating
                 self.ratingView = FloatRatingView(frame: CGRect(x: 0, y: 0, width: 200, height: 60))
                 
                 let rating = object!["rating"] as! NSNumber

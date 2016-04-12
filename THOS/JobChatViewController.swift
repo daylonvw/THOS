@@ -11,7 +11,7 @@ import Foundation
 import MediaPlayer
 import EventKit
 
-class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, PayPalPaymentDelegate {
 
     var timer: NSTimer = NSTimer()
     var isLoading: Bool = false
@@ -43,6 +43,26 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
     var dateCancelButton: UIButton!
 
     var phoneNumberEntered: Bool!
+    
+    
+    #if HAS_CARDIO
+    var acceptCreditCards: Bool = true {
+    didSet {
+    payPalConfig.acceptCreditCards = acceptCreditCards
+    }
+    }
+    
+    
+    #else
+    var acceptCreditCards: Bool = false {
+        didSet {
+            payPalConfig.acceptCreditCards = acceptCreditCards
+        }
+    }
+    #endif
+    
+    var resultText = "" // empty
+    var payPalConfig = PayPalConfiguration() // default
 
     override func viewDidLoad() {
        
@@ -54,9 +74,7 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
         
         outgoingBubbleImage = bubbleFactory.outgoingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleBlueColor())
         incomingBubbleImage = bubbleFactory.incomingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleLightGrayColor())
-        
-//        blankAvatarImage = JSQMessagesAvatarImageFactory.avatarImageWithImage(UIImage(named: "profile_blank"), diameter: 30)
-        
+                
         isLoading = false
         self.loadMessages()
         Messages.clearMessageCounter(jobId);
@@ -75,6 +93,42 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
             
             self.loadMessages()
         }
+        
+        //        title = "PayPal SDK Demo"
+        //        successView.hidden = true
+        
+        // Set up payPalConfig
+        payPalConfig.acceptCreditCards = true;
+        
+        payPalConfig.merchantName = "T.H.O.S."
+        payPalConfig.merchantPrivacyPolicyURL = NSURL(string: "https://www.paypal.com/webapps/mpp/ua/privacy-full")
+        payPalConfig.merchantUserAgreementURL = NSURL(string: "https://www.paypal.com/webapps/mpp/ua/useragreement-full")
+        
+        PayPalMobile.preconnectWithEnvironment(PayPalEnvironmentProduction)
+        
+        
+        
+        // Setting the languageOrLocale property is optional.
+        //
+        // If you do not set languageOrLocale, then the PayPalPaymentViewController will present
+        // its user interface according to the device's current language setting.
+        //
+        // Setting languageOrLocale to a particular language (e.g., @"es" for Spanish) or
+        // locale (e.g., @"es_MX" for Mexican Spanish) forces the PayPalPaymentViewController
+        // to use that language/locale.
+        //
+        // For full details, including a list of available languages and locales, see PayPalPaymentViewController.h.
+        
+        payPalConfig.languageOrLocale = NSLocale.preferredLanguages()[0]
+        
+        // Setting the payPalShippingAddressOption property is optional.
+        //
+        // See PayPalConfiguration.h for details.
+        
+        payPalConfig.payPalShippingAddressOption = .PayPal;
+        
+        //        print("PayPal iOS SDK Version: \(PayPalMobile.libraryVersion())")
+
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -488,8 +542,9 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
     override func collectionView(collectionView: JSQMessagesCollectionView!, didTapMessageBubbleAtIndexPath indexPath: NSIndexPath!) {
        
         let message = self.messages[indexPath.item]
+        // todo uncomment if statement use // for testing paypal
         
-        if message.senderId != self.senderId {
+//        if message.senderId != self.senderId {
         
         if message.jobDate != nil {
             
@@ -500,9 +555,7 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
             })
             
             let acceptDateAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
-                
-                // todo create payment
-                
+                                
                 self.job["acceptedDate"] = message.jobDate
                 self.job["posterAcceptedDate"] = true
                 self.job.saveInBackground()
@@ -510,11 +563,10 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
                 self.inputToolbar?.contentView?.leftBarButtonItem?.hidden = true
 
                 self.sendAcceptedDatePush()
+                self.openPaypal()
             })
             
             let AddToCalanderAction = UIAlertAction(title: "Yes and add to Calender", style: .Default, handler: { (action) -> Void in
-                
-                // todo create payment
                 
                 self.createEvent(self.eventStore, title: "job", startDate: message.jobDate)
                 
@@ -525,6 +577,7 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
                 self.inputToolbar?.contentView?.leftBarButtonItem?.hidden = true
 
                 self.sendAcceptedDatePush()
+                self.openPaypal()
                 
             })
             
@@ -541,7 +594,7 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
             print("not a date")
         }
 
-        }
+//        }
     }
     
     func sendAcceptedDatePush() {
@@ -564,7 +617,45 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
         push.sendPushInBackground()
         
     }
+    
+    func openPaypal() {
+        
+        let price = self.job["price"] as! NSNumber
+        
+        let item1 = PayPalItem(name: "T.H.O.S.", withQuantity: 1, withPrice: NSDecimalNumber(decimal: price.decimalValue), withCurrency: "EUR", withSku: self.job.objectId)
+        
+        let items = [item1]
+        let subtotal = PayPalItem.totalPriceForItems(items)
+        
+        // Optional: include payment details
+        //        let shipping = NSDecimalNumber(string: "5.99")
+        //        let tax = NSDecimalNumber(string: "2.50")
+        let paymentDetails = PayPalPaymentDetails(subtotal: subtotal, withShipping: nil, withTax: nil)
+        
+        let total = subtotal.decimalNumberByAdding(0).decimalNumberByAdding(0)
+        
+        let payment = PayPalPayment(amount: total, currencyCode: "EUR", shortDescription: self.job["jobDescription"] as! String, intent: .Sale)
+        
+        payment.items = items
+        payment.paymentDetails = paymentDetails
+        
+        print(payment)
+        
+        if (payment.processable) {
+           
+            let paymentViewController = PayPalPaymentViewController(payment: payment, configuration: payPalConfig, delegate: self)
+            presentViewController(paymentViewController!, animated: true, completion: nil)
+        }
+        else {
 
+            print("Payment not processalbe: \(payment)")
+        }
+        
+
+    }
+
+    
+    
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, didTapCellAtIndexPath indexPath: NSIndexPath!, touchLocation: CGPoint) {
 
@@ -701,4 +792,26 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
         
         
     }
+    
+    
+    func payPalPaymentDidCancel(paymentViewController: PayPalPaymentViewController) {
+        print("PayPal Payment Cancelled")
+        resultText = ""
+        //        successView.hidden = true
+        paymentViewController.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func payPalPaymentViewController(paymentViewController: PayPalPaymentViewController, didCompletePayment completedPayment: PayPalPayment) {
+        print("PayPal Payment Success !")
+        paymentViewController.dismissViewControllerAnimated(true, completion: { () -> Void in
+            // send completed confirmaion to your server
+            print("Here is your proof of payment:\n\n\(completedPayment.confirmation)\n\nSend this to your server for confirmation and fulfillment.")
+            
+            self.resultText = completedPayment.description
+            
+            // todo send payment to backend
+            
+        })
+    }
+
 }

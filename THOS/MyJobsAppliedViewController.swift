@@ -30,6 +30,8 @@ class MyJobsAppliedViewController: UIViewController, UITableViewDataSource, UITa
     
     var jobForChat: PFObject!
 
+    var refreshContol: UIRefreshControl!
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,8 +39,12 @@ class MyJobsAppliedViewController: UIViewController, UITableViewDataSource, UITa
         self.tableView.dataSource = self
         self.tableView.delegate = self
         
-//        getMyJobs()
-        // Do any additional setup after loading the view.
+        refreshContol = UIRefreshControl()
+        refreshContol.addTarget(self, action: #selector(MyJobsAppliedViewController.refreshPulled), forControlEvents: .ValueChanged)
+        self.tableView.addSubview(refreshContol)
+        
+        self.getMyJobs()
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -49,15 +55,7 @@ class MyJobsAppliedViewController: UIViewController, UITableViewDataSource, UITa
 
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(true)
-        print("appeared")
-        
-        
-        
-        if myAppliedJobsArray.count > 0 {
-            
-            myAppliedJobsArray.removeAll(keepCapacity: true)
-        }
-        getMyJobs()
+
         
     }
 
@@ -79,7 +77,8 @@ class MyJobsAppliedViewController: UIViewController, UITableViewDataSource, UITa
                                                 
                         self.myAppliedJobsArray.append(job)
                         self.tableView.reloadData()
-                        
+                        self.refreshContol.endRefreshing()
+
                     }
                 }
             }
@@ -87,6 +86,20 @@ class MyJobsAppliedViewController: UIViewController, UITableViewDataSource, UITa
         }
 
     }
+    
+    func refreshPulled () {
+        
+        self.refreshContol.beginRefreshing()
+        
+        if myAppliedJobsArray.count > 0 {
+            
+            myAppliedJobsArray.removeAll(keepCapacity: true)
+        }
+        
+        getMyJobs()
+        
+    }
+
     
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {

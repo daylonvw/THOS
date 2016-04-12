@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		03BD051A1CBB72B9000B84A0 /* test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03BD05191CBB72B9000B84A0 /* test.swift */; };
+		03BD052E1CBB7345000B84A0 /* libPayPalMobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 03BD05261CBB7345000B84A0 /* libPayPalMobile.a */; };
+		03BD053B1CBB7396000B84A0 /* libCardIO.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 03BD05381CBB7396000B84A0 /* libCardIO.a */; };
+		03BD053C1CBB7397000B84A0 /* libopencv_core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 03BD05391CBB7396000B84A0 /* libopencv_core.a */; };
+		03BD053D1CBB7397000B84A0 /* libopencv_imgproc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 03BD053A1CBB7396000B84A0 /* libopencv_imgproc.a */; };
 		03CB446D1CA5CB710040D770 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03CB446B1CA5CB710040D770 /* LaunchScreen.storyboard */; };
 		03CB44751CA5CB970040D770 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03CB44741CA5CB970040D770 /* Main.storyboard */; };
 		03CB44771CA5CBC60040D770 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 03CB44761CA5CBC60040D770 /* Assets.xcassets */; };
@@ -120,9 +125,104 @@
 		03CB45991CA5D01D0040D770 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03CB45981CA5D01D0040D770 /* FBSDKCoreKit.framework */; };
 		03CB459C1CA5D2CD0040D770 /* CreateAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CB459A1CA5D2CD0040D770 /* CreateAccountViewController.swift */; };
 		03CB459D1CA5D2CD0040D770 /* LoginVCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CB459B1CA5D2CD0040D770 /* LoginVCViewController.swift */; };
+		03CF92ED1CB646D7003A166C /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03CF92E01CB6463A003A166C /* Alamofire.framework */; };
+		03CF92EE1CB646D7003A166C /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 03CF92E01CB6463A003A166C /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		03CF92DF1CB6463A003A166C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 03CF92D51CB6463A003A166C /* Alamofire.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F8111E3319A95C8B0040E7D1;
+			remoteInfo = "Alamofire iOS";
+		};
+		03CF92E11CB6463A003A166C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 03CF92D51CB6463A003A166C /* Alamofire.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F8111E3E19A95C8B0040E7D1;
+			remoteInfo = "Alamofire iOS Tests";
+		};
+		03CF92E31CB6463A003A166C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 03CF92D51CB6463A003A166C /* Alamofire.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4DD67C0B1A5C55C900ED2280;
+			remoteInfo = "Alamofire OSX";
+		};
+		03CF92E51CB6463A003A166C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 03CF92D51CB6463A003A166C /* Alamofire.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F829C6B21A7A94F100A2CD59;
+			remoteInfo = "Alamofire OSX Tests";
+		};
+		03CF92E71CB6463A003A166C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 03CF92D51CB6463A003A166C /* Alamofire.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4CF626EF1BA7CB3E0011A099;
+			remoteInfo = "Alamofire tvOS";
+		};
+		03CF92E91CB6463A003A166C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 03CF92D51CB6463A003A166C /* Alamofire.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4CF626F81BA7CB3E0011A099;
+			remoteInfo = "Alamofire tvOS Tests";
+		};
+		03CF92EB1CB6463A003A166C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 03CF92D51CB6463A003A166C /* Alamofire.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = E4202FE01B667AA100C997FB;
+			remoteInfo = "Alamofire watchOS";
+		};
+		03CF92EF1CB646D7003A166C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 03CF92D51CB6463A003A166C /* Alamofire.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = F8111E3219A95C8B0040E7D1;
+			remoteInfo = "Alamofire iOS";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		033F16CB1CB6245F00E385F1 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				03CF92EE1CB646D7003A166C /* Alamofire.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		03BD05191CBB72B9000B84A0 /* test.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = test.swift; path = THOS/test.swift; sourceTree = SOURCE_ROOT; };
+		03BD05261CBB7345000B84A0 /* libPayPalMobile.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libPayPalMobile.a; sourceTree = "<group>"; };
+		03BD05271CBB7345000B84A0 /* PayPalConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PayPalConfiguration.h; sourceTree = "<group>"; };
+		03BD05281CBB7345000B84A0 /* PayPalFuturePaymentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PayPalFuturePaymentViewController.h; sourceTree = "<group>"; };
+		03BD05291CBB7345000B84A0 /* PayPalMobile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PayPalMobile.h; sourceTree = "<group>"; };
+		03BD052A1CBB7345000B84A0 /* PayPalOAuthScopes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PayPalOAuthScopes.h; sourceTree = "<group>"; };
+		03BD052B1CBB7345000B84A0 /* PayPalPayment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PayPalPayment.h; sourceTree = "<group>"; };
+		03BD052C1CBB7345000B84A0 /* PayPalPaymentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PayPalPaymentViewController.h; sourceTree = "<group>"; };
+		03BD052D1CBB7345000B84A0 /* PayPalProfileSharingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PayPalProfileSharingViewController.h; sourceTree = "<group>"; };
+		03BD05301CBB7396000B84A0 /* CardIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIO.h; sourceTree = "<group>"; };
+		03BD05311CBB7396000B84A0 /* CardIOCreditCardInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIOCreditCardInfo.h; sourceTree = "<group>"; };
+		03BD05321CBB7396000B84A0 /* CardIODetectionMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIODetectionMode.h; sourceTree = "<group>"; };
+		03BD05331CBB7396000B84A0 /* CardIOPaymentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIOPaymentViewController.h; sourceTree = "<group>"; };
+		03BD05341CBB7396000B84A0 /* CardIOPaymentViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIOPaymentViewControllerDelegate.h; sourceTree = "<group>"; };
+		03BD05351CBB7396000B84A0 /* CardIOUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIOUtilities.h; sourceTree = "<group>"; };
+		03BD05361CBB7396000B84A0 /* CardIOView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIOView.h; sourceTree = "<group>"; };
+		03BD05371CBB7396000B84A0 /* CardIOViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIOViewDelegate.h; sourceTree = "<group>"; };
+		03BD05381CBB7396000B84A0 /* libCardIO.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCardIO.a; sourceTree = "<group>"; };
+		03BD05391CBB7396000B84A0 /* libopencv_core.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_core.a; sourceTree = "<group>"; };
+		03BD053A1CBB7396000B84A0 /* libopencv_imgproc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_imgproc.a; sourceTree = "<group>"; };
 		03CB445F1CA5CB710040D770 /* THOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = THOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		03CB446C1CA5CB710040D770 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		03CB446E1CA5CB710040D770 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../THOS/THOS/Info.plist; sourceTree = "<group>"; };
@@ -290,6 +390,7 @@
 		03CB45981CA5D01D0040D770 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		03CB459A1CA5D2CD0040D770 /* CreateAccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateAccountViewController.swift; sourceTree = "<group>"; };
 		03CB459B1CA5D2CD0040D770 /* LoginVCViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginVCViewController.swift; sourceTree = "<group>"; };
+		03CF92D51CB6463A003A166C /* Alamofire.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Alamofire.xcodeproj; path = Carthage/Checkouts/Alamofire/Alamofire.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -297,16 +398,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				03CB45961CA5CEB10040D770 /* Bolts.framework in Frameworks */,
+				03BD053B1CBB7396000B84A0 /* libCardIO.a in Frameworks */,
+				03CB457B1CA5CE030040D770 /* AVFoundation.framework in Frameworks */,
 				03CB45781CA5CE030040D770 /* Accelerate.framework in Frameworks */,
+				03CB45961CA5CEB10040D770 /* Bolts.framework in Frameworks */,
 				03CB45791CA5CE030040D770 /* Accounts.framework in Frameworks */,
 				03CB45941CA5CEA70040D770 /* ParseFacebookUtilsV4.framework in Frameworks */,
+				03BD053D1CBB7397000B84A0 /* libopencv_imgproc.a in Frameworks */,
 				03CB458E1CA5CE7F0040D770 /* FBSDKLoginKit.framework in Frameworks */,
 				03CB457A1CA5CE030040D770 /* AudioToolbox.framework in Frameworks */,
-				03CB457B1CA5CE030040D770 /* AVFoundation.framework in Frameworks */,
 				03CB457C1CA5CE030040D770 /* CFNetwork.framework in Frameworks */,
 				03CB45901CA5CE7F0040D770 /* FBSDKShareKit.framework in Frameworks */,
 				03CB457D1CA5CE030040D770 /* CoreGraphics.framework in Frameworks */,
+				03CF92ED1CB646D7003A166C /* Alamofire.framework in Frameworks */,
 				03CB457E1CA5CE030040D770 /* CoreLocation.framework in Frameworks */,
 				03CB457F1CA5CE030040D770 /* CoreMedia.framework in Frameworks */,
 				03CB45801CA5CE030040D770 /* libsqlite3.tbd in Frameworks */,
@@ -314,9 +418,11 @@
 				03CB45821CA5CE030040D770 /* MapKit.framework in Frameworks */,
 				03CB45831CA5CE030040D770 /* MediaPlayer.framework in Frameworks */,
 				03CB458F1CA5CE7F0040D770 /* FBSDKMessengerShareKit.framework in Frameworks */,
+				03BD052E1CBB7345000B84A0 /* libPayPalMobile.a in Frameworks */,
 				03CB45841CA5CE030040D770 /* MessageUI.framework in Frameworks */,
 				03CB45931CA5CEA70040D770 /* Parse.framework in Frameworks */,
 				03CB45851CA5CE030040D770 /* MobileCoreServices.framework in Frameworks */,
+				03BD053C1CBB7397000B84A0 /* libopencv_core.a in Frameworks */,
 				03CB45861CA5CE030040D770 /* QuartzCore.framework in Frameworks */,
 				03CB45991CA5D01D0040D770 /* FBSDKCoreKit.framework in Frameworks */,
 				03CB45871CA5CE030040D770 /* SafariServices.framework in Frameworks */,
@@ -371,6 +477,41 @@
 			);
 			name = "Assets + storyBoard";
 			sourceTree = "<group>";
+		};
+		03BD05251CBB7345000B84A0 /* PayPalMobile */ = {
+			isa = PBXGroup;
+			children = (
+				03BD05261CBB7345000B84A0 /* libPayPalMobile.a */,
+				03BD05271CBB7345000B84A0 /* PayPalConfiguration.h */,
+				03BD05281CBB7345000B84A0 /* PayPalFuturePaymentViewController.h */,
+				03BD05291CBB7345000B84A0 /* PayPalMobile.h */,
+				03BD052A1CBB7345000B84A0 /* PayPalOAuthScopes.h */,
+				03BD052B1CBB7345000B84A0 /* PayPalPayment.h */,
+				03BD052C1CBB7345000B84A0 /* PayPalPaymentViewController.h */,
+				03BD052D1CBB7345000B84A0 /* PayPalProfileSharingViewController.h */,
+			);
+			name = PayPalMobile;
+			path = "PayPal-iOS-SDK-master/PayPalMobile";
+			sourceTree = SOURCE_ROOT;
+		};
+		03BD052F1CBB7396000B84A0 /* CardIO */ = {
+			isa = PBXGroup;
+			children = (
+				03BD05301CBB7396000B84A0 /* CardIO.h */,
+				03BD05311CBB7396000B84A0 /* CardIOCreditCardInfo.h */,
+				03BD05321CBB7396000B84A0 /* CardIODetectionMode.h */,
+				03BD05331CBB7396000B84A0 /* CardIOPaymentViewController.h */,
+				03BD05341CBB7396000B84A0 /* CardIOPaymentViewControllerDelegate.h */,
+				03BD05351CBB7396000B84A0 /* CardIOUtilities.h */,
+				03BD05361CBB7396000B84A0 /* CardIOView.h */,
+				03BD05371CBB7396000B84A0 /* CardIOViewDelegate.h */,
+				03BD05381CBB7396000B84A0 /* libCardIO.a */,
+				03BD05391CBB7396000B84A0 /* libopencv_core.a */,
+				03BD053A1CBB7396000B84A0 /* libopencv_imgproc.a */,
+			);
+			name = CardIO;
+			path = "PayPal-iOS-SDK-master/CardIO";
+			sourceTree = SOURCE_ROOT;
 		};
 		03CB44561CA5CB710040D770 = {
 			isa = PBXGroup;
@@ -501,8 +642,11 @@
 		03CB44B11CA5CCBB0040D770 /* Supporting files */ = {
 			isa = PBXGroup;
 			children = (
+				03BD052F1CBB7396000B84A0 /* CardIO */,
+				03BD05251CBB7345000B84A0 /* PayPalMobile */,
 				03CB44781CA5CBF40040D770 /* THOS-Bridging-Header.h */,
 				03CB446E1CA5CB710040D770 /* Info.plist */,
+				03BD05191CBB72B9000B84A0 /* test.swift */,
 				03CB448E1CA5CCBB0040D770 /* dare.png */,
 				03CB44961CA5CCBB0040D770 /* FBCluster */,
 				03CB449B1CA5CCBB0040D770 /* jobView */,
@@ -691,6 +835,7 @@
 		03CB45971CA5CED90040D770 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				03CF92D51CB6463A003A166C /* Alamofire.xcodeproj */,
 				03CB45951CA5CEB10040D770 /* Bolts.framework */,
 				03CB45911CA5CEA70040D770 /* Parse.framework */,
 				03CB45921CA5CEA70040D770 /* ParseFacebookUtilsV4.framework */,
@@ -721,6 +866,20 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		03CF92D61CB6463A003A166C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				03CF92E01CB6463A003A166C /* Alamofire.framework */,
+				03CF92E21CB6463A003A166C /* Alamofire iOS Tests.xctest */,
+				03CF92E41CB6463A003A166C /* Alamofire.framework */,
+				03CF92E61CB6463A003A166C /* Alamofire OSX Tests.xctest */,
+				03CF92E81CB6463A003A166C /* Alamofire.framework */,
+				03CF92EA1CB6463A003A166C /* Alamofire tvOS Tests.xctest */,
+				03CF92EC1CB6463A003A166C /* Alamofire.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -731,10 +890,12 @@
 				03CB445B1CA5CB710040D770 /* Sources */,
 				03CB445C1CA5CB710040D770 /* Frameworks */,
 				03CB445D1CA5CB710040D770 /* Resources */,
+				033F16CB1CB6245F00E385F1 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				03CF92F01CB646D7003A166C /* PBXTargetDependency */,
 			);
 			name = THOS;
 			productName = THOS;
@@ -767,12 +928,70 @@
 			mainGroup = 03CB44561CA5CB710040D770;
 			productRefGroup = 03CB44601CA5CB710040D770 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 03CF92D61CB6463A003A166C /* Products */;
+					ProjectRef = 03CF92D51CB6463A003A166C /* Alamofire.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				03CB445E1CA5CB710040D770 /* THOS */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		03CF92E01CB6463A003A166C /* Alamofire.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Alamofire.framework;
+			remoteRef = 03CF92DF1CB6463A003A166C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		03CF92E21CB6463A003A166C /* Alamofire iOS Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "Alamofire iOS Tests.xctest";
+			remoteRef = 03CF92E11CB6463A003A166C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		03CF92E41CB6463A003A166C /* Alamofire.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Alamofire.framework;
+			remoteRef = 03CF92E31CB6463A003A166C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		03CF92E61CB6463A003A166C /* Alamofire OSX Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "Alamofire OSX Tests.xctest";
+			remoteRef = 03CF92E51CB6463A003A166C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		03CF92E81CB6463A003A166C /* Alamofire.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Alamofire.framework;
+			remoteRef = 03CF92E71CB6463A003A166C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		03CF92EA1CB6463A003A166C /* Alamofire tvOS Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "Alamofire tvOS Tests.xctest";
+			remoteRef = 03CF92E91CB6463A003A166C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		03CF92EC1CB6463A003A166C /* Alamofire.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Alamofire.framework;
+			remoteRef = 03CF92EB1CB6463A003A166C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		03CB445D1CA5CB710040D770 /* Resources */ = {
@@ -845,6 +1064,7 @@
 				03CB459C1CA5D2CD0040D770 /* CreateAccountViewController.swift in Sources */,
 				03CB45571CA5CCBB0040D770 /* JSQMessagesMediaPlaceholderView.m in Sources */,
 				03CB45291CA5CCBB0040D770 /* FloatRatingView.swift in Sources */,
+				03BD051A1CBB72B9000B84A0 /* test.swift in Sources */,
 				03CB45391CA5CCBB0040D770 /* JSQMessagesViewController.m in Sources */,
 				03CB452D1CA5CCBB0040D770 /* UITextView+Placeholder.m in Sources */,
 				03CB44871CA5CBF50040D770 /* HelpSeekerTabbarControllerViewController.swift in Sources */,
@@ -880,6 +1100,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		03CF92F01CB646D7003A166C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Alamofire iOS";
+			targetProxy = 03CF92EF1CB646D7003A166C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		03CB446B1CA5CB710040D770 /* LaunchScreen.storyboard */ = {
@@ -983,12 +1211,23 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/braintree",
 				);
 				INFOPLIST_FILE = THOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/PayPal-iOS-SDK-master/PayPalMobile",
+					"$(PROJECT_DIR)/PayPal-iOS-SDK-master/CardIO",
+				);
+				OTHER_LDFLAGS = (
+					"-lc++",
+					"-ObjC",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = dapper.THOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "THOS/THOS-Bridging-Header.h";
@@ -1001,12 +1240,23 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/braintree",
 				);
 				INFOPLIST_FILE = THOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/PayPal-iOS-SDK-master/PayPalMobile",
+					"$(PROJECT_DIR)/PayPal-iOS-SDK-master/CardIO",
+				);
+				OTHER_LDFLAGS = (
+					"-lc++",
+					"-ObjC",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = dapper.THOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "THOS/THOS-Bridging-Header.h";

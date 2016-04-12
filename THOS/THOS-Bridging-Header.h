@@ -9,9 +9,10 @@
 #import "JSQMessages.h"
 #import <Social/Social.h>
 #import "UITextView+Placeholder.h"
-//#import <linkedin-sdk/LISDK.h>
 //#import <BraintreeUI/BraintreeUI.h>
 #import "JSImagePickerViewController.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import "SFDraggableDialogView.h"
+#import "PayPalMobile.h"
+#import "CardIO.h"

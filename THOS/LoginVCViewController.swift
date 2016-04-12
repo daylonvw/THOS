@@ -121,7 +121,6 @@ class LoginVCViewController: UIViewController {
                 user.username = result.valueForKey("email") as? String
             }
             
-            // todo reAsk every login to update.. given friends using the app
             if result.valueForKey("friends") != nil {
                 
                 

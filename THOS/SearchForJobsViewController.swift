@@ -145,13 +145,14 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
     
     @IBAction func searchCurrentLocationButtonPressed(sender: AnyObject) {
         
+        self.zipCodeTextField.resignFirstResponder()
         self.dismmissSearchItems()
         self.getlocation()
     }
     
     func dismmissSearchItems() {
-        print("1")
 
+        
         searchZipCodeButton.hidden = true
         zipCodeTextField.hidden = true
         searchCurrentLocationButton.hidden = true
@@ -163,11 +164,13 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
         self.labourButton.hidden = false
         self.houseKeepingButton.hidden = false
 
-        print("2")
 
+        
     }
     
     @IBAction func addSearchItems(sender: AnyObject) {
+        
+        self.jobSearchBar.resignFirstResponder()
         
         self.zipCodeTextField.text = ""
         
@@ -202,9 +205,7 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
     }
 
     func getJobs() {
-        
-        // todo do something with already applied to jobs
-        
+                
         let querie = PFQuery(className: "Job")
         querie.includeKey("user")
         querie.whereKey("user", notEqualTo: PFUser.currentUser()!)
@@ -274,8 +275,8 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
             view.canShowCallout = true
             view.calloutOffset = CGPoint(x: -5, y: 5)
 
-            view.image = UIImage(named: "userIcon")
-            view.backgroundColor = UIColor.whiteColor()
+            view.image = UIImage(named: "currentUser")
+            view.backgroundColor = UIColor.ThosColor()
             view.layer.cornerRadius = view.frame.size.width / 2
             
             view.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure) as UIView
@@ -356,6 +357,7 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
         jobView.firstBtnText = "I'm interested"
         jobView.firstBtnBackgroundColor = UIColor.ThosColor()
         jobView.pfObject = job
+        
         
         if job["price"] != nil {
             
@@ -475,6 +477,7 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
         }
 
     }
+    
     
     func removeAnnotationAndJobView(dialogView: SFDraggableDialogView) {
         

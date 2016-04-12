@@ -493,7 +493,6 @@ class MyAppliedJobsChatViewController: JSQMessagesViewController, UIImagePickerC
         if message.senderId != self.senderId {
         
         if message.jobDate != nil {
-            // toDo
             
             let controller = UIAlertController(title: "Accept appointment", message: "for job ?", preferredStyle: .Alert)
             let cancelAction = UIAlertAction(title: "No", style: .Default, handler: { (action) -> Void in
@@ -502,8 +501,6 @@ class MyAppliedJobsChatViewController: JSQMessagesViewController, UIImagePickerC
             })
             
             let acceptDateAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
-                
-                // todo create payment
                 
                 self.job["acceptedDate"] = message.jobDate
                 self.job["helperAcceptedDate"] = true
@@ -515,8 +512,6 @@ class MyAppliedJobsChatViewController: JSQMessagesViewController, UIImagePickerC
             })
             
             let AddToCalanderAction = UIAlertAction(title: "Yes and add to Calender", style: .Default, handler: { (action) -> Void in
-                
-                // todo create payment
                 
                 self.createEvent(self.eventStore, title: "job", startDate: message.jobDate)
                 
