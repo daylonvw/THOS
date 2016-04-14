@@ -51,7 +51,6 @@ class LoginVCViewController: UIViewController {
         PFFacebookUtils.logInInBackgroundWithReadPermissions(permissionsArray) {
             (user: PFUser?, error: NSError?) -> Void in
            
-            print(PFUser.currentUser())
             if let user = user {
                
                 if user.isNew {

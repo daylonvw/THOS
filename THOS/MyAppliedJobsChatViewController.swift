@@ -54,11 +54,11 @@ class MyAppliedJobsChatViewController: JSQMessagesViewController, UIImagePickerC
         let user = PFUser.currentUser()
         self.senderId = user!.objectId
         self.senderDisplayName = user![PF_USER_FULLNAME] as! String
+    
+        self.navigationBar.items![0].title = self.jobDescription
         
         outgoingBubbleImage = bubbleFactory.outgoingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleBlueColor())
         incomingBubbleImage = bubbleFactory.incomingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleLightGrayColor())
-        
-        //        blankAvatarImage = JSQMessagesAvatarImageFactory.avatarImageWithImage(UIImage(named: "profile_blank"), diameter: 30)
         
         isLoading = false
         self.loadMessages()
@@ -71,7 +71,7 @@ class MyAppliedJobsChatViewController: JSQMessagesViewController, UIImagePickerC
             
         }
         
-        NSNotificationCenter.defaultCenter().addObserverForName("messageRecieved", object: nil, queue: nil) { (notification) -> Void in
+        NSNotificationCenter.defaultCenter().addObserverForName("messageFromJobPosterRecieved", object: nil, queue: nil) { (notification) -> Void in
             
             print(notification)
             
@@ -79,6 +79,7 @@ class MyAppliedJobsChatViewController: JSQMessagesViewController, UIImagePickerC
         }
 
     }
+
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
@@ -380,7 +381,7 @@ class MyAppliedJobsChatViewController: JSQMessagesViewController, UIImagePickerC
             thumbnailFile?.getDataInBackgroundWithBlock({ (imageData, error) -> Void in
                 if error == nil {
                     
-                    //                    self.avatars[((user.objectId as! String))] = JSQMessagesAvatarImageFactory.avatarImageWithImage(UIImage(data: imageData), diameter: 30)
+                    self.avatars[user.objectId!] = JSQMessagesAvatarImageFactory.avatarImageWithImage(UIImage(data: imageData!), diameter: 30)
                     self.collectionView!.reloadData()
                 }
             })
@@ -543,8 +544,10 @@ class MyAppliedJobsChatViewController: JSQMessagesViewController, UIImagePickerC
     
     func sendAcceptedDatePush() {
         
+        let user = job["user"] as! PFUser
+        
         let pushQuery = PFInstallation.query()
-        pushQuery!.whereKey("user", equalTo: job["acceptedUser"])
+        pushQuery!.whereKey("user", equalTo: user)
         
         let dataDIC:[String: AnyObject] = [
             

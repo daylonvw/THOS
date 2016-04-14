@@ -72,8 +72,11 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
         self.senderId = user!.objectId
         self.senderDisplayName = user![PF_USER_FULLNAME] as! String
         
+        self.navigationBar.items![0].title = self.jobDescription
+
         outgoingBubbleImage = bubbleFactory.outgoingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleBlueColor())
         incomingBubbleImage = bubbleFactory.incomingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleLightGrayColor())
+        
                 
         isLoading = false
         self.loadMessages()
@@ -87,7 +90,7 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
         }
 
         
-        NSNotificationCenter.defaultCenter().addObserverForName("messageRecieved", object: nil, queue: nil) { (notification) -> Void in
+        NSNotificationCenter.defaultCenter().addObserverForName("messageFromJobHelperRecieved", object: nil, queue: nil) { (notification) -> Void in
             
             print(notification)
             
@@ -431,7 +434,7 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
             thumbnailFile?.getDataInBackgroundWithBlock({ (imageData, error) -> Void in
                 if error == nil {
                    
-//                    self.avatars[((user.objectId as! String))] = JSQMessagesAvatarImageFactory.avatarImageWithImage(UIImage(data: imageData), diameter: 30)
+                    self.avatars[user.objectId!] = JSQMessagesAvatarImageFactory.avatarImageWithImage(UIImage(data: imageData!), diameter: 30)
                     self.collectionView!.reloadData()
                 }
             })
@@ -544,7 +547,7 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
         let message = self.messages[indexPath.item]
         // todo uncomment if statement use // for testing paypal
         
-//        if message.senderId != self.senderId {
+        if message.senderId != self.senderId {
         
         if message.jobDate != nil {
             
@@ -594,7 +597,7 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
             print("not a date")
         }
 
-//        }
+        }
     }
     
     func sendAcceptedDatePush() {
@@ -620,37 +623,37 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
     
     func openPaypal() {
         
-        let price = self.job["price"] as! NSNumber
-        
-        let item1 = PayPalItem(name: "T.H.O.S.", withQuantity: 1, withPrice: NSDecimalNumber(decimal: price.decimalValue), withCurrency: "EUR", withSku: self.job.objectId)
-        
-        let items = [item1]
-        let subtotal = PayPalItem.totalPriceForItems(items)
-        
-        // Optional: include payment details
-        //        let shipping = NSDecimalNumber(string: "5.99")
-        //        let tax = NSDecimalNumber(string: "2.50")
-        let paymentDetails = PayPalPaymentDetails(subtotal: subtotal, withShipping: nil, withTax: nil)
-        
-        let total = subtotal.decimalNumberByAdding(0).decimalNumberByAdding(0)
-        
-        let payment = PayPalPayment(amount: total, currencyCode: "EUR", shortDescription: self.job["jobDescription"] as! String, intent: .Sale)
-        
-        payment.items = items
-        payment.paymentDetails = paymentDetails
-        
-        print(payment)
-        
-        if (payment.processable) {
-           
-            let paymentViewController = PayPalPaymentViewController(payment: payment, configuration: payPalConfig, delegate: self)
-            presentViewController(paymentViewController!, animated: true, completion: nil)
-        }
-        else {
-
-            print("Payment not processalbe: \(payment)")
-        }
-        
+//        let price = self.job["price"] as! NSNumber
+//        
+//        let item1 = PayPalItem(name: "T.H.O.S.", withQuantity: 1, withPrice: NSDecimalNumber(decimal: price.decimalValue), withCurrency: "EUR", withSku: self.job.objectId)
+//        
+//        let items = [item1]
+//        let subtotal = PayPalItem.totalPriceForItems(items)
+//        
+//        // Optional: include payment details
+//        //        let shipping = NSDecimalNumber(string: "5.99")
+//        //        let tax = NSDecimalNumber(string: "2.50")
+//        let paymentDetails = PayPalPaymentDetails(subtotal: subtotal, withShipping: nil, withTax: nil)
+//        
+//        let total = subtotal.decimalNumberByAdding(0).decimalNumberByAdding(0)
+//        
+//        let payment = PayPalPayment(amount: total, currencyCode: "EUR", shortDescription: self.job["jobDescription"] as! String, intent: .Sale)
+//        
+//        payment.items = items
+//        payment.paymentDetails = paymentDetails
+//        
+//        print(payment)
+//        
+//        if (payment.processable) {
+//           
+//            let paymentViewController = PayPalPaymentViewController(payment: payment, configuration: payPalConfig, delegate: self)
+//            presentViewController(paymentViewController!, animated: true, completion: nil)
+//        }
+//        else {
+//
+//            print("Payment not processalbe: \(payment)")
+//        }
+//        
 
     }
 

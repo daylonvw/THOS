@@ -341,7 +341,8 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
         for job in self.jobsArray {
             // ToDo set tag or subtitel also because maybe some jobs have te same description
             if (job["jobDescription"] as! String) == (anView.annotation?.title)! {
-                                
+            
+                self.jobSearchBar.resignFirstResponder()
                 self.OpenJobViewWith(job)
             }
         }
@@ -591,6 +592,7 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
     
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
         
+        searchBar.backgroundColor = UIColor.whiteColor()
         // show all annotations
         if searchBar.text! == "" {
             
@@ -625,17 +627,25 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
         
     }
     
+    func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
+        
+        searchBar.backgroundColor = UIColor.whiteColor()
+    
+    }
+
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
         
         searchBar.text = ""
         searchBar.resignFirstResponder()
+        searchBar.backgroundColor = UIColor.clearColor()
+
     }
     
     func searchBarCancelButtonClicked(searchBar: UISearchBar) {
      
         searchBar.text = ""
         searchBar.resignFirstResponder()
-        
+        searchBar.backgroundColor = UIColor.clearColor()
         
         for annotation in self.mapView.annotations {
             

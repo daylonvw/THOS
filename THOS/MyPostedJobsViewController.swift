@@ -340,107 +340,17 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
 
     func showUserViewWithUser(jobInfo: (PFUser, UIImage, PFObject)) {
         
+        //option one
         
-        let jobView: SFDraggableDialogView = NSBundle.mainBundle().loadNibNamed("SFDraggableDialogView", owner: self, options: nil)[0] as! SFDraggableDialogView
-        jobView.frame = view.frame
-        jobView.delegate = self
-        jobView.messgageLabel.sizeToFit()
-        jobView.messageText = NSMutableAttributedString(string: "")
-        jobView.firstBtnText = "Accept"
-        jobView.firstBtnBackgroundColor = UIColor.ThosColor()
-        jobView.titleText = NSMutableAttributedString(string:(jobInfo.0["displayName"] as? String)!)
-        jobView.createBlurBackgroundWithImage(self.tableView.convertViewToImage(), tintColor: nil, blurRadius: 20)
-        
-        let query = PFQuery(className: "UserRating")
-        query.whereKey("user", equalTo: jobInfo.0)
-        query.getFirstObjectInBackgroundWithBlock({ (object , error ) -> Void in
-            
-            if error != nil {
-                
-                print(error?.localizedDescription)
-                
-            } else {
-                
-                let userRatingView = FloatRatingView(frame: CGRect(x: jobView.subviews[1].center.x - 120, y: 2, width: 120, height: 30))
-                let rating = object!["rating"] as! NSNumber
-                userRatingView.hidden = false
-                userRatingView.rating = Float(rating)
-                userRatingView.editable = false
-                userRatingView.minRating = 1
-                userRatingView.maxRating = 5
-                userRatingView.fullImage = UIImage(named: "starFull")
-                userRatingView.emptyImage = UIImage(named: "starEmpty")
-                userRatingView.center = CGPointMake(jobView.subviews[1].center.x - 50, 17)
-                jobView.subviews[1].addSubview(userRatingView)
-                                
-            }
-        })
-        
-        if jobInfo.0["friendsArray"] != nil {
-            
-            let userFriends = jobInfo.0["friendsArray"]
-            let myfriends = PFUser.currentUser()!["friendsArray"]
-            
-            let set1 = NSMutableSet(array: userFriends as! Array)
-            let set2 = NSMutableSet(array: myfriends as! Array)
-            
-            set1.intersectSet(set2 as Set<NSObject>)
-            
-            let sharedResult = set1.allObjects as NSArray
-            
-            if sharedResult.count > 0 {
-                
-                jobView.messageText = NSMutableAttributedString(string: " \(sharedResult.count) common friend(s)")
-                self.sharedfriendsView = UIView(frame: CGRect(x: 0, y: 0, width: Int(self.view.frame.size.width - 40), height: (30 * sharedResult.count) + 30))
-                self.sharedfriendsView.center = self.view.center
-                
-                let label = UILabel(frame: CGRect(x: 0, y: 0, width: Int(self.sharedfriendsView.frame.size.width), height: 30))
-                label.text = "Common friends"
-                label.textColor = UIColor.darkGrayColor()
-                label.textAlignment  = .Center
-                label.font = UIFont.systemFontOfSize(20)
-                self.sharedfriendsView.addSubview(label)
-                
-                var index = 0
-                
-                while index < sharedResult.count {
-                    
-                    let user = sharedResult[index]
-                    
-                    self.getSharedFriendsInfoWith(index + 1 , userId: user as! String)
-                    index += 1
-                    
-                }
-            }
-        }
-
-
-        print(UIApplication.sharedApplication().scheduledLocalNotifications)
-        
-        jobView.photo = jobInfo.1
-        view.addSubview(jobView)
-
-        self.acceptedUser = jobInfo.0
-        self.selectedJob = jobInfo.2
-        
-        
-        // option two
-        
-        
-//        self.tableView.scrollEnabled = false
-//        
-//        userView = userPopUpView(frame: self.view.frame)
-//        
-//        userView.ratingView.hidden = true
-//        userView.acceptButton.frame = CGRectMake(0, 0, self.view.frame.size.width - 20, 40)
-//        userView.acceptButton.center = CGPointMake(self.view.center.x, self.view.frame.height - 110)
-//        userView.acceptButton.addTarget(self, action: #selector(MyPostedJobsViewController.acceptUserForJob), forControlEvents: .TouchUpInside)
-//        
-//        userView.declineButton.frame = CGRectMake(0, 0, self.view.frame.size.width - 20, 40)
-//        userView.declineButton.center = CGPointMake(self.view.center.x, self.view.frame.height - 60)
-//
-//        userView.declineButton.addTarget(self, action: #selector(MyPostedJobsViewController.dismissUserView), forControlEvents: .TouchUpInside)
-//      
+//        let jobView: SFDraggableDialogView = NSBundle.mainBundle().loadNibNamed("SFDraggableDialogView", owner: self, options: nil)[0] as! SFDraggableDialogView
+//        jobView.frame = view.frame
+//        jobView.delegate = self
+//        jobView.messgageLabel.sizeToFit()
+//        jobView.messageText = NSMutableAttributedString(string: "")
+//        jobView.firstBtnText = "Accept"
+//        jobView.firstBtnBackgroundColor = UIColor.ThosColor()
+//        jobView.titleText = NSMutableAttributedString(string:(jobInfo.0["displayName"] as? String)!)
+//        jobView.createBlurBackgroundWithImage(self.tableView.convertViewToImage(), tintColor: nil, blurRadius: 20)
 //        
 //        let query = PFQuery(className: "UserRating")
 //        query.whereKey("user", equalTo: jobInfo.0)
@@ -452,64 +362,155 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
 //                
 //            } else {
 //                
-//                self.userView.ratingView.hidden = false
+//                let userRatingView = FloatRatingView(frame: CGRect(x: jobView.subviews[1].center.x - 120, y: 2, width: 120, height: 30))
 //                let rating = object!["rating"] as! NSNumber
-//                self.userView.ratingView.rating = Float(rating)
-//                self.userView.ratingView.center = CGPointMake(self.view.center.x, 200)
-//                self.userView.ratingView.editable = false
-//                
+//                userRatingView.hidden = false
+//                userRatingView.rating = Float(rating)
+//                userRatingView.editable = false
+//                userRatingView.minRating = 1
+//                userRatingView.maxRating = 5
+//                userRatingView.fullImage = UIImage(named: "starFull")
+//                userRatingView.emptyImage = UIImage(named: "starEmpty")
+//                userRatingView.center = CGPointMake(jobView.subviews[1].center.x - 50, 17)
+//                jobView.subviews[1].addSubview(userRatingView)
+//                                
 //            }
 //        })
-//
+//        
 //        if jobInfo.0["friendsArray"] != nil {
 //            
 //            let userFriends = jobInfo.0["friendsArray"]
 //            let myfriends = PFUser.currentUser()!["friendsArray"]
-//        
+//            
 //            let set1 = NSMutableSet(array: userFriends as! Array)
 //            let set2 = NSMutableSet(array: myfriends as! Array)
-//        
+//            
 //            set1.intersectSet(set2 as Set<NSObject>)
-//        
+//            
 //            let sharedResult = set1.allObjects as NSArray
 //            
 //            if sharedResult.count > 0 {
 //                
+//                jobView.messageText = NSMutableAttributedString(string: " \(sharedResult.count) common friend(s)")
 //                self.sharedfriendsView = UIView(frame: CGRect(x: 0, y: 0, width: Int(self.view.frame.size.width - 40), height: (30 * sharedResult.count) + 30))
 //                self.sharedfriendsView.center = self.view.center
-//              
+//                
 //                let label = UILabel(frame: CGRect(x: 0, y: 0, width: Int(self.sharedfriendsView.frame.size.width), height: 30))
 //                label.text = "Common friends"
 //                label.textColor = UIColor.darkGrayColor()
 //                label.textAlignment  = .Center
 //                label.font = UIFont.systemFontOfSize(20)
 //                self.sharedfriendsView.addSubview(label)
-//
 //                
-//                self.userView.addSubview(self.sharedfriendsView)
 //                var index = 0
 //                
 //                while index < sharedResult.count {
-//                
+//                    
 //                    let user = sharedResult[index]
-//                
+//                    
 //                    self.getSharedFriendsInfoWith(index + 1 , userId: user as! String)
 //                    index += 1
-//
+//                    
 //                }
 //            }
 //        }
 //
-//        userView.userNameLabel.text = jobInfo.0["displayName"] as? String
+//
+//        print(UIApplication.sharedApplication().scheduledLocalNotifications)
 //        
-//        userView.userimageView.image = jobInfo.1
-//        userView.userimageView.center = CGPointMake(userView.center.x, 100)
-//        
-//        userView.center = CGPointMake(view.center.x, view.center.y - 20)
-//        self.view.addSubview(userView)
-//        
-//        acceptedUser = jobInfo.0
-//        selectedJob = jobInfo.2
+//        jobView.photo = jobInfo.1
+//        view.addSubview(jobView)
+//
+//        self.acceptedUser = jobInfo.0
+//        self.selectedJob = jobInfo.2
+        
+        
+        // option two
+        
+        
+        self.tableView.scrollEnabled = false
+        
+        userView = userPopUpView(frame: self.view.frame)
+        
+        userView.ratingView.hidden = true
+        userView.acceptButton.frame = CGRectMake(0, 0, self.view.frame.size.width - 20, 40)
+        userView.acceptButton.center = CGPointMake(self.view.center.x, self.view.frame.height - 110)
+        userView.acceptButton.addTarget(self, action: #selector(MyPostedJobsViewController.acceptUserForJob), forControlEvents: .TouchUpInside)
+        
+        userView.declineButton.frame = CGRectMake(0, 0, self.view.frame.size.width - 20, 40)
+        userView.declineButton.center = CGPointMake(self.view.center.x, self.view.frame.height - 60)
+
+        userView.declineButton.addTarget(self, action: #selector(MyPostedJobsViewController.dismissUserView), forControlEvents: .TouchUpInside)
+      
+        
+        let query = PFQuery(className: "UserRating")
+        query.whereKey("user", equalTo: jobInfo.0)
+        query.getFirstObjectInBackgroundWithBlock({ (object , error ) -> Void in
+            
+            if error != nil {
+                
+                print(error?.localizedDescription)
+                
+            } else {
+                
+                self.userView.ratingView.hidden = false
+                let rating = object!["rating"] as! NSNumber
+                self.userView.ratingView.rating = Float(rating)
+                self.userView.ratingView.center = CGPointMake(self.view.center.x, 200)
+                self.userView.ratingView.editable = false
+                
+            }
+        })
+
+        if jobInfo.0["friendsArray"] != nil {
+            
+            let userFriends = jobInfo.0["friendsArray"]
+            let myfriends = PFUser.currentUser()!["friendsArray"]
+        
+            let set1 = NSMutableSet(array: userFriends as! Array)
+            let set2 = NSMutableSet(array: myfriends as! Array)
+        
+            set1.intersectSet(set2 as Set<NSObject>)
+        
+            let sharedResult = set1.allObjects as NSArray
+            
+            if sharedResult.count > 0 {
+                
+                self.sharedfriendsView = UIView(frame: CGRect(x: 0, y: 0, width: Int(self.view.frame.size.width - 40), height: (30 * sharedResult.count) + 30))
+                self.sharedfriendsView.center = self.view.center
+              
+                let label = UILabel(frame: CGRect(x: 0, y: 0, width: Int(self.sharedfriendsView.frame.size.width), height: 30))
+                label.text = "Common friends"
+                label.textColor = UIColor.darkGrayColor()
+                label.textAlignment  = .Center
+                label.font = UIFont.systemFontOfSize(20)
+                self.sharedfriendsView.addSubview(label)
+
+                
+                self.userView.addSubview(self.sharedfriendsView)
+                var index = 0
+                
+                while index < sharedResult.count {
+                
+                    let user = sharedResult[index]
+                
+                    self.getSharedFriendsInfoWith(index + 1 , userId: user as! String)
+                    index += 1
+
+                }
+            }
+        }
+
+        userView.userNameLabel.text = jobInfo.0["displayName"] as? String
+        
+        userView.userimageView.image = jobInfo.1
+        userView.userimageView.center = CGPointMake(userView.center.x, 100)
+        
+        userView.center = CGPointMake(view.center.x, view.center.y - 20)
+        self.view.addSubview(userView)
+        
+        acceptedUser = jobInfo.0
+        selectedJob = jobInfo.2
 
     }
     
@@ -563,7 +564,7 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
                     // todo segue to chat ?
                     self.tableView.scrollEnabled = true
 
-//                    self.userView.removeFromSuperview()
+                    self.userView.removeFromSuperview()
                     self.myPostedJobsArray.removeAll()
                     self.getMyJobs()
                     
@@ -848,7 +849,6 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
                                 
                                 do {
                                     
-                                    print("try")
                                     try eventStore.saveEvent(event, span: .ThisEvent)
                                     
                                     
@@ -870,7 +870,6 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
             
         } else if EKEventStore.authorizationStatusForEntityType(.Event) == EKAuthorizationStatus.Authorized {
             
-            
             let userLocation = CLLocation(latitude: jobLocation.latitude, longitude: jobLocation.longitude)
             let geoCoder = CLGeocoder()
             
@@ -882,6 +881,12 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
                         
                         let placeMark = placeMarks![0]
                         
+                        print(job)
+                        print(placeMark.thoroughfare)
+                        print(placeMark.subThoroughfare)
+                        
+                        
+
                         let event = EKEvent(eventStore: eventStore)
                         
                         event.title = job["jobDescription"] as! String
@@ -893,7 +898,6 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
                         
                         do {
                             
-                            print("try")
                             try eventStore.saveEvent(event, span: .ThisEvent)
                             
                             
