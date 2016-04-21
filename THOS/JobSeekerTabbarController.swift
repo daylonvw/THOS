@@ -25,8 +25,6 @@ class JobSeekerTabbarController: UITabBarController {
         
         NSNotificationCenter.defaultCenter().addObserverForName("messageFromJobPosterRecieved", object: nil, queue: nil) { (notification) -> Void in
             
-            print(notification)
-            
             self.setNewMessageIcon()
         }
 
@@ -45,6 +43,8 @@ class JobSeekerTabbarController: UITabBarController {
         
         let item = items[1]
         item.image = UIImage(named: "newMessageIcon")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+        item.selectedImage = UIImage(named: "newMessageIcon")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+
         
         
     }
@@ -58,9 +58,43 @@ class JobSeekerTabbarController: UITabBarController {
         if messageItem == item {
             
             item.image = UIImage(named: "toolIcon")
+            item.selectedImage = UIImage(named: "toolIcon")
+
         }
         
     }
+    
+    func checkForMewChats() {
+        
+        let chatQuery = PFQuery(className: "Chat")
+        chatQuery.whereKey("isRead", equalTo: false)
+        chatQuery.whereKey("toUser", equalTo: PFUser.currentUser()!)
+        chatQuery.findObjectsInBackgroundWithBlock { (objects, error) in
+            
+            if error != nil {
+                
+                print(error)
+                
+            } else {
+                
+                if objects?.count > 0 {
+                    
+                    self.setNewMessageIcon()
+                    
+                } else {
+                    
+                    var items = self.tabBar.items as Array!
+                    let item = items[1]
+                    
+                    item.image = UIImage(named: "toolIcon")
+                    item.selectedImage = UIImage(named: "toolIcon")
+                    
+                }
+            }
+            
+        }
+    }
+
 
     
     /*

@@ -44,9 +44,6 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
     var tableView: UITableView!
     var addresses = [NSMutableDictionary]()
     
-//    var braintreeClient: BTAPIClient?
-
-
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -84,8 +81,18 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         
         allRequiredJobInfoEntered = true
         
+        NSNotificationCenter.defaultCenter().addObserverForName("openedWitdPushFromJobHelper", object: nil, queue: nil) { (notification: NSNotification) -> Void in
+            
+            self.openChatFromNotification(notification)
+        }
     }
     
+    override func viewDidAppear(animated: Bool) {
+        
+        super.viewDidAppear(true)
+        
+        self.checkForMewChats()
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -104,10 +111,7 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         } else if segmentenControl.selectedSegmentIndex == 1 {
             
             let controller = UIAlertController(title: "Enter zipcode", message: "for job location", preferredStyle: .Alert)
-            let cancelAction = UIAlertAction(title: "Cancel", style: .Default, handler: { (action) -> Void in
-                
-                self.dismissViewControllerAnimated(true, completion: nil)
-            })
+            let cancelAction = UIAlertAction(title: "Cancel", style: .Default, handler: nil)
             
             
             let action = UIAlertAction(title: "Use", style: .Default, handler: { (action) -> Void in
@@ -196,10 +200,7 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         } else if segmentenControl.selectedSegmentIndex == 2 {
             
             let controller = UIAlertController(title: "Enter your address and house number", message: "for job location", preferredStyle: .Alert)
-            let cancelAction = UIAlertAction(title: "Cancel", style: .Default, handler: { (action) -> Void in
-                
-                self.dismissViewControllerAnimated(true, completion: nil)
-            })
+            let cancelAction = UIAlertAction(title: "Cancel", style: .Default, handler: nil)
             
             let action = UIAlertAction(title: "Use", style: .Default, handler: { (action) -> Void in
                 
@@ -838,9 +839,6 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         
         self.jobPFGeoPoint = PFGeoPoint(latitude: Double(latitude! as! NSNumber), longitude: Double(longtitude! as! NSNumber))
         
-        
-        print("\(self.jobPFGeoPoint) and address is \(self.jobAddress)")
-        
         self.tableViewBackgroudImage.removeFromSuperview()
         self.addresses.removeAll(keepCapacity: true)
         
@@ -852,30 +850,41 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         self.addresses.removeAll(keepCapacity: true)
         
     }
-//    func dropInViewController(viewController: BTDropInViewController, didSucceedWithTokenization paymentMethodNonce: BTPaymentMethodNonce)
-//    {
-//        // Send payment method nonce to your server for processing
-//        postNonceToServer(paymentMethodNonce.nonce)
-//        dismissViewControllerAnimated(true, completion: nil)
-//    }
-//    
-//    func dropInViewControllerDidCancel(viewController: BTDropInViewController) {
-//        dismissViewControllerAnimated(true, completion: nil)
-//    }
-//    
-//    func userDidCancelPayment() {
-//        dismissViewControllerAnimated(true, completion: nil)
-//    }
-//    
-//    func postNonceToServer(paymentMethodNonce: String) {
-//        
-//        let paymentURL = NSURL(string: "https://your-server.example.com/payment-methods")!
-//        let request = NSMutableURLRequest(URL: paymentURL)
-//        request.HTTPBody = "payment_method_nonce=\(paymentMethodNonce)".dataUsingEncoding(NSUTF8StringEncoding)
-//        request.HTTPMethod = "POST"
-//        
-//        NSURLSession.sharedSession().dataTaskWithRequest(request) { (data, response, error) -> Void in
-//            // TODO: Handle success or failure
-//            }.resume()
-//    }
+    
+    func checkForMewChats() {
+    
+        let tabBarController = self.parentViewController as! HelpSeekerTabbarControllerViewController
+        tabBarController.checkForMewChats()
+
+    }
+    
+    func openChatFromNotification(notification: NSNotification) {
+        
+        let query = PFQuery(className: "Job")
+        query.whereKey("objectId", equalTo: notification.object as! String)
+        query.getFirstObjectInBackgroundWithBlock { (object, error) in
+            if error != nil {
+                
+                print(error)
+                
+            } else {
+                
+                print(object)
+                
+                let storyBoard  = UIStoryboard(name: "Main", bundle: nil)
+                
+                let chatController = storyBoard.instantiateViewControllerWithIdentifier("postedJobsChatController") as! JobChatViewController
+                
+                chatController.jobId = object!.objectId
+                chatController.jobGeoPoint = object!.valueForKey("jobLocation") as! PFGeoPoint
+                chatController.jobDescription = object!.valueForKey("jobDescription") as! String
+                chatController.job = object!
+
+                
+                self.presentViewController(chatController, animated: true, completion: nil)
+
+            }
+        }
+    }
+
 }

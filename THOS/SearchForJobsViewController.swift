@@ -59,7 +59,21 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
         self.zipCodeTextField.layer.borderWidth = 1.0
         self.zipCodeTextField.layer.cornerRadius = 4
         
+        
+        NSNotificationCenter.defaultCenter().addObserverForName("openedWitdPushFromJobPoster", object: nil, queue: nil) { (notification: NSNotification) -> Void in
+            
+            self.openChatFromNotification(notification)
+        }
+
     }
+    
+    override func viewDidAppear(animated: Bool) {
+        
+        super.viewDidAppear(true)
+        
+        self.checkForMewChats()
+    }
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -755,7 +769,40 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
         
     }
     
-    
+    func checkForMewChats() {
+        
+        let tabBarController = self.parentViewController as! JobSeekerTabbarController
+        tabBarController.checkForMewChats()
+        
+    }
+
+    func openChatFromNotification(notification: NSNotification) {
+        
+        let query = PFQuery(className: "Job")
+        query.whereKey("objectId", equalTo: notification.object as! String)
+        query.getFirstObjectInBackgroundWithBlock { (object, error) in
+            if error != nil {
+                
+                print(error)
+                
+            } else {
+                                
+                let storyBoard  = UIStoryboard(name: "Main", bundle: nil)
+                
+                let chatController = storyBoard.instantiateViewControllerWithIdentifier("appliedJobsViewcontroller") as! MyAppliedJobsChatViewController
+                
+                chatController.jobId = object!.objectId
+                chatController.jobGeoPoint = object!.valueForKey("jobLocation") as! PFGeoPoint
+                chatController.jobDescription = object!.valueForKey("jobDescription") as! String
+                chatController.job = object!
+                
+                
+                self.presentViewController(chatController, animated: true, completion: nil)
+                
+            }
+        }
+    }
+
 }
 
 class DWAnnotation: MKPointAnnotation {

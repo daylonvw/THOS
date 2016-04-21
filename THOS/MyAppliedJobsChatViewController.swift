@@ -84,12 +84,10 @@ class MyAppliedJobsChatViewController: JSQMessagesViewController, UIImagePickerC
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         self.collectionView!.collectionViewLayout.springinessEnabled = true
-//        timer = NSTimer.scheduledTimerWithTimeInterval(20.0, target: self, selector: "loadMessages", userInfo: nil, repeats: true)
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-//        timer.invalidate()
     }
     
     // Mark: - Backend methods
@@ -107,27 +105,51 @@ class MyAppliedJobsChatViewController: JSQMessagesViewController, UIImagePickerC
                 query.whereKey(PF_CHAT_CREATEDAT, greaterThan: (lastMessage?.date)!)
             }
             query.includeKey(PF_CHAT_USER)
+            query.includeKey("toUser")
             query.orderByDescending(PF_CHAT_CREATEDAT)
             query.limit = 50
             query.findObjectsInBackgroundWithBlock({ (objects, error) -> Void in
                 
                 if error == nil {
                     
+                    self.job["helperReadLastText"] = true
+                    self.job.saveInBackground()
+
                     self.automaticallyScrollsToMostRecentMessage = false
+                    
                     for object in Array((objects as [PFObject]!).reverse()) {
                         
-                        // add message to messages array and user to users array
                         self.addMessage(object)
+                        
+                        if object["toUser"] != nil {
+                            
+                            let toUser = object["toUser"] as! PFUser
+                            
+                            if PFUser.currentUser()!.objectId == toUser.objectId {
+                                
+                                object["isRead"] = true
+                                object.saveInBackground()
+                                
+                            } else {
+                                
+                                // nothing
+                            }
+                        }
+                        
                     }
+                    
                     if objects!.count > 0 {
+                        
                         self.finishReceivingMessage()
                         self.scrollToBottomAnimated(false)
                     }
                     self.automaticallyScrollsToMostRecentMessage = true
                     
                 } else {
-                    //                    ProgressHUD.showError("Network error")
+                    
+                    print(error)
                 }
+                
                 self.isLoading = false;
             })
         }
@@ -201,43 +223,14 @@ class MyAppliedJobsChatViewController: JSQMessagesViewController, UIImagePickerC
         
         if phoneNumberEntered == false {
             
-//            var videoFile: PFFile!
-//            var pictureFile: PFFile!
-//        
-//            if let video = video {
-//                text = "[Video message]"
-//                videoFile = PFFile(name: "video.mp4", data: NSFileManager.defaultManager().contentsAtPath(video.path!)!)
-//            
-//                videoFile.saveInBackgroundWithBlock({ (succeeed, error) -> Void in
-//                    if error != nil {
-//                    // error
-//                    }
-//                })
-//            }
-//        
-//            if let picture = picture {
-//                text = "[Picture message]"
-//                pictureFile = PFFile(name: "picture.jpg", data: UIImageJPEGRepresentation(picture, 0.6)!)
-//                pictureFile.saveInBackgroundWithBlock({ (suceeded, error) -> Void in
-//                    if error != nil {
-//                    // error
-//                    }
-//                })
-//            }
-        
             let object = PFObject(className: PF_CHAT_CLASS_NAME)
         
             object[PF_CHAT_USER] = PFUser.currentUser()
             object[PF_CHAT_GROUPID] = self.jobId
             object[PF_CHAT_TEXT] = text
-//       
-//            if let videoFile = videoFile {
-//                object[PF_CHAT_VIDEO] = videoFile
-//            }
-//            if let pictureFile = pictureFile {
-//                object[PF_CHAT_PICTURE] = pictureFile
-//            }
-//        
+            object["toUser"] = self.job["user"]
+            object["isRead"] = false
+
             if let jobDate = jobDate {
             
                 object[PF_JOB_DATE] = jobDate
@@ -260,6 +253,9 @@ class MyAppliedJobsChatViewController: JSQMessagesViewController, UIImagePickerC
             sendMessgePush(jobId, text: text)
             Messages.updateMessageCounter(jobId, lastMessage: text)
         
+            job["posterReadLastText"] = false
+            job.saveInBackground()
+            
             self.finishSendingMessage()
             
         } else {
@@ -292,7 +288,9 @@ class MyAppliedJobsChatViewController: JSQMessagesViewController, UIImagePickerC
             "alert"             : "New message about your job: \(descriptionString)",
             "type"              : "jobHelperMessage",
             "badge"             : "increment",
-            "sound"             : "message-sent.aiff"
+            "sound"             : "message-sent.aiff",
+            "job"               : jobId
+
         ]
         
         let push = PFPush()

@@ -85,7 +85,7 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
     
         if job["acceptedDate"] != nil {
             
-            self.inputToolbar?.contentView?.leftBarButtonItem?.imageView?.image
+            self.inputToolbar?.contentView?.leftBarButtonItem?.hidden = true
             
         }
 
@@ -107,7 +107,7 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
         payPalConfig.merchantPrivacyPolicyURL = NSURL(string: "https://www.paypal.com/webapps/mpp/ua/privacy-full")
         payPalConfig.merchantUserAgreementURL = NSURL(string: "https://www.paypal.com/webapps/mpp/ua/useragreement-full")
         
-        PayPalMobile.preconnectWithEnvironment(PayPalEnvironmentProduction)
+        PayPalMobile.preconnectWithEnvironment(PayPalEnvironmentSandbox)
         
         
         
@@ -137,12 +137,11 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         self.collectionView!.collectionViewLayout.springinessEnabled = true
-//        timer = NSTimer.scheduledTimerWithTimeInterval(20.0, target: self, selector: "loadMessages", userInfo: nil, repeats: true)
+        
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-//        timer.invalidate()
     }
     
     // Mark: - Backend methods
@@ -160,27 +159,50 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
                 query.whereKey(PF_CHAT_CREATEDAT, greaterThan: (lastMessage?.date)!)
             }
             query.includeKey(PF_CHAT_USER)
+            query.includeKey("toUser")
             query.orderByDescending(PF_CHAT_CREATEDAT)
             query.limit = 50
             query.findObjectsInBackgroundWithBlock({ (objects, error) -> Void in
                
                 if error == nil {
                    
+                    self.job["posterReadLastText"] = true
+                    self.job.saveInBackground()
                     self.automaticallyScrollsToMostRecentMessage = false
+                    
                     for object in Array((objects as [PFObject]!).reverse()) {
-                      
-                        // add message to messages array and user to users array
+                        
                         self.addMessage(object)
+
+                        if object["toUser"] != nil {
+                        
+                            let toUser = object["toUser"] as! PFUser
+
+                            if PFUser.currentUser()!.objectId == toUser.objectId {
+                                
+                                object["isRead"] = true
+                                object.saveInBackground()
+                                
+                            } else {
+                                
+                                // nothing
+                            }
+                        }
+                        
                     }
+                    
                     if objects!.count > 0 {
+                        
                         self.finishReceivingMessage()
                         self.scrollToBottomAnimated(false)
                     }
                     self.automaticallyScrollsToMostRecentMessage = true
                     
                 } else {
-//                    ProgressHUD.showError("Network error")
+                    
+                    print(error)
                 }
+                
                 self.isLoading = false;
             })
         }
@@ -254,43 +276,14 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
         }
         
         if phoneNumberEntered == false {
-//            
-//            var videoFile: PFFile!
-//            var pictureFile: PFFile!
-//            
-//            if let video = video {
-//                text = "[Video message]"
-//                videoFile = PFFile(name: "video.mp4", data: NSFileManager.defaultManager().contentsAtPath(video.path!)!)
-//                
-//                videoFile.saveInBackgroundWithBlock({ (succeeed, error) -> Void in
-//                    if error != nil {
-//                        // error
-//                    }
-//                })
-//            }
-//            
-//            if let picture = picture {
-//                text = "[Picture message]"
-//                pictureFile = PFFile(name: "picture.jpg", data: UIImageJPEGRepresentation(picture, 0.6)!)
-//                pictureFile.saveInBackgroundWithBlock({ (suceeded, error) -> Void in
-//                    if error != nil {
-//                        // error
-//                    }
-//                })
-//            }
             
             let object = PFObject(className: PF_CHAT_CLASS_NAME)
             
             object[PF_CHAT_USER] = PFUser.currentUser()
             object[PF_CHAT_GROUPID] = self.jobId
             object[PF_CHAT_TEXT] = text
-            
-//            if let videoFile = videoFile {
-//                object[PF_CHAT_VIDEO] = videoFile
-//            }
-//            if let pictureFile = pictureFile {
-//                object[PF_CHAT_PICTURE] = pictureFile
-//            }
+            object["toUser"] = self.job["acceptedUser"]
+            object["isRead"] = false
             
             if let jobDate = jobDate {
                 
@@ -314,6 +307,9 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
             sendMessgePush(jobId, text: text)
             Messages.updateMessageCounter(jobId, lastMessage: text)
             
+            job["helperReadLastText"] = false
+            job.saveInBackground()
+
             self.finishSendingMessage()
             
         } else {
@@ -344,7 +340,9 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
             "alert"             : text,
             "type"              : "jobPosterMessage",
             "badge"             : "increment",
-            "sound"             : "message-sent.aiff"
+            "sound"             : "message-sent.aiff",
+            "job"               : jobId
+            
         ]
         
         let push = PFPush()
@@ -631,13 +629,13 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
 //        let subtotal = PayPalItem.totalPriceForItems(items)
 //        
 //        // Optional: include payment details
-//        //        let shipping = NSDecimalNumber(string: "5.99")
-//        //        let tax = NSDecimalNumber(string: "2.50")
-//        let paymentDetails = PayPalPaymentDetails(subtotal: subtotal, withShipping: nil, withTax: nil)
+//                let shipping = NSDecimalNumber(string: "5.99")
+//                let tax = NSDecimalNumber(string: "2.50")
+//        let paymentDetails = PayPalPaymentDetails(subtotal: subtotal, withShipping: shipping, withTax: tax)
 //        
-//        let total = subtotal.decimalNumberByAdding(0).decimalNumberByAdding(0)
+//        let total = subtotal.decimalNumberByAdding(shipping).decimalNumberByAdding(tax)
 //        
-//        let payment = PayPalPayment(amount: total, currencyCode: "EUR", shortDescription: self.job["jobDescription"] as! String, intent: .Sale)
+//        let payment = PayPalPayment(amount: total, currencyCode: "EUR", shortDescription: "T.H.O.S. \(self.job["jobDescription"])", intent: .Sale)
 //        
 //        payment.items = items
 //        payment.paymentDetails = paymentDetails

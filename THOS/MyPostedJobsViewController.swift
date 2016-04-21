@@ -25,6 +25,7 @@ class MyPostedJobsCell: UITableViewCell {
 
 class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, FloatRatingViewDelegate, SFDraggableDialogViewDelegate {
 
+    //todo reload when returning from chat
     
     @IBOutlet var tableView: UITableView!
     
@@ -71,6 +72,9 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(true)
+        
+
+        NSNotificationCenter.defaultCenter().postNotificationName("chechForNewChats", object: nil)
 
     }
     
@@ -100,14 +104,24 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
                 
             } else {
                 
+                print(jobs?.count)
+                
                 if ((jobs?.count) != nil) {
                     
                     for job in jobs! {
                         
-                        self.myPostedJobsArray.append(job)
-                        self.tableView.reloadData()
-                        self.refreshContol.endRefreshing()
+                        if job["posterReadLastText"] as! Bool == false {
                         
+                            self.myPostedJobsArray.insert(job, atIndex: 0)
+                            self.tableView.reloadData()
+                            self.refreshContol.endRefreshing()
+                            
+                        } else {
+                        
+                            self.myPostedJobsArray.append(job)
+                            self.tableView.reloadData()
+                            self.refreshContol.endRefreshing()
+                        }
                     }
                 }
             }
@@ -139,7 +153,26 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
                 view.removeFromSuperview()
             }
         }
+        
         let object  = self.myPostedJobsArray[indexPath.row]
+        
+        if object["posterReadLastText"] as! Bool == false {
+            
+            let pulseAnimation = CABasicAnimation(keyPath: "opacity")
+            pulseAnimation.duration = 0.5
+            pulseAnimation.fromValue = 0
+            pulseAnimation.toValue = 1
+            pulseAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+            pulseAnimation.autoreverses = true
+            pulseAnimation.repeatCount = FLT_MAX
+            cell.GoToChatButton.layer.addAnimation(pulseAnimation, forKey: nil)
+            
+        } else if object["posterReadLastText"] as! Bool == true {
+            
+            
+        }
+
+
 
         if object["open"] as! Bool == false {
             
@@ -245,8 +278,11 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
 
         }
         
-        cell.descriptionTV.text = object["jobDescription"] as! String
-        cell.descriptionTV.textColor = UIColor.darkGrayColor()
+        let description = object["jobDescription"] as! String
+        let price = object["price"] as! NSNumber
+        let text = "\(description) €\(price)"
+
+        cell.descriptionTV.attributedText = getColoredText(text)
         cell.descriptionTV.font = UIFont.systemFontOfSize(20, weight: UIFontWeightLight)
 
         if object["jobImage"] != nil {
@@ -752,6 +788,9 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
         self.jobForChat = self.myPostedJobsArray[(indexPath?.row)!]
         self.jobIDForSegue = jobObject
         
+        jobCell.backgroundColor = UIColor.whiteColor()
+        self.tableView.reloadData()
+
         goToChatVC()
         
         
@@ -768,7 +807,7 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
         
         
         let jobCell = sender.superview?.superview as! MyPostedJobsCell
-        
+        jobCell.backgroundColor = UIColor.whiteColor()
         let indexPath = self.tableView.indexPathForCell(jobCell)
         
         let jobObject = myPostedJobsArray[(indexPath?.row)!]
@@ -914,6 +953,26 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
         }
         
         
+    }
+    
+    
+    func getColoredText(text: String) -> NSMutableAttributedString {
+       
+        let string:NSMutableAttributedString = NSMutableAttributedString(string: text)
+        let words:[String] = text.componentsSeparatedByString(" ")
+        
+        for word in words {
+         
+            if (word.hasPrefix("€")) {
+                
+                string.beginEditing()
+                let range:NSRange = (string.string as NSString).rangeOfString(word)
+                string.addAttribute(NSForegroundColorAttributeName, value: UIColor.ThosColor(), range: range)
+                
+                string.endEditing()
+            }
+        }
+        return string
     }
 
 }

@@ -26,8 +26,6 @@ class HelpSeekerTabbarControllerViewController: UITabBarController {
         
         NSNotificationCenter.defaultCenter().addObserverForName("messageFromJobHelperRecieved", object: nil, queue: nil) { (notification) -> Void in
             
-            print(notification)
-            
             self.setNewMessageIcon()
         }
 
@@ -44,6 +42,9 @@ class HelpSeekerTabbarControllerViewController: UITabBarController {
         
         let item = items[1]
         item.image = UIImage(named: "newMessageIcon")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+        item.selectedImage = UIImage(named: "newMessageIcon")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+        
+    
 
       
     }
@@ -57,8 +58,40 @@ class HelpSeekerTabbarControllerViewController: UITabBarController {
         if messageItem == item {
             
             item.image = UIImage(named: "toolIcon")
+            item.selectedImage = UIImage(named: "toolIcon")
         }
         
+    }
+    
+    func checkForMewChats() {
+        
+        let chatQuery = PFQuery(className: "Chat")
+        chatQuery.whereKey("isRead", equalTo: false)
+        chatQuery.whereKey("toUser", equalTo: PFUser.currentUser()!)
+        chatQuery.findObjectsInBackgroundWithBlock { (objects, error) in
+
+            if error != nil {
+                
+                print(error)
+                
+            } else {
+                
+                if objects?.count > 0 {
+                    
+                    self.setNewMessageIcon()
+                    
+                } else {
+                    
+                    var items = self.tabBar.items as Array!
+                    let item = items[1]
+
+                    item.image = UIImage(named: "toolIcon")
+                    item.selectedImage = UIImage(named: "toolIcon")
+
+                }
+            }
+        
+        }
     }
 
     /*

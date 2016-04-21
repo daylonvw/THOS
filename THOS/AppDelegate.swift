@@ -42,8 +42,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         PayPalMobile.initializeWithClientIdsForEnvironments(dataDIC)
 
         
-//        BTAppSwitch.setReturnURLScheme(BraintreeDemoAppDelegatePaymentsURLScheme)
-
 //        Parse.initializeWithConfiguration(ParseClientConfiguration(block: { (configuration:ParseMutableClientConfiguration) -> Void in
 //            
 //            configuration.server = "https://jobies.herokuapp.com/parse"
@@ -96,6 +94,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         
+        application.applicationIconBadgeNumber = 0
         FBSDKAppEvents.activateApp()
 
     }
@@ -110,30 +109,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
     }
     
-//    func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
-    
-//      return BTAppSwitch.handleOpenURL(url, options: options)
-//    }
-    
-    // paypal example
-    
-//    #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 90000
-//    - (BOOL)application:(__unused UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options {
-//    if ([[url.scheme lowercaseString] isEqualToString:[BraintreeDemoAppDelegatePaymentsURLScheme lowercaseString]]) {
-//    return [BTAppSwitch handleOpenURL:url options:options];
-//    }
-//    return YES;
-//    }
-//    #endif
-//    
-//    // Deprecated in iOS 9, but necessary to support < versions
-//    - (BOOL)application:(__unused UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(__unused id)annotation {
-//    if ([[url.scheme lowercaseString] isEqualToString:[BraintreeDemoAppDelegatePaymentsURLScheme lowercaseString]]) {
-//    return [BTAppSwitch handleOpenURL:url sourceApplication:sourceApplication];
-//    }
-//    return YES;
-//    }
-
     
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
         
@@ -150,9 +125,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
-//        PFPush.handlePush(userInfo)
         
-        print(userInfo)
+        print(application.applicationState.rawValue)
+        
         if application.applicationState == .Active {
             
             let typeString = userInfo["type"] as! String
@@ -171,51 +146,79 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 let notification = NSNotification(name: "message", object: typeString, userInfo: userInfo)
                 NSNotificationCenter.defaultCenter().postNotificationName("messageFromJobPosterRecieved", object: notification)
             }
+            
+        } else {
+            
+            let typeString = userInfo["type"] as! String
+            
+            if typeString == "jobHelperMessage" {
+                
+                let jobString = userInfo["job"]
+                
+                let notification = NSNotification(name: "openedWitdPushFromJobHelper", object: jobString, userInfo: nil)
+                NSNotificationCenter.defaultCenter().postNotification(notification)
+
+                print("helper message received")
+
+                
+            } else if typeString == "jobPosterMessage" {
+                
+                let jobString = userInfo["job"]
+                
+                let notification = NSNotification(name: "openedWitdPushFromJobPoster", object: jobString, userInfo: nil)
+                NSNotificationCenter.defaultCenter().postNotification(notification)
+
+                print("poster message recieved")
+
+            }
+
+
         }
     }
     
     func upDataFacebookFriends() {
         
-//        if PFFacebookUtils.isLinkedWithUser(PFUser.currentUser()!){
-//        
-//        FBSDKGraphRequest.init(graphPath: "/me", parameters: ["fields": "friends"], HTTPMethod: "GET").startWithCompletionHandler { (connection, result, error) -> Void in
-//
-//            //  todo crasht when no internet connectoin
-//            if result.valueForKey("friends") != nil {
-//                
-//                
-//                var index = 0
-//                
-//                let friendsArray: AnyObject? = result.valueForKey("friends")?.valueForKey("data")
-//                
-//                while index < friendsArray?.count {
-//                    
-//                    let userID = friendsArray?[index].valueForKey("id") as! String
-//                    
-//                    self.userFriendsArray.append(userID)
-//                    index += 1
-//                }
-//            }
-//            
-//            
-//            PFUser.currentUser()!["friendsArray"] = self.userFriendsArray
-//            
-//            PFUser.currentUser()?.saveInBackgroundWithBlock({ (succes, error ) -> Void in
-//                
-//                if error != nil {
-//                    
-//                    print(error?.localizedDescription)
-//                } else {
-//                    
-//                    if succes == true {
-//                        
-//                        print("saved")
-//                    }
-//                }
-//            })
-//     
-//            }
-//        }
+        if PFFacebookUtils.isLinkedWithUser(PFUser.currentUser()!){
+        
+        FBSDKGraphRequest.init(graphPath: "/me", parameters: ["fields": "friends"], HTTPMethod: "GET").startWithCompletionHandler { (connection, result, error) -> Void in
+
+            if error == nil {
+            //  todo crasht when no internet connectoin
+                if result.valueForKey("friends") != nil {
+                
+                    var index = 0
+                
+                    let friendsArray: AnyObject? = result.valueForKey("friends")?.valueForKey("data")
+                
+                    while index < friendsArray?.count {
+                    
+                        let userID = friendsArray?[index].valueForKey("id") as! String
+                    
+                        self.userFriendsArray.append(userID)
+                        index += 1
+                    }
+                }
+            
+            
+                PFUser.currentUser()!["friendsArray"] = self.userFriendsArray
+                PFUser.currentUser()?.saveInBackgroundWithBlock({ (succes, error ) -> Void in
+                
+                    if error != nil {
+                    
+                        print(error?.localizedDescription)
+               
+                    } else {
+                    
+                        if succes == true {
+                        
+                            print("saved")
+                        }
+                    }
+                })
+     
+                }
+            }
+        }
     }
 }
 
