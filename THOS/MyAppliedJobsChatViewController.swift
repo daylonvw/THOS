@@ -107,7 +107,7 @@ class MyAppliedJobsChatViewController: JSQMessagesViewController, UIImagePickerC
             query.includeKey(PF_CHAT_USER)
             query.includeKey("toUser")
             query.orderByDescending(PF_CHAT_CREATEDAT)
-            query.limit = 50
+            query.limit = 200
             query.findObjectsInBackgroundWithBlock({ (objects, error) -> Void in
                 
                 if error == nil {
@@ -436,6 +436,8 @@ class MyAppliedJobsChatViewController: JSQMessagesViewController, UIImagePickerC
             cell.acceptDateButton.hidden = false
             
             cell.cancelDateButton.addTarget(self, action: #selector(MyAppliedJobsChatViewController.declineDateButtonPressed(_:)), forControlEvents: .TouchUpInside)
+            cell.acceptDateButton.addTarget(self, action: #selector(MyAppliedJobsChatViewController.acceptDateButtonPressed(_:)), forControlEvents: .TouchUpInside)
+
             
         } else if message.jobDate == nil {
             
@@ -495,58 +497,7 @@ class MyAppliedJobsChatViewController: JSQMessagesViewController, UIImagePickerC
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, didTapMessageBubbleAtIndexPath indexPath: NSIndexPath!) {
-        
-//        let message = self.messages[indexPath.item]
-//        
-//        if message.senderId != self.senderId {
-//        
-//        if message.jobDate != nil {
-//            
-//            let controller = UIAlertController(title: "Accept appointment", message: "for job ?", preferredStyle: .Alert)
-//            let cancelAction = UIAlertAction(title: "No", style: .Default, handler: { (action) -> Void in
-//                
-//                // todo send "not accepted to user
-//            })
-//            
-//            let acceptDateAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
-//                
-//                self.job["acceptedDate"] = message.jobDate
-//                self.job["helperAcceptedDate"] = true
-//                self.job.saveInBackground()
-//                
-//                self.inputToolbar?.contentView?.leftBarButtonItem?.hidden = true
-//                
-//                self.sendAcceptedDatePush()
-//            })
-//            
-//            let AddToCalanderAction = UIAlertAction(title: "Yes and add to Calender", style: .Default, handler: { (action) -> Void in
-//                
-//                self.createEvent(self.eventStore, title: "job", startDate: message.jobDate)
-//                
-//                self.job["acceptedDate"] = message.jobDate
-//                self.job["helperAcceptedDate"] = true
-//                self.job.saveInBackground()
-//                
-//                self.inputToolbar?.contentView?.leftBarButtonItem?.hidden = true
-//                
-//                self.sendAcceptedDatePush()
-//                
-//            })
-//            
-//            
-//            
-//            controller.addAction(cancelAction)
-//            controller.addAction(acceptDateAction)
-//            controller.addAction(AddToCalanderAction)
-//            self.presentViewController(controller, animated: true, completion: nil)
-//            
-//            
-//        } else {
-//            
-//            print("not a date")
-//        }
-//        
-//        }
+    
     }
     
     func declineDateButtonPressed(sender: UIButton) {
@@ -555,29 +506,123 @@ class MyAppliedJobsChatViewController: JSQMessagesViewController, UIImagePickerC
         
         let indexPath = self.collectionView.indexPathForCell(cell)
         
-        let querie = PFQuery(className: "Chat")
-        querie.whereKey("groupId", equalTo: self.jobId)
-        querie.findObjectsInBackgroundWithBlock { (objects, error) in
+        let query = PFQuery(className: "Chat")
+        query.whereKey("groupId", equalTo: self.jobId)
+        query.orderByDescending(PF_CHAT_CREATEDAT)
+        
+        query.findObjectsInBackgroundWithBlock { (objects, error) in
             
             if error == nil {
                 
+                let messageText = self.messages[(indexPath?.row)!].text
+                
                 for chat in objects! {
                     
-                    if chat.createdAt == self.messages[(indexPath?.row)!].date {
+                    let chatText = chat[PF_CHAT_TEXT] as! String
+                    
+                    if messageText == chatText {
                         
                         chat.deleteInBackground()
                         
                         self.messages.removeAtIndex((indexPath?.row)!)
                         
                         self.collectionView.reloadData()
-                        
-                        // todo remove chat form backend
                     }
                 }
             }
         }
+        
     }
     
+    func acceptDateButtonPressed(sender: UIButton) {
+        
+        let cell = sender.superview as! JSQMessagesCollectionViewCell
+        
+        let indexPath = self.collectionView.indexPathForCell(cell)
+        
+        let message = self.messages[(indexPath?.row)!]
+        
+        let controller = UIAlertController(title: "Accept appointment", message: "for job ?", preferredStyle: .Alert)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Default, handler: nil)
+        
+        let acceptDateAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
+            
+            self.job["acceptedDate"] = message.jobDate
+            self.job["posterAcceptedDate"] = true
+            self.job.saveInBackground()
+            
+            self.inputToolbar?.contentView?.leftBarButtonItem?.hidden = true
+            
+            self.sendAcceptedDatePush()
+            
+            self.deleteDateChatsFromParse()
+
+        })
+        
+        let AddToCalanderAction = UIAlertAction(title: "Yes and add to Calender", style: .Default, handler: { (action) -> Void in
+            
+            self.createEvent(self.eventStore, title: "job", startDate: message.jobDate)
+            
+            self.job["acceptedDate"] = message.jobDate
+            self.job["posterAcceptedDate"] = true
+            self.job.saveInBackground()
+            
+            self.inputToolbar?.contentView?.leftBarButtonItem?.hidden = true
+            
+            self.sendAcceptedDatePush()
+            
+            self.deleteDateChatsFromParse()
+            
+            
+        })
+        controller.addAction(acceptDateAction)
+        controller.addAction(AddToCalanderAction)
+        controller.addAction(cancelAction)
+        
+        self.presentViewController(controller, animated: true, completion: nil)
+        
+    }
+
+    
+    func deleteDateChatsFromParse() {
+        
+        
+        let querie = PFQuery(className: "Chat")
+        querie.whereKey("groupId", equalTo: self.jobId)
+        querie.findObjectsInBackgroundWithBlock { (objects, error) in
+            
+            if error == nil {
+                
+                for chat in objects!.reverse() {
+                    
+                    if chat["jobDate"] != nil {
+                        
+                        chat.deleteInBackground()
+                        self.deleteMessageFromMessagesArray(chat)
+                        
+                    }
+                    
+                }
+            }
+        }
+        
+    }
+
+    func deleteMessageFromMessagesArray(chatObject: PFObject) {
+        
+        for message in self.messages {
+            
+            if message.text == chatObject[PF_CHAT_TEXT] as! String {
+                
+                self.messages.removeAtIndex(self.messages.indexOf(message)!)
+                self.collectionView.reloadData()
+                
+                
+            }
+        }
+        
+    }
+
     func sendAcceptedDatePush() {
         
         let user = job["user"] as! PFUser
