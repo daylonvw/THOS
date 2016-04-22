@@ -426,12 +426,21 @@ class MyAppliedJobsChatViewController: JSQMessagesViewController, UIImagePickerC
         let cell = super.collectionView(collectionView, cellForItemAtIndexPath: indexPath) as! JSQMessagesCollectionViewCell
         
         let message = self.messages[indexPath.item]
+        
         if message.jobDate != nil {
-
-            cell.textView?.textColor = UIColor.blackColor()
             
+            cell.textView?.textColor = UIColor.ThosColor()
+            cell.messageBubbleImageView.image = nil
+            
+            cell.cancelDateButton.hidden = false
+            cell.acceptDateButton.hidden = false
+            
+            cell.cancelDateButton.addTarget(self, action: #selector(MyAppliedJobsChatViewController.declineDateButtonPressed(_:)), forControlEvents: .TouchUpInside)
             
         } else if message.jobDate == nil {
+            
+            cell.cancelDateButton.hidden = true
+            cell.acceptDateButton.hidden = true
             
             if message.senderId == self.senderId {
                 
@@ -487,56 +496,85 @@ class MyAppliedJobsChatViewController: JSQMessagesViewController, UIImagePickerC
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, didTapMessageBubbleAtIndexPath indexPath: NSIndexPath!) {
         
-        let message = self.messages[indexPath.item]
+//        let message = self.messages[indexPath.item]
+//        
+//        if message.senderId != self.senderId {
+//        
+//        if message.jobDate != nil {
+//            
+//            let controller = UIAlertController(title: "Accept appointment", message: "for job ?", preferredStyle: .Alert)
+//            let cancelAction = UIAlertAction(title: "No", style: .Default, handler: { (action) -> Void in
+//                
+//                // todo send "not accepted to user
+//            })
+//            
+//            let acceptDateAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
+//                
+//                self.job["acceptedDate"] = message.jobDate
+//                self.job["helperAcceptedDate"] = true
+//                self.job.saveInBackground()
+//                
+//                self.inputToolbar?.contentView?.leftBarButtonItem?.hidden = true
+//                
+//                self.sendAcceptedDatePush()
+//            })
+//            
+//            let AddToCalanderAction = UIAlertAction(title: "Yes and add to Calender", style: .Default, handler: { (action) -> Void in
+//                
+//                self.createEvent(self.eventStore, title: "job", startDate: message.jobDate)
+//                
+//                self.job["acceptedDate"] = message.jobDate
+//                self.job["helperAcceptedDate"] = true
+//                self.job.saveInBackground()
+//                
+//                self.inputToolbar?.contentView?.leftBarButtonItem?.hidden = true
+//                
+//                self.sendAcceptedDatePush()
+//                
+//            })
+//            
+//            
+//            
+//            controller.addAction(cancelAction)
+//            controller.addAction(acceptDateAction)
+//            controller.addAction(AddToCalanderAction)
+//            self.presentViewController(controller, animated: true, completion: nil)
+//            
+//            
+//        } else {
+//            
+//            print("not a date")
+//        }
+//        
+//        }
+    }
+    
+    func declineDateButtonPressed(sender: UIButton) {
         
-        if message.senderId != self.senderId {
+        let cell = sender.superview as! JSQMessagesCollectionViewCell
         
-        if message.jobDate != nil {
-            
-            let controller = UIAlertController(title: "Accept appointment", message: "for job ?", preferredStyle: .Alert)
-            let cancelAction = UIAlertAction(title: "No", style: .Default, handler: { (action) -> Void in
-                
-                // todo send "not accepted to user
-            })
-            
-            let acceptDateAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
-                
-                self.job["acceptedDate"] = message.jobDate
-                self.job["helperAcceptedDate"] = true
-                self.job.saveInBackground()
-                
-                self.inputToolbar?.contentView?.leftBarButtonItem?.hidden = true
-                
-                self.sendAcceptedDatePush()
-            })
-            
-            let AddToCalanderAction = UIAlertAction(title: "Yes and add to Calender", style: .Default, handler: { (action) -> Void in
-                
-                self.createEvent(self.eventStore, title: "job", startDate: message.jobDate)
-                
-                self.job["acceptedDate"] = message.jobDate
-                self.job["helperAcceptedDate"] = true
-                self.job.saveInBackground()
-                
-                self.inputToolbar?.contentView?.leftBarButtonItem?.hidden = true
-                
-                self.sendAcceptedDatePush()
-                
-            })
-            
-            
-            
-            controller.addAction(cancelAction)
-            controller.addAction(acceptDateAction)
-            controller.addAction(AddToCalanderAction)
-            self.presentViewController(controller, animated: true, completion: nil)
-            
-            
-        } else {
-            
-            print("not a date")
-        }
+        let indexPath = self.collectionView.indexPathForCell(cell)
         
+        let querie = PFQuery(className: "Chat")
+        querie.whereKey("groupId", equalTo: self.jobId)
+        querie.findObjectsInBackgroundWithBlock { (objects, error) in
+            
+            if error == nil {
+                
+                for chat in objects! {
+                    
+                    if chat.createdAt == self.messages[(indexPath?.row)!].date {
+                        
+                        chat.deleteInBackground()
+                        
+                        self.messages.removeAtIndex((indexPath?.row)!)
+                        
+                        self.collectionView.reloadData()
+                        
+                        // todo remove chat form backend
+                    }
+                }
+            }
         }
     }
     

@@ -417,9 +417,13 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
         return self.messages[indexPath.item]
     }
     
-    override func collectionView(collectionView: JSQMessagesCollectionView!, messageBubbleImageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageBubbleImageDataSource! {
+    override func collectionView(collectionView: JSQMessagesCollectionView!,
+                                 messageBubbleImageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageBubbleImageDataSource! {
+        
         let message = self.messages[indexPath.item]
+        
         if message.senderId == self.senderId {
+            
             return outgoingBubbleImage
         }
         return incomingBubbleImage
@@ -442,8 +446,12 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
         }
     }
     
-    override func collectionView(collectionView: JSQMessagesCollectionView!, attributedTextForCellTopLabelAtIndexPath indexPath: NSIndexPath!) -> NSAttributedString! {
+    override func collectionView(collectionView: JSQMessagesCollectionView!, attributedTextForCellTopLabelAtIndexPath
+        
+        indexPath: NSIndexPath!) -> NSAttributedString! {
+      
         if indexPath.item % 3 == 0 {
+           
             let message = self.messages[indexPath.item]
             return JSQMessagesTimestampFormatter.sharedFormatter().attributedTimestampForDate(message.date)
         }
@@ -482,22 +490,31 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
        
         if message.jobDate != nil {
           
+            cell.textView?.textColor = UIColor.ThosColor()
+            cell.messageBubbleImageView.image = nil
             
-            cell.textView?.textColor = UIColor.blackColor()
+            cell.cancelDateButton.hidden = false
+            cell.acceptDateButton.hidden = false
             
+            cell.cancelDateButton.addTarget(self, action: #selector(JobChatViewController.declineDateButtonPressed(_:)), forControlEvents: .TouchUpInside)
+
             
         } else if message.jobDate == nil {
             
+            cell.cancelDateButton.hidden = true
+            cell.acceptDateButton.hidden = true
+
             if message.senderId == self.senderId {
                 
                 cell.textView?.textColor = UIColor.whiteColor()
                 
-            } else {
+            } else if message.senderId != self.senderId {
                 
                 cell.textView?.textColor = UIColor.blackColor()
             }
             
         }
+        
         return cell
     }
     
@@ -542,82 +559,118 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, didTapMessageBubbleAtIndexPath indexPath: NSIndexPath!) {
        
-        let message = self.messages[indexPath.item]
-        // todo uncomment if statement use // for testing paypal
+//        let message = self.messages[indexPath.item]
+//        // todo uncomment if statement use // for testing paypal
+//        
+//        if message.senderId != self.senderId {
+//        
+//        if message.jobDate != nil {
+//            
+//            let controller = UIAlertController(title: "Accept appointment", message: "for job ?", preferredStyle: .Alert)
+//            let cancelAction = UIAlertAction(title: "No", style: .Default, handler: { (action) -> Void in
+//                
+//                // todo send "not accepted to user
+//            })
+//            
+//            let acceptDateAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
+//                                
+//                self.job["acceptedDate"] = message.jobDate
+//                self.job["posterAcceptedDate"] = true
+//                self.job.saveInBackground()
+//                
+//                self.inputToolbar?.contentView?.leftBarButtonItem?.hidden = true
+//
+//                self.sendAcceptedDatePush()
+//                self.openPaypal()
+//            })
+//            
+//            let AddToCalanderAction = UIAlertAction(title: "Yes and add to Calender", style: .Default, handler: { (action) -> Void in
+//                
+//                self.createEvent(self.eventStore, title: "job", startDate: message.jobDate)
+//                
+//                self.job["acceptedDate"] = message.jobDate
+//                self.job["posterAcceptedDate"] = true
+//                self.job.saveInBackground()
+//                
+//                self.inputToolbar?.contentView?.leftBarButtonItem?.hidden = true
+//
+//                self.sendAcceptedDatePush()
+//                self.openPaypal()
+//                
+//            })
+//            
+//            
+//            
+//            controller.addAction(cancelAction)
+//            controller.addAction(acceptDateAction)
+//            controller.addAction(AddToCalanderAction)
+//            self.presentViewController(controller, animated: true, completion: nil)
+//
+//            
+//        } else {
+//            
+//            print("not a date")
+//        }
+//
+//        }
+//    }
+//    
+//    func sendAcceptedDatePush() {
+//        
+//        let pushQuery = PFInstallation.query()
+//        pushQuery!.whereKey("user", equalTo: job["acceptedUser"])
+//        
+//        let dataDIC:[String: AnyObject] = [
+//            
+//            "alert"             : "User accepted the date for: \(self.job["jobDescription"])",
+//            "type"              : "PosterDateAccepted",
+//            "badge"             : "increment",
+//            "sound"             : "message-sent.aiff"
+//        ]
+//        
+//        let push = PFPush()
+//        
+//        push.setQuery(pushQuery)
+//        push.setData(dataDIC)
+//        push.sendPushInBackground()
         
-        if message.senderId != self.senderId {
-        
-        if message.jobDate != nil {
-            
-            let controller = UIAlertController(title: "Accept appointment", message: "for job ?", preferredStyle: .Alert)
-            let cancelAction = UIAlertAction(title: "No", style: .Default, handler: { (action) -> Void in
-                
-                // todo send "not accepted to user
-            })
-            
-            let acceptDateAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
-                                
-                self.job["acceptedDate"] = message.jobDate
-                self.job["posterAcceptedDate"] = true
-                self.job.saveInBackground()
-                
-                self.inputToolbar?.contentView?.leftBarButtonItem?.hidden = true
-
-                self.sendAcceptedDatePush()
-                self.openPaypal()
-            })
-            
-            let AddToCalanderAction = UIAlertAction(title: "Yes and add to Calender", style: .Default, handler: { (action) -> Void in
-                
-                self.createEvent(self.eventStore, title: "job", startDate: message.jobDate)
-                
-                self.job["acceptedDate"] = message.jobDate
-                self.job["posterAcceptedDate"] = true
-                self.job.saveInBackground()
-                
-                self.inputToolbar?.contentView?.leftBarButtonItem?.hidden = true
-
-                self.sendAcceptedDatePush()
-                self.openPaypal()
-                
-            })
-            
-            
-            
-            controller.addAction(cancelAction)
-            controller.addAction(acceptDateAction)
-            controller.addAction(AddToCalanderAction)
-            self.presentViewController(controller, animated: true, completion: nil)
-
-            
-        } else {
-            
-            print("not a date")
-        }
-
-        }
     }
     
-    func sendAcceptedDatePush() {
+    func declineDateButtonPressed(sender: UIButton) {
         
-        let pushQuery = PFInstallation.query()
-        pushQuery!.whereKey("user", equalTo: job["acceptedUser"])
+        let cell = sender.superview as! JSQMessagesCollectionViewCell
         
-        let dataDIC:[String: AnyObject] = [
+        let indexPath = self.collectionView.indexPathForCell(cell)
+        
+        let querie = PFQuery(className: "Chat")
+        querie.whereKey("groupId", equalTo: self.jobId)
+        querie.findObjectsInBackgroundWithBlock { (objects, error) in
             
-            "alert"             : "User accepted the date for: \(self.job["jobDescription"])",
-            "type"              : "PosterDateAccepted",
-            "badge"             : "increment",
-            "sound"             : "message-sent.aiff"
-        ]
-        
-        let push = PFPush()
-        
-        push.setQuery(pushQuery)
-        push.setData(dataDIC)
-        push.sendPushInBackground()
+            if error == nil {
+                
+                for chat in objects! {
+                    
+                    if chat.createdAt == self.messages[(indexPath?.row)!].date {
+                    
+                        chat.deleteInBackground()
+
+                        self.messages.removeAtIndex((indexPath?.row)!)
+                        
+                        self.collectionView.reloadData()
+                        
+                        // todo remove chat form backend
+                    }
+                }
+            }
+        }
         
     }
+    
+    func acceptDateButtonPressed() {
+        
+        
+    }
+
     
     func openPaypal() {
         
