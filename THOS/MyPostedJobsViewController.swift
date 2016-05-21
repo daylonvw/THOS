@@ -28,6 +28,7 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
     //todo reload when returning from chat
     
     @IBOutlet var tableView: UITableView!
+    @IBOutlet var statusSegmentedControl: UISegmentedControl!
     
     var myPostedJobsArray = [PFObject]()
     var userView: userPopUpView!
@@ -53,6 +54,7 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
     var refreshContol: UIRefreshControl!
     
     override func viewDidLoad() {
+       
         super.viewDidLoad()
         
         self.tableView.delegate = self
@@ -61,8 +63,17 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
         refreshContol = UIRefreshControl()
         refreshContol.addTarget(self, action: #selector(MyPostedJobsViewController.refreshPulled), forControlEvents: .ValueChanged)
         self.tableView.addSubview(refreshContol)
+    
+        for subview in self.statusSegmentedControl.subviews {
+            
+            print(subview.subviews[0])
+            
+            let label = subview.subviews[0] as! UILabel
+            label.adjustsFontSizeToFitWidth = true
+            
         
-        self.getMyJobs()
+        }
+        self.getMyPlannedJobs()
         
     }
     
@@ -71,30 +82,67 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(true)
         
-
+        super.viewDidAppear(true)
         NSNotificationCenter.defaultCenter().postNotificationName("chechForNewChats", object: nil)
 
     }
     
     func refreshPulled () {
-        
+
         self.refreshContol.beginRefreshing()
         
         if myPostedJobsArray.count > 0 {
             
             myPostedJobsArray.removeAll(keepCapacity: true)
+            self.tableView.reloadData()
         }
         
-        getMyJobs()
+        if self.statusSegmentedControl.selectedSegmentIndex == 0 {
+            
+            self.getMyPlannedJobs()
+            
+        } else if self.statusSegmentedControl.selectedSegmentIndex == 1 {
+            
+            self.getMyOpenWithInterestedUsersJobs()
+            
+        } else if self.statusSegmentedControl.selectedSegmentIndex == 2 {
+            
+            self.getMyOpenWithoutInterestedUsersJobs()
+
+        }
+
 
     }
     
-    func getMyJobs() {
+    @IBAction func statusChanged(sender: UISegmentedControl) {
+        
+        if myPostedJobsArray.count > 0 {
+            
+            myPostedJobsArray.removeAll(keepCapacity: true)
+            self.tableView.reloadData()
+        }
+        
+        if sender.selectedSegmentIndex == 0 {
+            
+            self.getMyPlannedJobs()
+            
+        } else if sender.selectedSegmentIndex == 1 {
+            
+            self.getMyOpenWithInterestedUsersJobs()
+            
+        } else if sender.selectedSegmentIndex == 2 {
+            
+            self.getMyOpenWithoutInterestedUsersJobs()
+        }
+
+    }
+    
+    func getMyPlannedJobs() {
         
         let querie = PFQuery(className: "Job")
         querie.whereKey("user", equalTo: PFUser.currentUser()!)
+        querie.whereKey("open", equalTo: false)
         querie.includeKey("acceptedUser")
         querie.findObjectsInBackgroundWithBlock { (jobs, error ) -> Void in
             
@@ -104,13 +152,11 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
                 
             } else {
                 
-                print(jobs?.count)
-                
                 if ((jobs?.count) != nil) {
                     
                     for job in jobs! {
                         
-                        if job["posterReadLastText"] as! Bool == false {
+                        if job["posterReadLastText"] as! Bool == false && self.myPostedJobsArray.count != 0 {
                         
                             self.myPostedJobsArray.insert(job, atIndex: 0)
                             self.tableView.reloadData()
@@ -123,12 +169,103 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
                             self.refreshContol.endRefreshing()
                         }
                     }
+                    
+                } else {
+                    
+                    self.tableView.reloadData()
                 }
             }
             
         }
 
     }
+    
+    func getMyOpenWithInterestedUsersJobs() {
+        
+        let querie = PFQuery(className: "Job")
+        querie.whereKey("user", equalTo: PFUser.currentUser()!)
+        querie.whereKey("open", equalTo: true)
+        querie.includeKey("acceptedUser")
+        querie.findObjectsInBackgroundWithBlock { (jobs, error ) -> Void in
+            
+            if error != nil {
+                
+                print(error?.localizedDescription)
+                
+            } else {
+                
+                if ((jobs?.count) != nil) {
+                    
+                    for job in jobs! {
+                        
+                        if job["interestedUsersArray"] != nil {
+                            
+                            if job["posterReadLastText"] as! Bool == false && self.myPostedJobsArray.count != 0 {
+                            
+                                self.myPostedJobsArray.insert(job, atIndex: 0)
+                                self.tableView.reloadData()
+                                self.refreshContol.endRefreshing()
+                            
+                            } else {
+                            
+                                self.myPostedJobsArray.append(job)
+                                self.tableView.reloadData()
+                                self.refreshContol.endRefreshing()
+                            }
+                        }
+                    }
+                    
+                } else {
+                    
+                    self.tableView.reloadData()
+                }
+            }
+            
+        }
+
+    }
+
+    func getMyOpenWithoutInterestedUsersJobs() {
+        
+        let querie = PFQuery(className: "Job")
+        querie.whereKey("user", equalTo: PFUser.currentUser()!)
+        querie.whereKey("open", equalTo: true)
+        querie.includeKey("acceptedUser")
+        querie.findObjectsInBackgroundWithBlock { (jobs, error ) -> Void in
+            
+            if error != nil {
+                
+                print(error?.localizedDescription)
+                
+            } else {
+                                
+                if ((jobs?.count) != nil) {
+                    
+                    for job in jobs! {
+                        
+                        if job["interestedUsersArray"] == nil {
+                            
+                            if job["posterReadLastText"] as! Bool == false && self.myPostedJobsArray.count != 0 {
+                                
+                                self.myPostedJobsArray.insert(job, atIndex: 0)
+                                self.tableView.reloadData()
+                                self.refreshContol.endRefreshing()
+                                
+                            } else {
+                                
+                                self.myPostedJobsArray.append(job)
+                                self.tableView.reloadData()
+                                self.refreshContol.endRefreshing()
+                            }
+                        }
+                    }
+                }
+            }
+            
+        }
+        
+    }
+
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
@@ -602,7 +739,10 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
 
                     self.userView.removeFromSuperview()
                     self.myPostedJobsArray.removeAll()
-                    self.getMyJobs()
+                    
+                    // todo still get planned jobs with new layout ? 
+                    
+                    self.getMyPlannedJobs()
                     
                     self.sendAcceptedPush(self.acceptedUser!)
                     print("user selected, ready to open chatView")

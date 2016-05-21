@@ -425,6 +425,7 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
                     var jobArray: [String] = job!["interestedUsersArray"] as! Array
                    
                     if jobArray.count < 4 {
+                       
                         jobArray.append((PFUser.currentUser()?.objectId)!)
                     
                         job!["interestedUsersArray"] = jobArray

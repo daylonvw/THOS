@@ -21,7 +21,6 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
     @IBOutlet var addImagebuttton: UIButton!
     @IBOutlet var priceTextField: UITextField!
     
-    
     @IBOutlet var houseKeepingButton: UIButton!
     @IBOutlet var labourButton: UIButton!
     
@@ -44,6 +43,8 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
     var tableView: UITableView!
     var addresses = [NSMutableDictionary]()
     
+    @IBOutlet var topLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -54,10 +55,12 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         
         self.jobLocationSegmentedControl.state
         
-        self.postJobButton.layer.cornerRadius = 40
-        self.postJobButton.layer.shadowColor = UIColor.blackColor().CGColor
-        self.postJobButton.layer.shadowOffset = CGSizeMake(1.0, 1.0)
-        self.postJobButton.layer.shadowOpacity = 0.8
+        self.topLabel.adjustsFontSizeToFitWidth = true
+        
+//        self.postJobButton.layer.cornerRadius = 40
+//        self.postJobButton.layer.shadowColor = UIColor.blackColor().CGColor
+//        self.postJobButton.layer.shadowOffset = CGSizeMake(1.0, 1.0)
+//        self.postJobButton.layer.shadowOpacity = 0.8
 
         jobDescriptionTextView.backgroundColor = UIColor(white: 1.0, alpha: 0.8)
         jobDescriptionTextView.textColor = UIColor.darkGrayColor()
@@ -166,7 +169,6 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
                             
                             self.jobPFGeoPoint = PFGeoPoint(latitude: Double(latitude! as! NSNumber), longitude: Double(longtitude! as! NSNumber))
 
-                            print(self.jobPFGeoPoint)
                             
                         } else if locationArray!.count > 1 {
                             
@@ -276,9 +278,6 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
                             
                             self.jobPFGeoPoint = PFGeoPoint(latitude: Double(latitude! as! NSNumber), longitude: Double(longtitude! as! NSNumber))
                             
-                            
-                            print("\(self.jobPFGeoPoint) and address is \(self.jobAddress)")
-
                         } else if results.count > 1 {
                             
                             dispatch_async(dispatch_get_main_queue()) {
@@ -526,7 +525,9 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         job["maxUsersReached"] = false
         job["posterAcceptedDate"] = false
         job["helperAcceptedDate"] = false
-        
+        job["posterReadLastText"] = false
+        job["helperReadLastText"] = false
+
         job.saveInBackgroundWithBlock { (succes, error) -> Void in
             
             if error != nil {
@@ -728,7 +729,7 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
     
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
         
-//        print("changed")
+        print("changed")
     }
 
     
@@ -868,8 +869,6 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
                 print(error)
                 
             } else {
-                
-                print(object)
                 
                 let storyBoard  = UIStoryboard(name: "Main", bundle: nil)
                 

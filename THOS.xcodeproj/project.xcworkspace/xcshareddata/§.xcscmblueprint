@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "29493594E94BA28AC520270B0D65E7171A86486E",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "2A54E76F7FDD45D910C53BBEF3C113EE2DF3F3A4" : 0,
+    "29493594E94BA28AC520270B0D65E7171A86486E" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "4DB5EC4B-7D29-463B-8BAF-C02F7351FC4E",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "2A54E76F7FDD45D910C53BBEF3C113EE2DF3F3A4" : "Jobie\/",
+    "29493594E94BA28AC520270B0D65E7171A86486E" : "THOS\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "§",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "§.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/daylonvw\/THOS.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "29493594E94BA28AC520270B0D65E7171A86486E"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/daylonvw\/Jopie.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "2A54E76F7FDD45D910C53BBEF3C113EE2DF3F3A4"
+    }
+  ]
+}

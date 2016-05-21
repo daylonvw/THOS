@@ -22,6 +22,7 @@ class MyAppliedJobsCell: UITableViewCell {
 class MyJobsAppliedViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @IBOutlet var tableView: UITableView!
+    @IBOutlet var statusSegmentedControl: UISegmentedControl!
     
     var myAppliedJobsArray = [PFObject]()
     var jobIDForSegue: String!
@@ -43,7 +44,7 @@ class MyJobsAppliedViewController: UIViewController, UITableViewDataSource, UITa
         refreshContol.addTarget(self, action: #selector(MyJobsAppliedViewController.refreshPulled), forControlEvents: .ValueChanged)
         self.tableView.addSubview(refreshContol)
         
-        self.getMyJobs()
+        self.getMyPlannedJobs()
 
     }
 
@@ -59,7 +60,7 @@ class MyJobsAppliedViewController: UIViewController, UITableViewDataSource, UITa
         
     }
 
-    func getMyJobs() {
+    func getMyPlannedJobs() {
         
         let querie = PFQuery(className: "Job")
         querie.whereKey("acceptedUser", equalTo: PFUser.currentUser()!)
@@ -75,7 +76,7 @@ class MyJobsAppliedViewController: UIViewController, UITableViewDataSource, UITa
                     
                     for job in jobs! {
                         
-                        if job["helperReadLastText"] as! Bool == false {
+                        if job["helperReadLastText"] as! Bool == false && self.myAppliedJobsArray.count != 0 {
                             
                             self.myAppliedJobsArray.insert(job, atIndex: 0)
                             self.tableView.reloadData()
@@ -96,6 +97,48 @@ class MyJobsAppliedViewController: UIViewController, UITableViewDataSource, UITa
 
     }
     
+    func getMyAppliedJobs() {
+        
+        //todo check if item still exists if not remove from array
+        
+        let appliedJobsArray = PFUser.currentUser()!.valueForKey("jobsAppliedToArray") as! [String]
+        
+        for job in appliedJobsArray {
+    
+            let querie = PFQuery(className: "Job")
+            querie.whereKey("objectId", equalTo: job)
+            querie.whereKey("acceptedUser", notEqualTo: PFUser.currentUser()!)
+
+            querie.getFirstObjectInBackgroundWithBlock({ (job, error) in
+                
+                if error != nil {
+                    
+                    print(error?.localizedDescription)
+                    
+                } else {
+                  
+                    if job!["acceptedUser"] == nil {
+                        
+                        if  self.myAppliedJobsArray.count != 0 {
+                        
+                            self.myAppliedJobsArray.insert(job!, atIndex: 0)
+                            self.tableView.reloadData()
+                            self.refreshContol.endRefreshing()
+                            
+                        } else {
+                            
+                            self.myAppliedJobsArray.append(job!)
+                            self.tableView.reloadData()
+                            self.refreshContol.endRefreshing()
+                        }
+                    }
+                }
+                
+            })
+
+        }
+    }
+    
     func refreshPulled () {
         
         self.refreshContol.beginRefreshing()
@@ -103,13 +146,21 @@ class MyJobsAppliedViewController: UIViewController, UITableViewDataSource, UITa
         if myAppliedJobsArray.count > 0 {
             
             myAppliedJobsArray.removeAll(keepCapacity: true)
-        }
-        
-        getMyJobs()
-        
-    }
+            self.tableView.reloadData()
 
-    
+        }
+
+        if self.statusSegmentedControl.selectedSegmentIndex == 0 {
+            
+            self.getMyPlannedJobs()
+            
+        } else if self.statusSegmentedControl.selectedSegmentIndex == 1 {
+            
+            self.getMyAppliedJobs()
+        
+        }
+
+    }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
@@ -126,21 +177,24 @@ class MyJobsAppliedViewController: UIViewController, UITableViewDataSource, UITa
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! MyAppliedJobsCell
         
         let object  = self.myAppliedJobsArray[indexPath.row]
+      
+        if object["helperReadLastText"] != nil {
         
-        if object["helperReadLastText"] as! Bool == false {
+            if object["helperReadLastText"] as! Bool == false {
             
-            let pulseAnimation = CABasicAnimation(keyPath: "opacity")
-            pulseAnimation.duration = 0.5
-            pulseAnimation.fromValue = 0
-            pulseAnimation.toValue = 1
-            pulseAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-            pulseAnimation.autoreverses = true
-            pulseAnimation.repeatCount = FLT_MAX
-            cell.goToChatButton.layer.addAnimation(pulseAnimation, forKey: nil)
+                let pulseAnimation = CABasicAnimation(keyPath: "opacity")
+                pulseAnimation.duration = 0.5
+                pulseAnimation.fromValue = 0
+                pulseAnimation.toValue = 1
+                pulseAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+                pulseAnimation.autoreverses = true
+                pulseAnimation.repeatCount = FLT_MAX
+                cell.goToChatButton.layer.addAnimation(pulseAnimation, forKey: nil)
 
-        } else if object["helperReadLastText"] as! Bool == true {
+            } else if object["helperReadLastText"] as! Bool == true {
             
             
+            }
         }
         
         cell.goToChatButton.addTarget(self, action: #selector(MyJobsAppliedViewController.chatButtonPressed(_:)), forControlEvents: .TouchUpInside)
@@ -195,6 +249,15 @@ class MyJobsAppliedViewController: UIViewController, UITableViewDataSource, UITa
             
             cell.acceptedDateLabel.text = dateString
             
+        }
+        
+        if self.statusSegmentedControl.selectedSegmentIndex == 1 {
+            
+            cell.goToChatButton.hidden =  true
+            
+        } else if self.statusSegmentedControl.selectedSegmentIndex == 0 {
+            
+            cell.goToChatButton.hidden = false
         }
         
         return cell
@@ -404,4 +467,27 @@ class MyJobsAppliedViewController: UIViewController, UITableViewDataSource, UITa
         return string
     }
 
+    
+    @IBAction func statusSegmentedControlChanged(sender: AnyObject) {
+        
+        if myAppliedJobsArray.count > 0 {
+            
+            myAppliedJobsArray.removeAll(keepCapacity: true)
+            self.tableView.reloadData()
+
+        }
+        
+        let segmentedControll = sender as! UISegmentedControl
+        
+        if segmentedControll.selectedSegmentIndex == 0 {
+            
+            self.getMyPlannedJobs()
+            
+        } else if segmentedControll.selectedSegmentIndex == 1 {
+            
+            self.getMyAppliedJobs()
+        }
+        
+    }
+    
 }

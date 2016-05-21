@@ -126,8 +126,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
         
-        print(application.applicationState.rawValue)
-        
         if application.applicationState == .Active {
             
             let typeString = userInfo["type"] as! String
@@ -211,7 +209,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     
                         if succes == true {
                         
-                            print("saved")
                         }
                     }
                 })

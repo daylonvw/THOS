@@ -3,6 +3,8 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -17,7 +19,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="T.H.O.S." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="34W-vy-RqH">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="34W-vy-RqH">
                                 <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="100" id="FUf-t1-Pyt">
@@ -25,7 +27,7 @@
                                     </constraint>
                                     <constraint firstAttribute="height" constant="60" id="buZ-Hr-vyu"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="32"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="default">
@@ -41,17 +43,47 @@
                                     </mask>
                                 </variation>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="The house of service" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="22" translatesAutoresizingMaskIntoConstraints="NO" id="LTy-hq-fqX">
+                                <rect key="frame" x="-42" y="-21" width="42" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="QyQ-aI-RWe">
+                                        <variation key="heightClass=regular" constant="80"/>
+                                    </constraint>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="QyQ-aI-RWe"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=regular">
+                                    <mask key="constraints">
+                                        <include reference="QyQ-aI-RWe"/>
+                                    </mask>
+                                </variation>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.48627450979999998" green="0.64705882349999999" blue="0.69019607839999997" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
+                            <constraint firstItem="LTy-hq-fqX" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" constant="30" id="6LE-RA-IUQ"/>
                             <constraint firstItem="34W-vy-RqH" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="7bw-9M-8pv"/>
                             <constraint firstItem="34W-vy-RqH" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="8bL-S0-4Lq"/>
+                            <constraint firstItem="LTy-hq-fqX" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="KKA-qU-waT">
+                                <variation key="heightClass=regular" constant="-60"/>
+                            </constraint>
+                            <constraint firstAttribute="trailingMargin" secondItem="LTy-hq-fqX" secondAttribute="trailing" constant="30" id="bx8-Tc-Wya"/>
                         </constraints>
                         <variation key="default">
                             <mask key="subviews">
                                 <exclude reference="34W-vy-RqH"/>
+                                <exclude reference="LTy-hq-fqX"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="6LE-RA-IUQ"/>
+                                <exclude reference="KKA-qU-waT"/>
+                                <exclude reference="bx8-Tc-Wya"/>
                                 <exclude reference="7bw-9M-8pv"/>
                                 <exclude reference="8bL-S0-4Lq"/>
                             </mask>
@@ -59,8 +91,12 @@
                         <variation key="heightClass=regular">
                             <mask key="subviews">
                                 <include reference="34W-vy-RqH"/>
+                                <include reference="LTy-hq-fqX"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="6LE-RA-IUQ"/>
+                                <include reference="KKA-qU-waT"/>
+                                <include reference="bx8-Tc-Wya"/>
                                 <include reference="7bw-9M-8pv"/>
                                 <include reference="8bL-S0-4Lq"/>
                             </mask>

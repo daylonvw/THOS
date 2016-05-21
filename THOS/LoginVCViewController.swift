@@ -189,35 +189,7 @@ class LoginVCViewController: UIViewController {
     
     
     @IBAction func userLoginButtonPressed(sender: AnyObject) {
-        
-        // authenticate
-//        LISDKSessionManager.createSessionWithAuth([LISDK_EMAILADDRESS_PERMISSION], state: nil, showGoToAppStoreDialog: true, successBlock: { (returnState) -> Void in
-//                      
-//            let session = LISDKSessionManager.sharedInstance().session
-//            
-//           
-//            
-//            }) { (error ) -> Void in
-//                
-//                print("error is \(error)")
-//        }
-        
-        // ask for info
-//        if LISDKSessionManager.hasValidSession() {
-//            
-//            let pictureUrl = "https://api.linkedin.com/v1/people/~:(id,picture-url,first-name,last-name,email-address)?format=json"
-//
-//            LISDKAPIHelper.sharedInstance().getRequest(pictureUrl, success: { (responce) -> Void in
-//                
-//                print(responce.data)
-//                
-//                }, error: { (error ) -> Void in
-//                    
-//                    print(error.localizedDescription)
-//            })
-//        }
-
-    
+            
         PFUser.logInWithUsernameInBackground(userNameTextField.text!, password: userPassWordTextField.text!) {
            
             (user: PFUser?, error: NSError?) -> Void in
