@@ -20,9 +20,10 @@ class LoginVCViewController: UIViewController {
     
     @IBOutlet var userTypeSegmentedControl: UISegmentedControl!
     
-    
     var userFriendsArray = [String]()
-
+    var termsView: UIWebView!
+    var cancelButton: UIButton!
+    var acceptButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,15 +47,77 @@ class LoginVCViewController: UIViewController {
 
     @IBAction func faceBookLoginPressed() {
         
+        
+        let controller = UIAlertController(title: "Thank you for joining", message: "by creating an account you accept our general terms and conditions", preferredStyle: .Alert)
+        
+        let acceptAction = UIAlertAction(title: "Accept", style: .Default) { (action) in
+        
+            self.continueWithFacebookLogin()
+            
+        }
+        
+        let readfirstAction = UIAlertAction(title: "Show me", style: .Default) { (action) in
+        
+            self.openTermsView()
+        
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Default, handler: nil)
+        
+        controller.addAction(readfirstAction)
+        controller.addAction(acceptAction)
+        controller.addAction(cancelAction)
+        self.presentViewController(controller, animated: true, completion: nil)
+
+    
+    }
+    
+    func openTermsView() {
+        
+        
+        
+        if let pdf = NSBundle.mainBundle().URLForResource("The House of Service legal BU", withExtension: "pdf", subdirectory: nil, localization: nil)  {
+            let req = NSURLRequest(URL: pdf)
+            termsView = UIWebView(frame: CGRect(x: 0, y: 20, width: view.frame.size.width, height: view.frame.size.height - 60))
+            termsView.loadRequest(req)
+            self.view.addSubview(termsView)
+        }
+        
+        cancelButton = UIButton(frame: CGRect(x: 0, y: self.view.frame.size.height - 60, width: view.frame.size.width / 2, height: 60))
+        cancelButton.backgroundColor = UIColor.ThosColor()
+        cancelButton.setTitle("Cancel", forState: .Normal)
+        cancelButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        cancelButton.addTarget(self, action: #selector(LoginVCViewController.dismissTermsView), forControlEvents: .TouchUpInside)
+        
+        self.view.addSubview(cancelButton)
+        
+        acceptButton = UIButton(frame: CGRect(x: view.frame.size.width / 2, y: self.view.frame.size.height - 60, width: view.frame.size.width / 2, height: 60))
+        acceptButton.backgroundColor = UIColor.ThosColor()
+        acceptButton.setTitle("Accept", forState: .Normal)
+        acceptButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        acceptButton.addTarget(self, action: #selector(LoginVCViewController.continueWithFacebookLogin), forControlEvents: .TouchUpInside)
+        
+        self.view.addSubview(acceptButton)
+    }
+    
+    func dismissTermsView() {
+        
+        self.termsView.removeFromSuperview()
+        acceptButton.removeFromSuperview()
+        cancelButton.removeFromSuperview()
+    }
+    
+    func continueWithFacebookLogin() {
+        
         let permissionsArray = ["public_profile", "email", "user_friends"]
         
         PFFacebookUtils.logInInBackgroundWithReadPermissions(permissionsArray) {
             (user: PFUser?, error: NSError?) -> Void in
-           
+            
             if let user = user {
-               
+                
                 if user.isNew {
-                  
+                    
                     self.showUserTypeSegmentedControlfor(user)
                     print("User signed up and logged in through Facebook!")
                     
@@ -69,6 +132,7 @@ class LoginVCViewController: UIViewController {
                 print("Uh oh. The user cancelled the Facebook login.")
             }
         }
+
     }
     
     func showUserTypeSegmentedControlfor(user: PFUser) {
@@ -143,8 +207,6 @@ class LoginVCViewController: UIViewController {
             let imageFile = PFFile(data: NSData(contentsOfURL: imageUrl!)!)
             user["userImgage"] = imageFile
             
-//            user["userType"] = "seeker"
-
             user.saveInBackgroundWithBlock({ (succes, error) -> Void in
                 
                 if error != nil {
@@ -200,6 +262,7 @@ class LoginVCViewController: UIViewController {
                 
                 
             } else {
+                
                 // The login failed. Check error to see why.
                 
                 let alertController = UIAlertController(title: "Oh oh", message: "username password combination unknown", preferredStyle: .Alert)

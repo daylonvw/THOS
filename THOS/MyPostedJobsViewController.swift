@@ -170,9 +170,6 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
                         }
                     }
                     
-                } else {
-                    
-                    self.tableView.reloadData()
                 }
             }
             
@@ -215,10 +212,7 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
                         }
                     }
                     
-                } else {
-                    
-                    self.tableView.reloadData()
-                }
+                } 
             }
             
         }

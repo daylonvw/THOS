@@ -18,6 +18,11 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
     @IBOutlet var userTypeSegmentedControl: UISegmentedControl!
     
     var enteredAllInfo: Bool!
+    var termsView: UIWebView!
+    var newUser: PFUser!
+    var cancelButton: UIButton!
+    var acceptButton: UIButton!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -153,57 +158,127 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         
         if enteredAllInfo == true {
         
-            for subView in self.view.subviews {
-                
-                subView.hidden = true
-            }
-            
-            let activity = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
-            activity.activityIndicatorViewStyle = .WhiteLarge
-            activity.center = self.view.center
-            activity.startAnimating()
-            self.view.addSubview(activity)
-            
-            user.signUpInBackgroundWithBlock { (succeeded: Bool, error: NSError?) -> Void in
-           
-                if error != nil {
-               
-                        print(error?.localizedDescription)
-                
-                } else {
+            newUser = user
+            self.openConditionsAlertViewController()
+        }
 
-                    let object = PFObject(className: "UserRating")
-                    object["user"] = user
-                    object["totalRating"] = 5
-                    object["numberOfRatings"] = 1
-                    object["rating"] = 3
-                    object.saveInBackgroundWithBlock({ (succeded, error ) -> Void in
+    }
+    
+    func openConditionsAlertViewController() {
+        
+        let controller = UIAlertController(title: "Thank you for joining", message: "by creating an account you accept our general terms and conditions", preferredStyle: .Alert)
+        
+        let acceptAction = UIAlertAction(title: "Accept", style: .Default) { (action) in
+            
+            self.continueCreatinAccount()
+            
+        }
+        
+        let readfirstAction = UIAlertAction(title: "Show me", style: .Default) { (action) in
+            
+            self.openTermsView()
+            
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Default, handler: nil)
+
+        controller.addAction(readfirstAction)
+        controller.addAction(acceptAction)
+        controller.addAction(cancelAction)
+        self.presentViewController(controller, animated: true, completion: nil)
+    }
+    
+    func continueCreatinAccount() {
+        
+        for subView in self.view.subviews {
+            
+            subView.hidden = true
+        }
+        
+        let user = newUser
+        
+        let activity = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+        activity.activityIndicatorViewStyle = .WhiteLarge
+        activity.center = self.view.center
+        activity.startAnimating()
+        self.view.addSubview(activity)
+        
+        user.signUpInBackgroundWithBlock { (succeeded: Bool, error: NSError?) -> Void in
+            
+            if error != nil {
+                
+                print(error?.localizedDescription)
+                
+            } else {
+                
+                let object = PFObject(className: "UserRating")
+                object["user"] = user
+                object["totalRating"] = 5
+                object["numberOfRatings"] = 1
+                object["rating"] = 3
+                object.saveInBackgroundWithBlock({ (succeded, error ) -> Void in
                     
-                        if succeeded == true {
+                    if succeeded == true {
                         
-                            // set first distance for search
-                            NSUserDefaults.standardUserDefaults().setInteger(50, forKey: "distanceForSearch")
-                            NSUserDefaults.standardUserDefaults().synchronize()
+                        // set first distance for search
+                        NSUserDefaults.standardUserDefaults().setInteger(50, forKey: "distanceForSearch")
+                        NSUserDefaults.standardUserDefaults().synchronize()
                         
-                            // creation complete.. go to job screen
+                        // creation complete.. go to job screen
                         
-                            if user["userType"] as! String == "seeker" {
-
-                                self.performSegueWithIdentifier("createAccountVCtoTabbarVCsegue", sender: self)
+                        if user["userType"] as! String == "seeker" {
                             
-                            } else if user["userType"] as! String == "helper" {
+                            self.performSegueWithIdentifier("createAccountVCtoTabbarVCsegue", sender: self)
                             
-                                self.performSegueWithIdentifier("createUserToHelperSegue", sender: self)
-
-                            }
-
+                        } else if user["userType"] as! String == "helper" {
+                            
+                            self.performSegueWithIdentifier("createUserToHelperSegue", sender: self)
+                            
                         }
-                    })
-
-                }
+                        
+                    }
+                })
+                
             }
         }
+
     }
+    
+    func openTermsView() {
+        
+        
+        if let pdf = NSBundle.mainBundle().URLForResource("The House of Service legal BU", withExtension: "pdf", subdirectory: nil, localization: nil)  {
+            let req = NSURLRequest(URL: pdf)
+            termsView = UIWebView(frame: CGRect(x: 0, y: 20, width: view.frame.size.width, height: view.frame.size.height - 60))
+            termsView.loadRequest(req)
+            self.view.addSubview(termsView)
+        }
+
+        
+        cancelButton = UIButton(frame: CGRect(x: 0, y: self.view.frame.size.height - 60, width: view.frame.size.width / 2, height: 60))
+        cancelButton.backgroundColor = UIColor.ThosColor()
+        cancelButton.setTitle("Cancel", forState: .Normal)
+        cancelButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        cancelButton.addTarget(self, action: #selector(CreateAccountViewController.dismissTermsView), forControlEvents: .TouchUpInside)
+        
+        self.view.addSubview(cancelButton)
+        
+        acceptButton = UIButton(frame: CGRect(x: view.frame.size.width / 2, y: self.view.frame.size.height - 60, width: view.frame.size.width / 2, height: 60))
+        acceptButton.backgroundColor = UIColor.ThosColor()
+        acceptButton.setTitle("Accept", forState: .Normal)
+        acceptButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        acceptButton.addTarget(self, action: #selector(CreateAccountViewController.continueCreatinAccount), forControlEvents: .TouchUpInside)
+        
+        self.view.addSubview(acceptButton)
+    }
+    
+    func dismissTermsView() {
+        
+        self.termsView.removeFromSuperview()
+        acceptButton.removeFromSuperview()
+        cancelButton.removeFromSuperview()
+    }
+
     
     @IBAction func backButtonPressed(sender: AnyObject) {
         

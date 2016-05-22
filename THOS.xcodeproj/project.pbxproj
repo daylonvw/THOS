@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0362591E1CF1CECA00AB26EE /* The House of Service legal BU.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 0362591D1CF1CEC900AB26EE /* The House of Service legal BU.pdf */; };
 		03BD051A1CBB72B9000B84A0 /* test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03BD05191CBB72B9000B84A0 /* test.swift */; };
 		03BD052E1CBB7345000B84A0 /* libPayPalMobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 03BD05261CBB7345000B84A0 /* libPayPalMobile.a */; };
 		03BD053B1CBB7396000B84A0 /* libCardIO.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 03BD05381CBB7396000B84A0 /* libCardIO.a */; };
@@ -203,6 +204,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0362591D1CF1CEC900AB26EE /* The House of Service legal BU.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "The House of Service legal BU.pdf"; sourceTree = "<group>"; };
 		03BD05191CBB72B9000B84A0 /* test.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = test.swift; path = THOS/test.swift; sourceTree = SOURCE_ROOT; };
 		03BD05261CBB7345000B84A0 /* libPayPalMobile.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libPayPalMobile.a; sourceTree = "<group>"; };
 		03BD05271CBB7345000B84A0 /* PayPalConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PayPalConfiguration.h; sourceTree = "<group>"; };
@@ -642,6 +644,7 @@
 		03CB44B11CA5CCBB0040D770 /* Supporting files */ = {
 			isa = PBXGroup;
 			children = (
+				0362591D1CF1CEC900AB26EE /* The House of Service legal BU.pdf */,
 				03BD052F1CBB7396000B84A0 /* CardIO */,
 				03BD05251CBB7345000B84A0 /* PayPalMobile */,
 				03CB44781CA5CBF40040D770 /* THOS-Bridging-Header.h */,
@@ -1004,6 +1007,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0362591E1CF1CECA00AB26EE /* The House of Service legal BU.pdf in Resources */,
 				03CB44751CA5CB970040D770 /* Main.storyboard in Resources */,
 				03CB45301CA5CCBB0040D770 /* JSQMessagesAssets.bundle in Resources */,
 				03CB45261CA5CCBB0040D770 /* SFDraggableDialogView.xib in Resources */,

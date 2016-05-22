@@ -2055,25 +2055,6 @@
             </objects>
             <point key="canvasLocation" x="3094" y="-372"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="9Ph-wi-m2T">
-            <objects>
-                <viewController id="V1T-0e-fhy" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="SNS-gE-ecs"/>
-                        <viewControllerLayoutGuide type="bottom" id="uLr-fw-2ra"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="YsY-Yd-Rrr">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="" image="favorite" id="5WA-rS-QjT"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ZXp-VZ-0aE" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="4007" y="-368.25"/>
-        </scene>
         <!--Job Chat View Controller-->
         <scene sceneID="hFR-iH-239">
             <objects>
@@ -2653,7 +2634,6 @@
                     <connections>
                         <segue destination="QFH-tF-UTX" kind="relationship" relationship="viewControllers" id="AKn-5o-AwU"/>
                         <segue destination="kCR-Zt-8ah" kind="relationship" relationship="viewControllers" id="6ga-s8-nSE"/>
-                        <segue destination="V1T-0e-fhy" kind="relationship" relationship="viewControllers" id="pLr-wU-Twj"/>
                         <segue destination="wrf-RM-mxw" kind="relationship" relationship="viewControllers" id="unV-2z-NFp"/>
                     </connections>
                 </tabBarController>
@@ -2665,7 +2645,6 @@
     <resources>
         <image name="calenderIcon" width="50" height="56"/>
         <image name="createIcon" width="34" height="34"/>
-        <image name="favorite" width="38" height="37"/>
         <image name="houseKeepingIcon" width="56" height="54"/>
         <image name="labourIcon" width="45" height="54"/>
         <image name="searchIcon" width="33" height="34"/>
