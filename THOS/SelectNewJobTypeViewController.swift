@@ -94,20 +94,31 @@ class SelectNewJobTypeViewController: UIViewController {
     
     func jobTypeButtonPressed(sender: UIButton)  {
         
-        outdoorHeroButton.removeFromSuperview()
-        indoorHeroButton.removeFromSuperview()
-        
-        if sender.tag == 0 {
+        UIView.animateWithDuration(0.2, animations: { 
             
-            self.showOutdoorSubTypesOptions()
-            
-        } else if sender.tag == 1 {
-            
-            self.showIndoorSubTypesOptions()
+            self.outdoorHeroButton.transform = CGAffineTransformMakeTranslation(-400, 0.1)
+            self.indoorHeroButton.transform = CGAffineTransformMakeTranslation(-400, 0.1)
+
+            }) { (Bool) in
+               
+                self.outdoorHeroButton.removeFromSuperview()
+                self.indoorHeroButton.removeFromSuperview()
+                
+                if sender.tag == 0 {
+                    
+                    self.showOutdoorSubTypesOptions()
+                    
+                } else if sender.tag == 1 {
+                    
+                    self.showIndoorSubTypesOptions()
+                }
+                
+                self.jobTypeNumber = sender.tag
+                self.backButton.hidden = false
+
         }
-    
-        jobTypeNumber = sender.tag
-        backButton.hidden = false
+
+        
     }
     
     func showOutdoorSubTypesOptions() {
@@ -120,24 +131,36 @@ class SelectNewJobTypeViewController: UIViewController {
         gardenerButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         gardenerButton.addTarget(self, action: #selector(self.subTypeButtonPressed(_:)), forControlEvents: .TouchUpInside)
         gardenerButton.tag = 0
-        
+        gardenerButton.transform = CGAffineTransformMakeTranslation(+400, 0.1)
+
         jobsAroundTheHouseButton = UIButton(frame: CGRect(x: 20, y: centerY - 25, width: view.frame.size.width - 40, height: 50))
         jobsAroundTheHouseButton.backgroundColor = UIColor.ThosColor()
         jobsAroundTheHouseButton.setTitle("Klussen aan het huis", forState: .Normal)
         jobsAroundTheHouseButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         jobsAroundTheHouseButton.addTarget(self, action: #selector(self.subTypeButtonPressed(_:)), forControlEvents: .TouchUpInside)
         jobsAroundTheHouseButton.tag = 1
-        
+        jobsAroundTheHouseButton.transform = CGAffineTransformMakeTranslation(+400, 0.1)
+
         deliveryButton = UIButton(frame: CGRect(x: 20, y: centerY + 30, width: view.frame.size.width - 40, height: 50))
         deliveryButton.backgroundColor = UIColor.ThosColor()
         deliveryButton.setTitle("Ophaal/bezorg diensten", forState: .Normal)
         deliveryButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         deliveryButton.addTarget(self, action: #selector(self.subTypeButtonPressed(_:)), forControlEvents: .TouchUpInside)
         deliveryButton.tag = 2
-        
+        deliveryButton.transform = CGAffineTransformMakeTranslation(+400, 0.1)
+
         view.addSubview(gardenerButton)
         view.addSubview(jobsAroundTheHouseButton)
         view.addSubview(deliveryButton)
+        
+        UIView.animateWithDuration(0.2, animations: {
+            
+            self.gardenerButton.transform = CGAffineTransformIdentity
+            self.jobsAroundTheHouseButton.transform = CGAffineTransformIdentity
+            self.deliveryButton.transform = CGAffineTransformIdentity
+            
+        })
+   
 
     }
     
@@ -151,24 +174,36 @@ class SelectNewJobTypeViewController: UIViewController {
         carpenterButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         carpenterButton.addTarget(self, action: #selector(self.subTypeButtonPressed(_:)), forControlEvents: .TouchUpInside)
         carpenterButton.tag = 0
-        
+        carpenterButton.transform = CGAffineTransformMakeTranslation(+400, 0.1)
+
         electricianButton = UIButton(frame: CGRect(x: 20, y: centerY - 25, width: view.frame.size.width - 40, height: 50))
         electricianButton.backgroundColor = UIColor.ThosColor()
         electricianButton.setTitle("Elektricien", forState: .Normal)
         electricianButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         electricianButton.addTarget(self, action: #selector(self.subTypeButtonPressed(_:)), forControlEvents: .TouchUpInside)
         electricianButton.tag = 1
-        
+        electricianButton.transform = CGAffineTransformMakeTranslation(+400, 0.1)
+
         tutorButton = UIButton(frame: CGRect(x: 20, y: centerY + 30, width: view.frame.size.width - 40, height: 50))
         tutorButton.backgroundColor = UIColor.ThosColor()
         tutorButton.setTitle("Bijles", forState: .Normal)
         tutorButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         tutorButton.addTarget(self, action: #selector(self.subTypeButtonPressed(_:)), forControlEvents: .TouchUpInside)
         tutorButton.tag = 2
-        
+        tutorButton.transform = CGAffineTransformMakeTranslation(+400, 0.1)
+
         view.addSubview(carpenterButton)
         view.addSubview(electricianButton)
         view.addSubview(tutorButton)
+        
+        UIView.animateWithDuration(0.2, animations: {
+            
+            self.carpenterButton.transform = CGAffineTransformIdentity
+            self.electricianButton.transform = CGAffineTransformIdentity
+            self.tutorButton.transform = CGAffineTransformIdentity
+            
+        })
+
     }
     
     func subTypeButtonPressed(sender: UIButton)  {

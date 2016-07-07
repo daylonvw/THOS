@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 class CreateJobViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     @IBOutlet var jobDescriptionTextView: UITextView!
@@ -48,9 +47,10 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
 
         allRequiredJobInfoEntered = true
         
-        let dismissViewButton = UIButton(frame: CGRect(x: 10, y: 10, width: 60, height: 40))
-        dismissViewButton.setTitle("Terug", forState: .Normal)
+        let dismissViewButton = UIButton(frame: CGRect(x: 10, y: view.frame.size.height - 60, width: 60, height: 60))
+        dismissViewButton.setTitle("Annuleer", forState: .Normal)
         dismissViewButton.setTitleColor(UIColor.ThosColor(), forState: .Normal)
+        dismissViewButton.titleLabel?.adjustsFontSizeToFitWidth = true
         dismissViewButton.addTarget(self, action: #selector(self.dismissViewButtonPressed), forControlEvents: .TouchUpInside)
         
         view.addSubview(dismissViewButton)
