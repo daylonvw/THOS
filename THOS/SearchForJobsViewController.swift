@@ -97,9 +97,7 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
             
             index += 1
         }
-        
-        print(zipCodeText)
-        
+                
         // todo use removeAtIndex also at creating a job ( price, zipcode )
         self.dismmissSearchItems()
 
@@ -175,8 +173,8 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
         
         self.mapView.hidden = false
         self.jobSearchBar.hidden = false
-        self.labourButton.hidden = false
-        self.houseKeepingButton.hidden = false
+//        self.labourButton.hidden = false
+//        self.houseKeepingButton.hidden = false
 
 
         
@@ -200,8 +198,8 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
         
         self.mapView.hidden = true
         self.jobSearchBar.hidden = true
-        self.labourButton.hidden = true
-        self.houseKeepingButton.hidden = true
+//        self.labourButton.hidden = true
+//        self.houseKeepingButton.hidden = true
         
         
 
@@ -369,7 +367,7 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
         jobView.delegate = self
         jobView.messgageLabel.sizeToFit()
         jobView.messageText = NSMutableAttributedString(string: job["jobDescription"] as! String)
-        jobView.firstBtnText = "I'm interested"
+        jobView.firstBtnText = "Ik ben geïnteresseerd"
         jobView.firstBtnBackgroundColor = UIColor.ThosColor()
         jobView.pfObject = job
         
@@ -566,7 +564,6 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
         
         locationManager.stopUpdatingLocation()
         
-//        print("updateing")
         
         if self.geoPoint == nil {
             
@@ -772,8 +769,8 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
     
     func checkForMewChats() {
         
-        let tabBarController = self.parentViewController as! JobSeekerTabbarController
-        tabBarController.checkForMewChats()
+//        let tabBarController = self.parentViewController as! JobSeekerTabbarController
+//        tabBarController.checkForMewChats()
         
     }
 

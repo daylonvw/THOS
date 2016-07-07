@@ -13,16 +13,13 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
     @IBOutlet var userImageView: UIImageView!
     @IBOutlet var userEmailTextField: UITextField!
     @IBOutlet var userPassWordTextFiled: UITextField!
-    @IBOutlet var userDatePicker: UIDatePicker!
     @IBOutlet var userNameTextField: UITextField!
-    @IBOutlet var userTypeSegmentedControl: UISegmentedControl!
     
     var enteredAllInfo: Bool!
     var termsView: UIWebView!
     var newUser: PFUser!
     var cancelButton: UIButton!
     var acceptButton: UIButton!
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,6 +37,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         userPassWordTextFiled.delegate = self
         
         enteredAllInfo = true
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -51,31 +49,32 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
 
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
-        imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
-        self.presentViewController(imagePicker, animated: true, completion: nil)
+        
+        if UIImagePickerController.isSourceTypeAvailable(.PhotoLibrary) {
+            
+            imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+            self.presentViewController(imagePicker, animated: true, completion: nil)
 
+        } else if UIImagePickerController.isSourceTypeAvailable(.SavedPhotosAlbum) {
+            
+            imagePicker.sourceType = UIImagePickerControllerSourceType.SavedPhotosAlbum
+            self.presentViewController(imagePicker, animated: true, completion: nil)
+
+        }
+        
     }
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
         
         dismissViewControllerAnimated(true, completion: nil)
-        self.userImageView.image = image
-        self.userImageView.highlighted = true
+        
+            self.userImageView.image = image
+            self.userImageView.highlighted = true
+        
     }
     
     @IBAction func createButtonPressed(sender: AnyObject) {
         
-        let dateformatter = NSDateFormatter()
-        dateformatter.dateFormat = "MM/dd/yy"
-        
-        
-        let timeinterval = NSDate().timeIntervalSinceDate(self.userDatePicker.date)
-            
-        let secondsperY = 31536000
-        let userAge  = Int(timeinterval) / secondsperY
-        let userAgenumer = NSNumber(integer: userAge)
-        
-    
         let user = PFUser()
         
         if userNameTextField.text != "" {
@@ -86,7 +85,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         } else {
             
             enteredAllInfo = false
-            openalertViewController("user name")
+            openalertViewController("Gebruikersnaam")
         }
 
         if userPassWordTextFiled.text != "" {
@@ -97,7 +96,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
           
             enteredAllInfo = false
 
-            openalertViewController("password")
+            openalertViewController("Wachtwoord")
         }
         
         if userEmailTextField.text != "" {
@@ -120,40 +119,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
             
             enteredAllInfo = false
 
-            openalertViewController("image")
-        }
-        
-        if self.userTypeSegmentedControl.selectedSegmentIndex == -1 {
-            
-            enteredAllInfo = false
-
-            openalertViewController("user type")
-            
-        } else {
-            
-            if self.userTypeSegmentedControl.selectedSegmentIndex == 0 {
-                
-                user["userType"] = "seeker"
-
-                
-            } else if self.userTypeSegmentedControl.selectedSegmentIndex == 1 {
-                
-                user["userType"] = "helper"
-
-            }
-        }
-        
-
-        if userAge > 12 {
-            
-            user["userAge"] = userAgenumer
-
-        } else {
-            
-            enteredAllInfo = false
-
-            openalertViewController("birthday")
-
+            openalertViewController("Foto")
         }
         
         if enteredAllInfo == true {
@@ -166,21 +132,21 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
     
     func openConditionsAlertViewController() {
         
-        let controller = UIAlertController(title: "Thank you for joining", message: "by creating an account you accept our general terms and conditions", preferredStyle: .Alert)
+        let controller = UIAlertController(title: "Bedankt voor het registreren", message: "door het creëren van een account ga je akkoord met onze algemene voorwaarden", preferredStyle: .Alert)
         
-        let acceptAction = UIAlertAction(title: "Accept", style: .Default) { (action) in
+        let acceptAction = UIAlertAction(title: "Accepteer", style: .Default) { (action) in
             
             self.continueCreatinAccount()
             
         }
         
-        let readfirstAction = UIAlertAction(title: "Show me", style: .Default) { (action) in
+        let readfirstAction = UIAlertAction(title: "Laat zien", style: .Default) { (action) in
             
             self.openTermsView()
             
         }
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Default, handler: nil)
+        let cancelAction = UIAlertAction(title: "Terug", style: .Default, handler: nil)
 
         controller.addAction(readfirstAction)
         controller.addAction(acceptAction)
@@ -213,9 +179,9 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
                 
                 let object = PFObject(className: "UserRating")
                 object["user"] = user
-                object["totalRating"] = 5
+                object["totalRating"] = 1
                 object["numberOfRatings"] = 1
-                object["rating"] = 3
+                object["rating"] = 1
                 object.saveInBackgroundWithBlock({ (succeded, error ) -> Void in
                     
                     if succeeded == true {
@@ -224,18 +190,8 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
                         NSUserDefaults.standardUserDefaults().setInteger(50, forKey: "distanceForSearch")
                         NSUserDefaults.standardUserDefaults().synchronize()
                         
-                        // creation complete.. go to job screen
-                        
-                        if user["userType"] as! String == "seeker" {
+                        self.performSegueWithIdentifier("createAccountVCtoTabbarVCsegue", sender: self)
                             
-                            self.performSegueWithIdentifier("createAccountVCtoTabbarVCsegue", sender: self)
-                            
-                        } else if user["userType"] as! String == "helper" {
-                            
-                            self.performSegueWithIdentifier("createUserToHelperSegue", sender: self)
-                            
-                        }
-                        
                     }
                 })
                 
@@ -257,7 +213,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         
         cancelButton = UIButton(frame: CGRect(x: 0, y: self.view.frame.size.height - 60, width: view.frame.size.width / 2, height: 60))
         cancelButton.backgroundColor = UIColor.ThosColor()
-        cancelButton.setTitle("Cancel", forState: .Normal)
+        cancelButton.setTitle("Terug", forState: .Normal)
         cancelButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         cancelButton.addTarget(self, action: #selector(CreateAccountViewController.dismissTermsView), forControlEvents: .TouchUpInside)
         
@@ -265,7 +221,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         
         acceptButton = UIButton(frame: CGRect(x: view.frame.size.width / 2, y: self.view.frame.size.height - 60, width: view.frame.size.width / 2, height: 60))
         acceptButton.backgroundColor = UIColor.ThosColor()
-        acceptButton.setTitle("Accept", forState: .Normal)
+        acceptButton.setTitle("Accepteer", forState: .Normal)
         acceptButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         acceptButton.addTarget(self, action: #selector(CreateAccountViewController.continueCreatinAccount), forControlEvents: .TouchUpInside)
         
@@ -299,9 +255,9 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
     
     func openalertViewController(missingItem: String) {
     
-        let messageString  = "You seem to have forgotten to enter your \(missingItem)"
-        let controoler = UIAlertController(title: "Uh oh", message: messageString, preferredStyle: .Alert)
-        let okAction = UIAlertAction(title: "Ok", style: .Default) { (action) -> Void in
+        let messageString  = "Je bent vergeten om je \(missingItem) te selecteren"
+        let controoler = UIAlertController(title: "Oh oh", message: messageString, preferredStyle: .Alert)
+        let okAction = UIAlertAction(title: "Oke", style: .Default) { (action) -> Void in
             
             self.enteredAllInfo = true
         }

@@ -647,7 +647,7 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
                 self.sharedfriendsView.center = self.view.center
               
                 let label = UILabel(frame: CGRect(x: 0, y: 0, width: Int(self.sharedfriendsView.frame.size.width), height: 30))
-                label.text = "Common friends"
+                label.text = "Gedeelde vrienden"
                 label.textColor = UIColor.darkGrayColor()
                 label.textAlignment  = .Center
                 label.font = UIFont.systemFontOfSize(20)
@@ -691,7 +691,6 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
                 
             } else {
                 
-                print(index)
                 self.sharedFriendsArray.append(result.valueForKey("name") as! String)
                 let label = UILabel(frame: CGRect(x: 0, y: index * 30, width: Int(self.sharedfriendsView.frame.size.width), height: 30))
                 label.text = result.valueForKey("name") as? String
@@ -739,7 +738,6 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
                     self.getMyPlannedJobs()
                     
                     self.sendAcceptedPush(self.acceptedUser!)
-                    print("user selected, ready to open chatView")
                 }
             }
         }
@@ -754,7 +752,7 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
         
         let dataDIC:[String: AnyObject] = [
             
-            "alert"             : "New accepted job: \(descriptionString)",
+            "alert"             : "Nieuw geaccepteerde opdracht: \(descriptionString)",
             "type"              : "accepted",
             "badge"             : "increment",
             "sound"             : "message-sent.aiff"
@@ -939,30 +937,30 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
     
     func addToCalenderButtonPressed(sender: UIButton) {
         
-        
-        let jobCell = sender.superview?.superview as! MyPostedJobsCell
-        jobCell.backgroundColor = UIColor.whiteColor()
-        let indexPath = self.tableView.indexPathForCell(jobCell)
-        
-        let jobObject = myPostedJobsArray[(indexPath?.row)!]
-        
-        let jobDate = jobObject["acceptedDate"] as! NSDate
-        
-        let controller = UIAlertController(title: "Add appointment to calender?", message: jobObject["jobDescription"] as? String, preferredStyle: .Alert)
-
-        let AddToCalanderAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
-            
-            self.createEvent(jobObject, title: "job", startDate: jobDate)
-
-            
-        })
-
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Default, handler: nil)
-        
-        controller.addAction(AddToCalanderAction)
-        controller.addAction(cancelAction)
-        
-        self.presentViewController(controller, animated: true, completion: nil)
+//        
+//        let jobCell = sender.superview?.superview as! MyPostedJobsCell
+//        jobCell.backgroundColor = UIColor.whiteColor()
+//        let indexPath = self.tableView.indexPathForCell(jobCell)
+//        
+//        let jobObject = myPostedJobsArray[(indexPath?.row)!]
+//        
+//        let jobDate = jobObject["acceptedDate"] as! NSDate
+//        
+//        let controller = UIAlertController(title: "Add appointment to calender?", message: jobObject["jobDescription"] as? String, preferredStyle: .Alert)
+//
+//        let AddToCalanderAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
+//            
+//            self.createEvent(jobObject, title: "job", startDate: jobDate)
+//
+//            
+//        })
+//
+//        let cancelAction = UIAlertAction(title: "Cancel", style: .Default, handler: nil)
+//        
+//        controller.addAction(AddToCalanderAction)
+//        controller.addAction(cancelAction)
+//        
+//        self.presentViewController(controller, animated: true, completion: nil)
         
     }
 

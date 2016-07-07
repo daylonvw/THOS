@@ -14,7 +14,8 @@ class JobSeekerTabbarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.tabBar.tintColor = UIColor.ThosColor()
+        self.tabBar.tintColor = UIColor.darkGrayColor()
+        
         
         for item in self.tabBar.items! {
             
@@ -45,7 +46,6 @@ class JobSeekerTabbarController: UITabBarController {
         item.image = UIImage(named: "newMessageIcon")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
         item.selectedImage = UIImage(named: "newMessageIcon")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
 
-        
         
     }
     

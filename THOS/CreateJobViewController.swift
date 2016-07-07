@@ -7,82 +7,56 @@
 //
 
 import UIKit
-//import Alamofire
 
 
-class CreateJobViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, JSImagePickerViewControllerDelegate, UITableViewDelegate, UITableViewDataSource {
+class CreateJobViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
-    
-    //BTDropInViewControllerDelegate for braintree
-    
     @IBOutlet var jobDescriptionTextView: UITextView!
     @IBOutlet var postJobButton: UIButton!
-    @IBOutlet var jobLocationSegmentedControl: UISegmentedControl!
-    @IBOutlet var addImagebuttton: UIButton!
+    @IBOutlet var currentPostionButton: UIButton!
     @IBOutlet var priceTextField: UITextField!
-    
-    @IBOutlet var houseKeepingButton: UIButton!
-    @IBOutlet var labourButton: UIButton!
     
     let locationManager = CLLocationManager()
     var jobPFGeoPoint: PFGeoPoint!
-    var jobImage: UIImage!
-    var jobImageView: UIImageView!
-    var jobAddress: String!
     
     var cloudImage: UIImageView!
     
     var allRequiredJobInfoEntered: Bool!
     
-    var jobType: String?
+    var jobType: Int!
+    var jobSubType: Int!
     
     var missingItemsArray = [String]()
     var missingItemsString = ""
     
-    var tableViewBackgroudImage: UIImageView!
-    var tableView: UITableView!
-    var addresses = [NSMutableDictionary]()
-    
-    @IBOutlet var topLabel: UILabel!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         
         // set delegates
         self.jobDescriptionTextView.delegate = self
         self.priceTextField.delegate = self
         
-        self.jobLocationSegmentedControl.state
-        
-        self.topLabel.adjustsFontSizeToFitWidth = true
-        
-//        self.postJobButton.layer.cornerRadius = 40
-//        self.postJobButton.layer.shadowColor = UIColor.blackColor().CGColor
-//        self.postJobButton.layer.shadowOffset = CGSizeMake(1.0, 1.0)
-//        self.postJobButton.layer.shadowOpacity = 0.8
-
         jobDescriptionTextView.backgroundColor = UIColor(white: 1.0, alpha: 0.8)
         jobDescriptionTextView.textColor = UIColor.darkGrayColor()
         jobDescriptionTextView.font = UIFont.systemFontOfSize(20, weight: UIFontWeightMedium)
-        jobDescriptionTextView.placeholder = "Job description..."
+        jobDescriptionTextView.placeholder = "Typ hier de opdrachtomschrijving"
         jobDescriptionTextView.layer.borderColor = UIColor.ThosColor().CGColor
         jobDescriptionTextView.layer.borderWidth = 1.0
-        
-        jobImageView = UIImageView(frame: CGRect(x: 10, y: 30, width: view.frame.width - 20, height: 150))
-        jobImageView.contentMode = .ScaleAspectFill
-        jobImageView.clipsToBounds = true
-        view.addSubview(jobImageView)
-        view.sendSubviewToBack(jobImageView)
-        
+
         priceTextField.layer.borderColor = UIColor.ThosColor().CGColor
         priceTextField.layer.borderWidth = 1.0
 
-        
-        jobLocationSegmentedControl.layer.cornerRadius = 4
-        addImagebuttton.layer.cornerRadius = 4
-        
         allRequiredJobInfoEntered = true
+        
+        let dismissViewButton = UIButton(frame: CGRect(x: 10, y: 10, width: 60, height: 40))
+        dismissViewButton.setTitle("Terug", forState: .Normal)
+        dismissViewButton.setTitleColor(UIColor.ThosColor(), forState: .Normal)
+        dismissViewButton.addTarget(self, action: #selector(self.dismissViewButtonPressed), forControlEvents: .TouchUpInside)
+        
+        view.addSubview(dismissViewButton)
+      
+        getlocation()
+
         
         NSNotificationCenter.defaultCenter().addObserverForName("openedWitdPushFromJobHelper", object: nil, queue: nil) { (notification: NSNotification) -> Void in
             
@@ -102,251 +76,6 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         // Dispose of any resources that can be recreated.
     }
 
-    @IBAction func jobLocation(sender: AnyObject) {
-        
-        self.jobDescriptionTextView.resignFirstResponder()
-        let segmentenControl = sender as! UISegmentedControl
-        
-        if segmentenControl.selectedSegmentIndex == 0 {
-            
-            getlocation()
-        
-        } else if segmentenControl.selectedSegmentIndex == 1 {
-            
-            let controller = UIAlertController(title: "Enter zipcode", message: "for job location", preferredStyle: .Alert)
-            let cancelAction = UIAlertAction(title: "Cancel", style: .Default, handler: nil)
-            
-            
-            let action = UIAlertAction(title: "Use", style: .Default, handler: { (action) -> Void in
-                
-                let textField = controller.textFields![0]
-                var zipCodeText = textField.text!
-                
-                var index = 0
-                for character in zipCodeText.characters {
-                    
-                    if character == " " {
-                        
-                        zipCodeText.removeAtIndex(zipCodeText.startIndex.advancedBy(index))
-                        
-                        index -= 1
-
-                    }
-                    
-                    index += 1
-                }
-                
-                let zipCode = NSURL(string: "https://maps.googleapis.com/maps/api/geocode/json?address=\(zipCodeText)&sensor=true")
-                
-                let downloadTask = NSURLSession.sharedSession().dataTaskWithURL(zipCode!, completionHandler: { (data , responce, error) -> Void in
-                    
-                    do {
-                        
-                        let dict = try NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments)
-                        
-                        let locationArray = dict.valueForKey("results")?.valueForKey("geometry")?.valueForKey("location")
-                        
-                        if locationArray!.count == 0 {
-                            
-                            self.dismissViewControllerAnimated(true, completion: nil)
-                            let controller = UIAlertController(title: "Zipcode not found", message: "Please try again", preferredStyle: .Alert)
-                            let ok = UIAlertAction(title: "Ok", style: .Default, handler: { (action) -> Void in
-                                
-                                self.dismissViewControllerAnimated(true, completion: nil)
-                            })
-                            
-                            controller.addAction(ok)
-                            
-                            self.presentViewController(controller, animated: true, completion: nil)
-
-                        
-                            
-                        } else if locationArray!.count == 1 {
-                            
-                            
-                            let latitude = locationArray?.objectAtIndex(0).valueForKey("lat")
-                            let longtitude = locationArray?.objectAtIndex(0).valueForKey("lng")
-                            
-                            self.jobPFGeoPoint = PFGeoPoint(latitude: Double(latitude! as! NSNumber), longitude: Double(longtitude! as! NSNumber))
-
-                            
-                        } else if locationArray!.count > 1 {
-                            
-                            print("more options")
-                        }
-
-                    } catch let error as NSError {
-                       
-                        print(error)
-                    }
-                    
-                    
-                    
-                })
-                
-                downloadTask.resume()
-
-
-            })
-            
-            controller.addTextFieldWithConfigurationHandler({ (textField) -> Void in
-                
-                textField.placeholder = "Zipcode"
-            })
-            
-            controller.addAction(cancelAction)
-            controller.addAction(action)
-            self.presentViewController(controller, animated: true, completion: nil)
-            
-            
-        } else if segmentenControl.selectedSegmentIndex == 2 {
-            
-            let controller = UIAlertController(title: "Enter your address and house number", message: "for job location", preferredStyle: .Alert)
-            let cancelAction = UIAlertAction(title: "Cancel", style: .Default, handler: nil)
-            
-            let action = UIAlertAction(title: "Use", style: .Default, handler: { (action) -> Void in
-                
-                let addressTextField = controller.textFields![0]
-                var addressText = addressTextField.text!
-                
-                var index = 0
-                for character in addressText.characters {
-                    
-                    if character == " " {
-                        
-                        addressText.removeAtIndex(addressText.startIndex.advancedBy(index))
-                        
-                        index -= 1
-                        
-                    }
-                    
-                    index += 1
-                }
-                
-                let houseNumberTextField = controller.textFields![1]
-                var houseNumberText = houseNumberTextField.text!
-                
-                var numberindex = 0
-                for character in houseNumberText.characters {
-                    
-                    if character == " " {
-                        
-                        houseNumberText.removeAtIndex(houseNumberText.startIndex.advancedBy(index))
-                        
-                        numberindex -= 1
-                        
-                    }
-                    
-                    numberindex += 1
-                }
-
-                let adressurl = NSURL(string: "https://maps.googleapis.com/maps/api/geocode/json?address=\(addressText)+\(houseNumberText)&sensor=true")
-                
-                let downloadTask = NSURLSession.sharedSession().dataTaskWithURL(adressurl!, completionHandler: { (data , responce, error) -> Void in
-                    
-                    do {
-                        
-                        let dict = try NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments) as? [String : AnyObject]
-                        
-                        let results = dict!["results"] as! NSArray
-
-                        if results.count == 0 {
-                            
-                            self.dismissViewControllerAnimated(true, completion: nil)
-
-                            let controller = UIAlertController(title: "Adress not found", message: "Please try again", preferredStyle: .Alert)
-                            let ok = UIAlertAction(title: "Ok", style: .Default, handler: { (action) -> Void in
-                                
-                                self.dismissViewControllerAnimated(true, completion: nil)
-                            })
-                            
-                            controller.addAction(ok)
-                            
-                            self.presentViewController(controller, animated: true, completion: nil)
-                            
-                            
-                            
-                        } else if results.count == 1 {
-                            
-                            let geometry = results.objectAtIndex(0).valueForKey("geometry")
-                            let location = geometry?.valueForKey("location")
-                           
-                            let latitude = location!.valueForKey("lat")
-                            let longtitude = location!.valueForKey("lng")
-                            
-                            self.jobAddress = results.objectAtIndex(0).valueForKey("formatted_address") as? String
-                            
-                            self.jobPFGeoPoint = PFGeoPoint(latitude: Double(latitude! as! NSNumber), longitude: Double(longtitude! as! NSNumber))
-                            
-                        } else if results.count > 1 {
-                            
-                            dispatch_async(dispatch_get_main_queue()) {
-                            
-                                
-                                self.tableViewBackgroudImage = UIImageView(frame: self.view.frame)
-                                self.tableViewBackgroudImage.image = self.view.convertViewToImage().applyLightEffect()
-                                self.tableViewBackgroudImage.userInteractionEnabled = true
-                                
-                                let cancelButton = UIButton(frame: CGRect(x: 0, y: 0, width: self.view.frame.width - 20, height: 40))
-                                cancelButton.backgroundColor = UIColor.ThosColor()
-                                cancelButton.setTitle("Cancel", forState: .Normal)
-                                cancelButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-                                cancelButton.addTarget(self, action: #selector(CreateJobViewController.dismissAddressView), forControlEvents: .TouchUpInside)
-                                cancelButton.center = CGPointMake(self.view.center.x, self.view.frame.height - 80)
-                                
-                                
-                                self.tableView = UITableView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width - 20, height: self.view.frame.width - 20))
-                                self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-                                self.tableView.center = self.view.center
-                                self.tableView.delegate = self
-                                self.tableView.dataSource = self
-                                self.tableView.backgroundColor = UIColor.clearColor()
-                                self.tableView.separatorStyle = .None
-                            
-                                self.tableViewBackgroudImage.addSubview(cancelButton)
-                                self.tableViewBackgroudImage.addSubview(self.tableView)
-                                self.view.addSubview(self.tableViewBackgroudImage)
-                                for address in results {
-                                
-                                    self.addresses.append(address as! NSMutableDictionary)
-                                    self.tableView.reloadData()
-                                
-                                }
-                            }
-                        }
-                        
-                    } catch let error as NSError {
-                        
-                        print(error)
-                        
-                
-                    }
-                    
-                })
-                
-                downloadTask.resume()
-                
-                
-            })
-            
-            controller.addTextFieldWithConfigurationHandler({ (textField) -> Void in
-                
-                textField.placeholder = "Address"
-            })
-            
-            controller.addTextFieldWithConfigurationHandler({ (textField) -> Void in
-                
-                textField.placeholder = "Number"
-            })
-
-            
-            controller.addAction(cancelAction)
-            controller.addAction(action)
-            self.presentViewController(controller, animated: true, completion: nil)
-
-            
-        }
-    }
     
     
     
@@ -355,66 +84,19 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
        self.checkForRequiredInfo()
 
     }
-    
-
-    @IBAction func houseKeepingButtonPressed(sender: AnyObject) {
         
-        if sender.tag == 0 {
-            
-            self.jobType = "houseKeeping"
-            
-            (sender as! UIButton).tag = 1
-            
-            self.labourButton.alpha = 0.2
-            self.labourButton.userInteractionEnabled = false
-            
-        } else if sender.tag == 1 {
-            
-            self.jobType = nil
-            
-            (sender as! UIButton).tag = 0
-            
-            self.labourButton.alpha = 1.0
-            self.labourButton.userInteractionEnabled = true
-        }
-
-    }
-
-    @IBAction func labourButtonSelected(sender: AnyObject) {
-        
-        if sender.tag == 0 {
-            
-            self.jobType = "labour"
-
-            (sender as! UIButton).tag = 1
-            
-            self.houseKeepingButton.alpha = 0.2
-            self.houseKeepingButton.userInteractionEnabled = false
-            
-        } else if sender.tag == 1 {
-            
-            self.jobType = nil
-
-            (sender as! UIButton).tag = 0
-            
-            self.houseKeepingButton.alpha = 1.0
-            self.houseKeepingButton.userInteractionEnabled = true
-        }
-
-    }
-    
     func checkForRequiredInfo() {
         
         if jobDescriptionTextView.text == "" {
         
             self.allRequiredJobInfoEntered = false
-            self.missingItemsArray.append("Job description")
+            self.missingItemsArray.append("opdrachtomschrijving")
         }
         
         if self.jobPFGeoPoint == nil {
             
             self.allRequiredJobInfoEntered = false
-            self.missingItemsArray.append("Job location")
+            self.missingItemsArray.append("Opdracht locatie")
 
         }
         
@@ -423,14 +105,7 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         if priceString == "" || priceString == "€" || priceString == "€ " {
             
             self.allRequiredJobInfoEntered = false
-            self.missingItemsArray.append("Job price")
-
-        }
-        
-        if jobType == nil {
-            
-            self.allRequiredJobInfoEntered = false
-            self.missingItemsArray.append("Job type")
+            self.missingItemsArray.append("opdracht prijs")
 
         }
         
@@ -442,7 +117,7 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
             
             self.allRequiredJobInfoEntered = true
             
-            self.openalertViewController("Please enter all requierd items")
+            self.openalertViewController("")
         }
         
     }
@@ -455,9 +130,8 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
             
         }
         
-        
         let messageString  = String(self.missingItemsString.characters.dropFirst())
-        let controoler = UIAlertController(title: "Uh oh you forgot", message: messageString, preferredStyle: .Alert)
+        let controoler = UIAlertController(title: "Oh oh, je bent het volgende vergeten:", message: messageString, preferredStyle: .Alert)
         let okAction = UIAlertAction(title: "Ok", style: .Default, handler: nil )
         
         controoler.addAction(okAction)
@@ -489,13 +163,6 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
             
         }
         
-        if jobImage != nil {
-            
-            let file  = PFFile(data: UIImageJPEGRepresentation(self.jobImage, 0.5)!)
-            job["jobImage"] = file
-            
-        }
-        
         if self.jobPFGeoPoint != nil {
             
             job["jobLocation"] = self.jobPFGeoPoint
@@ -506,16 +173,6 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
             
             job["jobDescription"] = self.jobDescriptionTextView.text
             
-        }
-        
-        if self.jobType != nil {
-        
-            job["jobType"] = self.jobType
-        }
-        
-        if self.jobAddress != nil {
-            
-            job["jobAddress"] = self.jobAddress
         }
         
         job["user"] = PFUser.currentUser()!
@@ -548,6 +205,7 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
     }
     
     func sendNearByPush() {
+        // todo
         
         let pushQuery = PFInstallation.query()
         pushQuery?.whereKey("installationId", notEqualTo:PFInstallation().installationId)
@@ -555,7 +213,7 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         
         let dataDIC:[String: AnyObject] = [
             
-            "alert"             : "New jobs nearby",
+            "alert"             : "Nieuwe opdracht in de buurt",
             "type"              : "new job",
             "badge"             : "increment",
             "sound"             : "message-sent.aiff"
@@ -576,41 +234,15 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         self.jobDescriptionTextView.textColor = UIColor.darkGrayColor()
         self.jobDescriptionTextView.text = ""
         
-        for view in self.jobImageView.subviews {
-            
-            view.removeFromSuperview()
-        }
-        
-        self.jobPFGeoPoint = nil
-        self.jobImageView.image = nil
-        self.jobImage = nil
-        self.jobType = nil
-        self.jobAddress = nil
         self.priceTextField.text = ""
-        self.jobLocationSegmentedControl.selectedSegmentIndex = -1
         
-        // remove before real testing
-//        job.deleteInBackground()
-
-
         self.jobDescriptionTextView.hidden = false
-        self.jobImageView.hidden = false
-        self.jobLocationSegmentedControl.hidden = false
-        self.addImagebuttton.hidden = false
         self.priceTextField.hidden = false
-        self.houseKeepingButton.hidden = false
-        self.labourButton.hidden = false
         
         self.postJobButton.alpha = 1.0
         
         self.cloudImage.removeFromSuperview()
-        
-        
-        self.labourButton.alpha = 1.0
-        self.houseKeepingButton.alpha = 1.0
-        self.labourButton.userInteractionEnabled = true
-        self.houseKeepingButton.userInteractionEnabled = true
-        
+
         self.missingItemsArray.removeAll(keepCapacity: true)
         self.missingItemsString = ""
 
@@ -620,12 +252,7 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
     func animatePostButton() {
         
         self.jobDescriptionTextView.hidden = true
-        self.jobImageView.hidden = true
-        self.jobLocationSegmentedControl.hidden = true
-        self.addImagebuttton.hidden = true
         self.priceTextField.hidden = true
-        self.houseKeepingButton.hidden = true
-        self.labourButton.hidden = true
         
         
         cloudImage = UIImageView(frame: CGRect(x: 0, y: 0, width: 250, height: 230))
@@ -663,6 +290,7 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
 
 
     }
+    
     func getlocation() {
         
         locationManager.delegate = self
@@ -673,31 +301,6 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         
     }
     
-
-    
-    @IBAction func addImageButtonPressed(sender: AnyObject) {
-        
-        let controller = JSImagePickerViewController()
-        controller.delegate = self
-        controller.showImagePickerInController(self)
-
-    }
-    
-
-    func imagePicker(imagePicker: JSImagePickerViewController!, didSelectImage image: UIImage!) {
-        
-        self.jobImage = image
-        self.jobImageView.image = image
-        
-        let layerView = UIView(frame: CGRect(x: 0, y: 0, width: self.jobImageView.frame.width, height: self.jobImageView.frame.height))
-        layerView.backgroundColor = UIColor(white: 0.2, alpha: 0.2)
-        self.jobImageView.addSubview(layerView)
-        
-        jobDescriptionTextView.backgroundColor = UIColor(white: 1.0, alpha: 0.1)
-        jobDescriptionTextView.textColor = UIColor.whiteColor()
-
-        
-    }
     
 // cllocatationManagerDelagateFunctions
     
@@ -707,6 +310,25 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
             
         self.jobPFGeoPoint = PFGeoPoint(location: locationManager.location)
         
+        let geoCoder = CLGeocoder()
+        let location = CLLocation(latitude: self.jobPFGeoPoint.latitude, longitude: self.jobPFGeoPoint.longitude)
+        
+        geoCoder.reverseGeocodeLocation(location, completionHandler: { (placemarks, error) -> Void in
+            
+            // Place details
+            var placeMark: CLPlacemark!
+            placeMark = placemarks?[0]
+            
+            // City
+            if let city = placeMark.addressDictionary!["City"] as? NSString {
+                
+                self.currentPostionButton.setTitle("Opdracht locatie is \(city)", forState: .Normal)
+                
+                print(city)
+            }
+
+        })
+    
         let installation = PFInstallation.currentInstallation()
         
         if PFUser.currentUser() != nil {
@@ -747,23 +369,20 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
     func textFieldDidBeginEditing(textField: UITextField) {
     
         self.jobDescriptionTextView.userInteractionEnabled = false
-        self.jobLocationSegmentedControl.userInteractionEnabled = false
-        self.addImagebuttton.userInteractionEnabled = false
-        self.houseKeepingButton.userInteractionEnabled = false
-        self.labourButton.userInteractionEnabled = false
-        
+
         if textField == self.priceTextField {
             
             let numberToolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 50))
             numberToolbar.barStyle = .Default
-            numberToolbar.items = [UIBarButtonItem(title: "Done", style: .Plain, target: self, action: #selector(CreateJobViewController.resignNumberpad))]
+            numberToolbar.items = [UIBarButtonItem(title: "Klaar", style: .Plain, target: self, action: #selector(CreateJobViewController.resignNumberpad))]
             numberToolbar.sizeToFit()
             self.priceTextField.inputAccessoryView = numberToolbar
             
         }
     }
 
-
+ // textView delegate
+    
     func textViewShouldBeginEditing(textView: UITextView) -> Bool {
         
         return true
@@ -782,12 +401,7 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
     func resignNumberpad() {
         
         self.jobDescriptionTextView.userInteractionEnabled = true
-        self.jobLocationSegmentedControl.userInteractionEnabled = true
-        self.addImagebuttton.userInteractionEnabled = true
-        self.houseKeepingButton.userInteractionEnabled = true
-        self.labourButton.userInteractionEnabled = true
-        
-        
+
         let priceString = self.priceTextField.text!
         
         if priceString == "" || priceString == "€" || priceString == "€ " {
@@ -802,60 +416,12 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         }
     }
     
-    // table view delegate methods 
-    
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        return self.addresses.count
-    }
-    
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        
-        return 1
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
-        let address = self.addresses[indexPath.row]
-        cell.textLabel?.text = address.valueForKey("formatted_address") as? String
-        cell.backgroundColor = UIColor.ThosColor()
-        cell.textLabel?.textColor = UIColor.whiteColor()
-        cell.textLabel?.adjustsFontSizeToFitWidth = true
-        
-        return cell
-    }
-    
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
-        let address = self.addresses[indexPath.row]
-        
-        let geometry = address.valueForKey("geometry")
-        let location = geometry?.valueForKey("location")
-        
-        let latitude = location!.valueForKey("lat")
-        let longtitude = location!.valueForKey("lng")
-        
-        self.jobAddress = address.valueForKey("formatted_address") as? String
-        
-        self.jobPFGeoPoint = PFGeoPoint(latitude: Double(latitude! as! NSNumber), longitude: Double(longtitude! as! NSNumber))
-        
-        self.tableViewBackgroudImage.removeFromSuperview()
-        self.addresses.removeAll(keepCapacity: true)
-        
-    }
-    
-    func dismissAddressView() {
-        
-        self.tableViewBackgroudImage.removeFromSuperview()
-        self.addresses.removeAll(keepCapacity: true)
-        
-    }
-    
+    // todo check for new chats to new viewController "selectnewjobViewController"
+ 
     func checkForMewChats() {
     
-        let tabBarController = self.parentViewController as! HelpSeekerTabbarControllerViewController
-        tabBarController.checkForMewChats()
+//        let tabBarController = self.parentViewController as! HelpSeekerTabbarControllerViewController
+//        tabBarController.checkForMewChats()
 
     }
     
@@ -884,6 +450,11 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
 
             }
         }
+    }
+    
+    func dismissViewButtonPressed() {
+        
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
 
 }

@@ -311,30 +311,30 @@ class MyJobsAppliedViewController: UIViewController, UITableViewDataSource, UITa
     
     func addToCalenderButtonPressed(sender: UIButton) {
         
-        
-        let jobCell = sender.superview?.superview as! MyAppliedJobsCell
-        jobCell.backgroundColor = UIColor.whiteColor()
-        let indexPath = self.tableView.indexPathForCell(jobCell)
-        
-        let jobObject = myAppliedJobsArray[(indexPath?.row)!]
-
-        let jobDate = jobObject["acceptedDate"] as! NSDate
-        
-        let controller = UIAlertController(title: "Add appointment to calender?", message: jobObject["jobDescription"] as? String, preferredStyle: .Alert)
-        
-        let AddToCalanderAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
-            
-            self.createEvent(jobObject, title: "job", startDate: jobDate)
-            
-            
-        })
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Default, handler: nil)
-        
-        controller.addAction(AddToCalanderAction)
-        controller.addAction(cancelAction)
-        
-        self.presentViewController(controller, animated: true, completion: nil)
+//        
+//        let jobCell = sender.superview?.superview as! MyAppliedJobsCell
+//        jobCell.backgroundColor = UIColor.whiteColor()
+//        let indexPath = self.tableView.indexPathForCell(jobCell)
+//        
+//        let jobObject = myAppliedJobsArray[(indexPath?.row)!]
+//
+//        let jobDate = jobObject["acceptedDate"] as! NSDate
+//        
+//        let controller = UIAlertController(title: "Add appointment to calender?", message: jobObject["jobDescription"] as? String, preferredStyle: .Alert)
+//        
+//        let AddToCalanderAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
+//            
+//            self.createEvent(jobObject, title: "job", startDate: jobDate)
+//            
+//            
+//        })
+//        
+//        let cancelAction = UIAlertAction(title: "Cancel", style: .Default, handler: nil)
+//        
+//        controller.addAction(AddToCalanderAction)
+//        controller.addAction(cancelAction)
+//        
+//        self.presentViewController(controller, animated: true, completion: nil)
 
     }
     

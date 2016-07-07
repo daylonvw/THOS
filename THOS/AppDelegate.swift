@@ -26,6 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         application.applicationIconBadgeNumber = 0
         
+    
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
         
         Parse.setApplicationId("95JkWTOujhkZNxbuVgIeCzOkN99VxR2Kli1s64HS", clientKey: "YXiPbEl8GGh4U0Bi2gDCETS3dvFXbMHToz2ByVjk")
@@ -56,20 +57,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if PFUser.currentUser() != nil {
             
             let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-           
             let helpController = storyBoard.instantiateViewControllerWithIdentifier("helpSeekertabBarVC")
-            let seekController = storyBoard.instantiateViewControllerWithIdentifier("SeekingJobTabbarVC")
-
-            let userType = PFUser.currentUser()!["userType"] as! String
-
-            if userType == "seeker"{
-                
-                self.window?.rootViewController = helpController
-
-            } else if userType == "helper" {
-                
-                self.window?.rootViewController = seekController
-            }
+            self.window?.rootViewController = helpController
             
             self.upDataFacebookFriends()
         }

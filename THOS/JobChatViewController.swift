@@ -174,7 +174,6 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
                         
                         self.addMessage(object)
 
-                        print(object.createdAt)
                         if object["toUser"] != nil {
                         
                             let toUser = object["toUser"] as! PFUser
@@ -315,12 +314,14 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
             
         } else {
             
+            let controller = UIAlertController(title: "Stop!", message: "Begruik geen telefoonnummers in de chat", preferredStyle: .Alert)
+            let action = UIAlertAction(title: "Oke", style: .Default, handler: nil)
+            controller.addAction(action)
+            
+            self.presentViewController(controller, animated: true, completion: nil)
+            
             self.keyboardController.textView?.resignFirstResponder()
-            let imageView = UIImageView(frame: self.view.frame)
-            imageView.image = UIImage(named: "dare")
-            imageView.backgroundColor = UIColor.blackColor()
-            imageView.contentMode = .ScaleAspectFit
-            self.view.addSubview(imageView)
+
         }
     }
     
@@ -383,7 +384,7 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
         dateCancelButton = UIButton(frame: CGRect(x: 10, y: 0, width: view.frame.size.width - 20, height: 50))
         dateCancelButton.addTarget(self, action: #selector(JobChatViewController.dismissDatePickerView), forControlEvents: .TouchUpInside)
         dateCancelButton.center = CGPointMake(view.center.x, view.frame.size.height - 60)
-        dateCancelButton.setTitle("Cancel", forState: .Normal)
+        dateCancelButton.setTitle("Terug", forState: .Normal)
         dateCancelButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         dateCancelButton.backgroundColor = UIColor.ThosColor()
 
@@ -627,10 +628,10 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
         
         let message = self.messages[(indexPath?.row)!]
         
-        let controller = UIAlertController(title: "Accept appointment", message: "for job ?", preferredStyle: .Alert)
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Default, handler: nil)
+        let controller = UIAlertController(title: "Accepteer datum", message: "voor opdracht?", preferredStyle: .Alert)
+        let cancelAction = UIAlertAction(title: "Nee", style: .Default, handler: nil)
         
-        let acceptDateAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
+        let acceptDateAction = UIAlertAction(title: "Ja", style: .Default, handler: { (action) -> Void in
         
             self.job["acceptedDate"] = message.jobDate
             self.job["posterAcceptedDate"] = true
@@ -644,24 +645,24 @@ class JobChatViewController: JSQMessagesViewController, UIImagePickerControllerD
             self.deleteDateChatsFromParse()
         })
         
-        let AddToCalanderAction = UIAlertAction(title: "Yes and add to Calender", style: .Default, handler: { (action) -> Void in
-        
-            self.createEvent(self.eventStore, title: "job", startDate: message.jobDate)
-        
-            self.job["acceptedDate"] = message.jobDate
-            self.job["posterAcceptedDate"] = true
-            self.job.saveInBackground()
-        
-            self.inputToolbar?.contentView?.leftBarButtonItem?.hidden = true
-        
-            self.sendAcceptedDatePush()
-            self.openPaypal()
-            
-            self.deleteDateChatsFromParse()
-        
-        })
+//        let AddToCalanderAction = UIAlertAction(title: "Yes and add to Calender", style: .Default, handler: { (action) -> Void in
+//        
+//            self.createEvent(self.eventStore, title: "job", startDate: message.jobDate)
+//        
+//            self.job["acceptedDate"] = message.jobDate
+//            self.job["posterAcceptedDate"] = true
+//            self.job.saveInBackground()
+//        
+//            self.inputToolbar?.contentView?.leftBarButtonItem?.hidden = true
+//        
+//            self.sendAcceptedDatePush()
+//            self.openPaypal()
+//            
+//            self.deleteDateChatsFromParse()
+//        
+//        })
         controller.addAction(acceptDateAction)
-        controller.addAction(AddToCalanderAction)
+//        controller.addAction(AddToCalanderAction)
         controller.addAction(cancelAction)
 
         self.presentViewController(controller, animated: true, completion: nil)

@@ -18,8 +18,6 @@ class LoginVCViewController: UIViewController {
     @IBOutlet var userCreateNewAccountButton: UIButton!
     @IBOutlet var facebookLoginButton: UIButton!
     
-    @IBOutlet var userTypeSegmentedControl: UISegmentedControl!
-    
     var userFriendsArray = [String]()
     var termsView: UIWebView!
     var cancelButton: UIButton!
@@ -32,10 +30,11 @@ class LoginVCViewController: UIViewController {
         let loginButton = FBSDKLoginButton()
         loginButton.center = CGPointMake(view.center.x, view.center.y + 200)
         
-        facebookLoginButton.setTitle(" Login with Facebook", forState: .Normal)
+        facebookLoginButton.setTitle(" Login met Facebook", forState: .Normal)
         facebookLoginButton.setImage(loginButton.imageView?.image, forState: .Normal)
         facebookLoginButton.setBackgroundImage(loginButton.backgroundImageForState(.Normal), forState: .Normal)
-    
+        
+        self.userCreateNewAccountButton.titleLabel?.adjustsFontSizeToFitWidth = true
         
     }
 
@@ -48,21 +47,21 @@ class LoginVCViewController: UIViewController {
     @IBAction func faceBookLoginPressed() {
         
         
-        let controller = UIAlertController(title: "Thank you for joining", message: "by creating an account you accept our general terms and conditions", preferredStyle: .Alert)
+        let controller = UIAlertController(title: "Bedankt voor het registreren", message: "door het creëren van een account ga je akkoord met onze algemene voorwaarden", preferredStyle: .Alert)
         
-        let acceptAction = UIAlertAction(title: "Accept", style: .Default) { (action) in
-        
+        let acceptAction = UIAlertAction(title: "Accepteer", style: .Default) { (action) in
+            
             self.continueWithFacebookLogin()
             
         }
         
-        let readfirstAction = UIAlertAction(title: "Show me", style: .Default) { (action) in
-        
+        let readfirstAction = UIAlertAction(title: "Laat zien", style: .Default) { (action) in
+            
             self.openTermsView()
-        
+            
         }
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Default, handler: nil)
+        let cancelAction = UIAlertAction(title: "Terug", style: .Default, handler: nil)
         
         controller.addAction(readfirstAction)
         controller.addAction(acceptAction)
@@ -85,7 +84,7 @@ class LoginVCViewController: UIViewController {
         
         cancelButton = UIButton(frame: CGRect(x: 0, y: self.view.frame.size.height - 60, width: view.frame.size.width / 2, height: 60))
         cancelButton.backgroundColor = UIColor.ThosColor()
-        cancelButton.setTitle("Cancel", forState: .Normal)
+        cancelButton.setTitle("Terug", forState: .Normal)
         cancelButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         cancelButton.addTarget(self, action: #selector(LoginVCViewController.dismissTermsView), forControlEvents: .TouchUpInside)
         
@@ -93,7 +92,7 @@ class LoginVCViewController: UIViewController {
         
         acceptButton = UIButton(frame: CGRect(x: view.frame.size.width / 2, y: self.view.frame.size.height - 60, width: view.frame.size.width / 2, height: 60))
         acceptButton.backgroundColor = UIColor.ThosColor()
-        acceptButton.setTitle("Accept", forState: .Normal)
+        acceptButton.setTitle("Accepteer", forState: .Normal)
         acceptButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         acceptButton.addTarget(self, action: #selector(LoginVCViewController.continueWithFacebookLogin), forControlEvents: .TouchUpInside)
         
@@ -118,13 +117,11 @@ class LoginVCViewController: UIViewController {
                 
                 if user.isNew {
                     
-                    self.showUserTypeSegmentedControlfor(user)
-                    print("User signed up and logged in through Facebook!")
+                    self.getFaceBookUserInfo(user)
                     
                 } else {
                     
                     self.performSegueWithIdentifier("loginVCtoTabBarControllerSegue", sender: self)
-                    print("User logged in through Facebook!")
                 }
                 
             } else {
@@ -134,40 +131,6 @@ class LoginVCViewController: UIViewController {
         }
 
     }
-    
-    func showUserTypeSegmentedControlfor(user: PFUser) {
-        
-        for subView in self.view.subviews {
-            
-            if subView.hidden == false {
-                
-                subView.hidden = true
-                
-            } else if subView.hidden == true {
-                
-                subView.hidden = false
-            }
-        }
-
-    }
-    
-    @IBAction func segmentedControlValeuChanged(sender: AnyObject) {
-        
-        if self.userTypeSegmentedControl.selectedSegmentIndex == 0 {
-            
-            PFUser.currentUser()!["userType"] = "seeker"
-            self.getFaceBookUserInfo(PFUser.currentUser()!)
-
-            
-        } else if self.userTypeSegmentedControl.selectedSegmentIndex == 1 {
-            
-            PFUser.currentUser()!["userType"] = "helper"
-            self.getFaceBookUserInfo(PFUser.currentUser()!)
-
-        }
-    }
-    
-    
     
     func getFaceBookUserInfo(user: PFUser) {
         
@@ -215,11 +178,13 @@ class LoginVCViewController: UIViewController {
                     
                 } else {
                     
+                    // todo rating nakijken ook bij creeren account
+                    
                     let object = PFObject(className: "UserRating")
                     object["user"] = user
-                    object["totalRating"] = 5
+                    object["totalRating"] = 1
                     object["numberOfRatings"] = 1
-                    object["rating"] = 3
+                    object["rating"] = 1
                     object.saveInBackgroundWithBlock({ (succeeded, error ) -> Void in
                         
                         if succeeded == true {
@@ -228,18 +193,7 @@ class LoginVCViewController: UIViewController {
                             NSUserDefaults.standardUserDefaults().setInteger(50, forKey: "distanceForSearch")
                             NSUserDefaults.standardUserDefaults().synchronize()
                             
-                            // creation complete.. go to job screen
-                            if user["userType"] as! String == "seeker" {
-                                
-                                self.performSegueWithIdentifier("loginVCtoTabBarControllerSegue", sender: self)
-                                
-                            } else if user["userType"] as! String == "helper" {
-                                
-                                self.performSegueWithIdentifier("loginVCToSeekerSegue", sender: self)
-                                
-                            }
-
-                            
+                            self.performSegueWithIdentifier("loginVCtoTabBarControllerSegue", sender: self)
                         }
                     })
                     
@@ -265,20 +219,19 @@ class LoginVCViewController: UIViewController {
                 
                 // The login failed. Check error to see why.
                 
-                let alertController = UIAlertController(title: "Oh oh", message: "username password combination unknown", preferredStyle: .Alert)
+                let alertController = UIAlertController(title: "Oh oh", message: "Verkeerde combinatie van wachtwoord en gebruikersnaam", preferredStyle: .Alert)
                 let action = UIAlertAction(title: "Oke", style: .Default, handler: nil)
-                let forgotAction = UIAlertAction(title: "forgot my password", style: .Default, handler: { (action) -> Void in
+                let forgotAction = UIAlertAction(title: "Ik ben me wachtwoord vergeten", style: .Default, handler: { (action) -> Void in
                     
                     PFUser.requestPasswordResetForEmailInBackground(self.userNameTextField.text!, block: { (succes, error ) -> Void in
                         
                         if error != nil {
                             
                             print(error?.localizedDescription)
+                            
                         } else{
                             
                             if succes == true {
-                                
-                                print("succes")
                                 
                                 // set first distance for search
                                 NSUserDefaults.standardUserDefaults().setInteger(50, forKey: "distanceForSearch")

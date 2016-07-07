@@ -131,7 +131,7 @@ class helpSeekerProfileViewController: UIViewController {
         
         let feedBackVC = FeedBackController()
         feedBackVC.title = "Feedback"
-        feedBackVC.placeholder = "Be gentle"
+        feedBackVC.placeholder = "We waarderen je feedback"
         feedBackVC.completionHandler = {
             
             // tupple returned by the completion handeler ( composeViewController
