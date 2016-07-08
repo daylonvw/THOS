@@ -26,7 +26,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         application.applicationIconBadgeNumber = 0
         
-    
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
         
         Parse.setApplicationId("95JkWTOujhkZNxbuVgIeCzOkN99VxR2Kli1s64HS", clientKey: "YXiPbEl8GGh4U0Bi2gDCETS3dvFXbMHToz2ByVjk")

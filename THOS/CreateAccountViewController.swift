@@ -52,11 +52,13 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         
         if UIImagePickerController.isSourceTypeAvailable(.PhotoLibrary) {
             
+            print("lib")
             imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
             self.presentViewController(imagePicker, animated: true, completion: nil)
 
         } else if UIImagePickerController.isSourceTypeAvailable(.SavedPhotosAlbum) {
-            
+           
+            print("album")
             imagePicker.sourceType = UIImagePickerControllerSourceType.SavedPhotosAlbum
             self.presentViewController(imagePicker, animated: true, completion: nil)
 

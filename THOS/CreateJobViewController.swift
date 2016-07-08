@@ -12,8 +12,11 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
 
     @IBOutlet var jobDescriptionTextView: UITextView!
     @IBOutlet var postJobButton: UIButton!
-    @IBOutlet var currentPostionButton: UIButton!
     @IBOutlet var priceTextField: UITextField!
+    
+    @IBOutlet var firstDateOption: UIButton!
+    @IBOutlet var secondDateOption: UIButton!
+    @IBOutlet var thirdDateOption: UIButton!
     
     let locationManager = CLLocationManager()
     var jobPFGeoPoint: PFGeoPoint!
@@ -76,15 +79,25 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         // Dispose of any resources that can be recreated.
     }
 
-    
-    
-    
     @IBAction func postJobButtonPressed(sender: AnyObject) {
         
        self.checkForRequiredInfo()
 
     }
+    
+    
+    @IBAction func firstDateButtonPressed(sender: AnyObject) {
         
+    }
+        
+    @IBAction func secondDateButtonPressed(sender: AnyObject) {
+        
+    }
+    
+    @IBAction func thirdDateButtonPressed(sender: AnyObject) {
+        
+    }
+    
     func checkForRequiredInfo() {
         
         if jobDescriptionTextView.text == "" {
@@ -322,7 +335,7 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
             // City
             if let city = placeMark.addressDictionary!["City"] as? NSString {
                 
-                self.currentPostionButton.setTitle("Opdracht locatie is \(city)", forState: .Normal)
+//                self.currentPostionButton.setTitle("Opdracht locatie is \(city)", forState: .Normal)
                 
                 print(city)
             }

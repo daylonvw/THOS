@@ -1,15 +1,14 @@
-//
 //  SelectNewJobTypeViewController.swift
 //  THOS
 //
 //  Created by daylonvanwel on 07-07-16.
 //  Copyright © 2016 daylon wel. All rights reserved.
-//
+
 
 import UIKit
 
 class SelectNewJobTypeViewController: UIViewController {
-
+    
     var questionLabel: UILabel!
     var outdoorHeroButton: UIButton!
     var indoorHeroButton: UIButton!
@@ -30,9 +29,8 @@ class SelectNewJobTypeViewController: UIViewController {
     var jobSubTypeNumber: Int!
     
     override func viewDidLoad() {
+       
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
         
         centerX = view.center.x
         centerY = view.center.y
