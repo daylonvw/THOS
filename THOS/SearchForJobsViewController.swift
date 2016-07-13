@@ -8,62 +8,55 @@
 
 import UIKit
 
+class jobCell: UITableViewCell {
+    
+    @IBOutlet var userImageView: UIImageView!
+    @IBOutlet var jobDescriptionLabel: UILabel!
+    @IBOutlet var jobPriceLabel: UILabel!
+    
+}
 
-
-class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate, SFDraggableDialogViewDelegate, UISearchBarDelegate {
+class SearchForJobsViewController: UIViewController, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate {
     
 // IBOutlets
     
-    @IBOutlet var mapView: MKMapView!
-    @IBOutlet var jobSearchBar: UISearchBar!
-
-    @IBOutlet var houseKeepingButton: UIButton!
-    @IBOutlet var labourButton: UIButton!
+    @IBOutlet var tableView: UITableView!
     
-    @IBOutlet var searchBarButton: UIBarButtonItem!
-    
-    @IBOutlet var searchZipCodeButton: UIButton!
-    @IBOutlet var zipCodeTextField: UITextField!
-    @IBOutlet var searchCurrentLocationButton: UIButton!
-    @IBOutlet var startSearchLabel: UILabel!
-    @IBOutlet var orLabel: UILabel!
-    
-    
-    var MapViewLocationManager:CLLocationManager! = CLLocationManager()
-    
-    
-    let locationManager = CLLocationManager()
-    var geoPoint: PFGeoPoint!
     var jobsArray = [PFObject]()
     
-    var jobTypeSelected = [String]()
+    var questionLabel: UILabel!
+    var outdoorHeroButton: UIButton!
+    var indoorHeroButton: UIButton!
+    var centerX: CGFloat!
+    var centerY: CGFloat!
     
+    var carpenterButton: UIButton!
+    var electricianButton: UIButton!
+    var tutorButton: UIButton!
+    
+    var gardenerButton: UIButton!
+    var jobsAroundTheHouseButton: UIButton!
+    var deliveryButton: UIButton!
+    
+    var backButton: UIButton!
+    
+    var jobTypeNumber: Int!
+    var jobSubTypeNumber: Int!
 
     override func viewDidLoad() {
        
         super.viewDidLoad()
         // setup default design
         
-        self.jobSearchBar.delegate = self
-        self.jobSearchBar.returnKeyType = .Done
-        self.jobSearchBar.enablesReturnKeyAutomatically = true
+        centerX = view.center.x
+        centerY = view.center.y
         
-        self.mapView.hidden = true
-        self.jobSearchBar.hidden = true
-        self.labourButton.hidden = true
-        self.houseKeepingButton.hidden = true
+        self.showJobOptions()
         
-        self.searchZipCodeButton.layer.cornerRadius = 4
-        self.searchCurrentLocationButton.layer.cornerRadius = 4
-        self.zipCodeTextField.layer.borderColor = UIColor.ThosColor().CGColor
-        self.zipCodeTextField.layer.borderWidth = 1.0
-        self.zipCodeTextField.layer.cornerRadius = 4
-        
-        
-        NSNotificationCenter.defaultCenter().addObserverForName("openedWitdPushFromJobPoster", object: nil, queue: nil) { (notification: NSNotification) -> Void in
-            
-            self.openChatFromNotification(notification)
-        }
+//        NSNotificationCenter.defaultCenter().addObserverForName("openedWitdPushFromJobPoster", object: nil, queue: nil) { (notification: NSNotification) -> Void in
+//            
+//            self.openChatFromNotification(notification)
+//        }
 
     }
     
@@ -79,152 +72,193 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
         super.didReceiveMemoryWarning()
     }
     
-    @IBAction func searchByZipCodeButtonPressed(sender: AnyObject) {
-        
-        self.zipCodeTextField.resignFirstResponder()
-        var zipCodeText = zipCodeTextField.text!
-        
-        var index = 0
-        for character in zipCodeText.characters {
-           
-            if character == " " {
-            
-                zipCodeText.removeAtIndex(zipCodeText.startIndex.advancedBy(index))
-                
-                index -= 1
-
-            }
-            
-            index += 1
-        }
-                
-        // todo use removeAtIndex also at creating a job ( price, zipcode )
-        self.dismmissSearchItems()
-
-        let zipCode = NSURL(string: "https://maps.googleapis.com/maps/api/geocode/json?address=\(zipCodeText)&sensor=true")
-        
-        let downloadTask = NSURLSession.sharedSession().dataTaskWithURL(zipCode!, completionHandler: { (data , responce, error) -> Void in
-            
-            do {
-                
-                let dict = try NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments)
-                
-                let locationArray = dict.valueForKey("results")?.valueForKey("geometry")?.valueForKey("location")
-                // todo loop through characters from string and delete spaced ( crasher when there is a space )
-                print(locationArray?.count)
-
-                if (locationArray!.count != nil) {
-                
-                    let latitude = locationArray?.objectAtIndex(0).valueForKey("lat") as! Double
-                    let longtitude = locationArray?.objectAtIndex(0).valueForKey("lng") as! Double
     
-                    self.geoPoint = PFGeoPoint(latitude: latitude, longitude: longtitude)
-                    
-                    self.mapView.showsUserLocation = true
-                    self.mapView.delegate = self
-                    self.MapViewLocationManager.delegate = self
-                    self.MapViewLocationManager.startUpdatingLocation()
-                    self.mapView.region = MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2D(latitude: latitude, longitude: longtitude), 15000, 15000)
-                    
-                    self.getJobs()
-                    
-                } else {
-                
-                    let controller = UIAlertController(title: "Zipcode not found", message: "Please try again", preferredStyle: .Alert)
-                    let ok = UIAlertAction(title: "Ok", style: .Default, handler: { (action) -> Void in
-                        
-                        self.dismissViewControllerAnimated(true, completion: nil)
-                    })
-                    
-                    controller.addAction(ok)
-                    
-                    self.presentViewController(controller, animated: true, completion: nil)
-                }
+    func showJobOptions() {
+        
+        questionLabel = UILabel(frame: CGRect(x: 10, y: 70, width: view.frame.size.width - 20, height: 60))
+        questionLabel.textColor = UIColor.ThosColor()
+        questionLabel.text = "Naar wat voor klus ben je op zoek?"
+        questionLabel.numberOfLines = 2
+        questionLabel.adjustsFontSizeToFitWidth = true
+        questionLabel.textAlignment = .Center
+        questionLabel.font = UIFont.systemFontOfSize(16, weight: UIFontWeightMedium)
+        
+        outdoorHeroButton = UIButton(frame: CGRect(x: 20, y: centerY - 30, width: view.frame.size.width - 40, height: 50))
+        outdoorHeroButton.backgroundColor = UIColor.ThosColor()
+        outdoorHeroButton.setTitle("Klussen buiten het huis", forState: .Normal)
+        outdoorHeroButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        outdoorHeroButton.addTarget(self, action: #selector(self.jobTypeButtonPressed(_:)), forControlEvents: .TouchUpInside)
+        outdoorHeroButton.tag = 0
+        
+        indoorHeroButton = UIButton(frame: CGRect(x: 20, y: centerY + 25, width: view.frame.size.width - 40, height: 50))
+        indoorHeroButton.backgroundColor = UIColor.ThosColor()
+        indoorHeroButton.setTitle("Klussen binnen het huis", forState: .Normal)
+        indoorHeroButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        indoorHeroButton.addTarget(self, action: #selector(self.jobTypeButtonPressed(_:)), forControlEvents: .TouchUpInside)
+        indoorHeroButton.tag = 1
+
+        backButton = UIButton(frame: CGRect(x: 10, y: view.frame.size.height - 100, width: 60, height: 60))
+        backButton.setTitle("Annuleer", forState: .Normal)
+        backButton.setTitleColor(UIColor.ThosColor(), forState: .Normal)
+        backButton.addTarget(self, action: #selector(self.backButtonPressed(_:)), forControlEvents: .TouchUpInside)
+        backButton.titleLabel?.adjustsFontSizeToFitWidth = true
+        backButton.hidden = true
+
+        view.addSubview(questionLabel)
+        view.addSubview(outdoorHeroButton)
+        view.addSubview(indoorHeroButton)
+        view.addSubview(backButton)
+        
+    }
+
+    func jobTypeButtonPressed(sender: UIButton)  {
+        
+        UIView.animateWithDuration(0.2, animations: {
             
-            } catch let error as NSError {
+            self.outdoorHeroButton.transform = CGAffineTransformMakeTranslation(-400, 0.1)
+            self.indoorHeroButton.transform = CGAffineTransformMakeTranslation(-400, 0.1)
+            
+        }) { (Bool) in
+            
+            self.outdoorHeroButton.removeFromSuperview()
+            self.indoorHeroButton.removeFromSuperview()
+            
+            if sender.tag == 0 {
                 
-                print(error)
+                self.showOutdoorSubTypesOptions()
+                
+            } else if sender.tag == 1 {
+                
+                self.showIndoorSubTypesOptions()
             }
             
+            self.jobTypeNumber = sender.tag
+            self.backButton.hidden = false
             
+        }
+        
+        
+    }
+
+    
+    func showOutdoorSubTypesOptions() {
+        
+        questionLabel.text = "Wat voor klus rondom het huis wil je doen?"
+        
+        gardenerButton = UIButton(frame: CGRect(x: 20, y: centerY - 80, width: view.frame.size.width - 40, height: 50))
+        gardenerButton.backgroundColor = UIColor.ThosColor()
+        gardenerButton.setTitle("Hovenier", forState: .Normal)
+        gardenerButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        gardenerButton.addTarget(self, action: #selector(self.subTypeButtonPressed(_:)), forControlEvents: .TouchUpInside)
+        gardenerButton.tag = 0
+        gardenerButton.transform = CGAffineTransformMakeTranslation(+400, 0.1)
+        
+        jobsAroundTheHouseButton = UIButton(frame: CGRect(x: 20, y: centerY - 25, width: view.frame.size.width - 40, height: 50))
+        jobsAroundTheHouseButton.backgroundColor = UIColor.ThosColor()
+        jobsAroundTheHouseButton.setTitle("Klussen aan het huis", forState: .Normal)
+        jobsAroundTheHouseButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        jobsAroundTheHouseButton.addTarget(self, action: #selector(self.subTypeButtonPressed(_:)), forControlEvents: .TouchUpInside)
+        jobsAroundTheHouseButton.tag = 1
+        jobsAroundTheHouseButton.transform = CGAffineTransformMakeTranslation(+400, 0.1)
+        
+        deliveryButton = UIButton(frame: CGRect(x: 20, y: centerY + 30, width: view.frame.size.width - 40, height: 50))
+        deliveryButton.backgroundColor = UIColor.ThosColor()
+        deliveryButton.setTitle("Ophaal/bezorg diensten", forState: .Normal)
+        deliveryButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        deliveryButton.addTarget(self, action: #selector(self.subTypeButtonPressed(_:)), forControlEvents: .TouchUpInside)
+        deliveryButton.tag = 2
+        deliveryButton.transform = CGAffineTransformMakeTranslation(+400, 0.1)
+        
+        view.addSubview(gardenerButton)
+        view.addSubview(jobsAroundTheHouseButton)
+        view.addSubview(deliveryButton)
+        
+        UIView.animateWithDuration(0.2, animations: {
+            
+            self.gardenerButton.transform = CGAffineTransformIdentity
+            self.jobsAroundTheHouseButton.transform = CGAffineTransformIdentity
+            self.deliveryButton.transform = CGAffineTransformIdentity
             
         })
         
-        downloadTask.resume()
-
-    }
-    
-    
-    @IBAction func searchCurrentLocationButtonPressed(sender: AnyObject) {
-        
-        self.zipCodeTextField.resignFirstResponder()
-        self.dismmissSearchItems()
-        self.getlocation()
-    }
-    
-    func dismmissSearchItems() {
-
-        
-        searchZipCodeButton.hidden = true
-        zipCodeTextField.hidden = true
-        searchCurrentLocationButton.hidden = true
-        orLabel.hidden = true
-        startSearchLabel.hidden = true
-        
-        self.mapView.hidden = false
-        self.jobSearchBar.hidden = false
-//        self.labourButton.hidden = false
-//        self.houseKeepingButton.hidden = false
-
-
         
     }
     
-    @IBAction func addSearchItems(sender: AnyObject) {
+    func showIndoorSubTypesOptions()  {
         
-        self.jobSearchBar.resignFirstResponder()
+        questionLabel.text = "Wat voor klus in huis wil je doen?"
         
-        self.zipCodeTextField.text = ""
+        carpenterButton = UIButton(frame: CGRect(x: 20, y: centerY - 80, width: view.frame.size.width - 40, height: 50))
+        carpenterButton.backgroundColor = UIColor.ThosColor()
+        carpenterButton.setTitle("Klusjes man", forState: .Normal)
+        carpenterButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        carpenterButton.addTarget(self, action: #selector(self.subTypeButtonPressed(_:)), forControlEvents: .TouchUpInside)
+        carpenterButton.tag = 0
+        carpenterButton.transform = CGAffineTransformMakeTranslation(+400, 0.1)
         
-        self.geoPoint = nil
-        self.jobsArray.removeAll(keepCapacity: true)
-        self.mapView.removeAnnotations(self.mapView.annotations)
+        electricianButton = UIButton(frame: CGRect(x: 20, y: centerY - 25, width: view.frame.size.width - 40, height: 50))
+        electricianButton.backgroundColor = UIColor.ThosColor()
+        electricianButton.setTitle("Elektricien", forState: .Normal)
+        electricianButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        electricianButton.addTarget(self, action: #selector(self.subTypeButtonPressed(_:)), forControlEvents: .TouchUpInside)
+        electricianButton.tag = 1
+        electricianButton.transform = CGAffineTransformMakeTranslation(+400, 0.1)
         
-        searchZipCodeButton.hidden = false
-        zipCodeTextField.hidden = false
-        searchCurrentLocationButton.hidden = false
-        orLabel.hidden = false
-        startSearchLabel.hidden = false
+        tutorButton = UIButton(frame: CGRect(x: 20, y: centerY + 30, width: view.frame.size.width - 40, height: 50))
+        tutorButton.backgroundColor = UIColor.ThosColor()
+        tutorButton.setTitle("Bijles", forState: .Normal)
+        tutorButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        tutorButton.addTarget(self, action: #selector(self.subTypeButtonPressed(_:)), forControlEvents: .TouchUpInside)
+        tutorButton.tag = 2
+        tutorButton.transform = CGAffineTransformMakeTranslation(+400, 0.1)
         
-        self.mapView.hidden = true
-        self.jobSearchBar.hidden = true
-//        self.labourButton.hidden = true
-//        self.houseKeepingButton.hidden = true
+        view.addSubview(carpenterButton)
+        view.addSubview(electricianButton)
+        view.addSubview(tutorButton)
         
+        UIView.animateWithDuration(0.2, animations: {
+            
+            self.carpenterButton.transform = CGAffineTransformIdentity
+            self.electricianButton.transform = CGAffineTransformIdentity
+            self.tutorButton.transform = CGAffineTransformIdentity
+            
+        })
         
-
     }
     
-    
-    func getlocation() {
+    func subTypeButtonPressed(sender: UIButton)  {
         
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        jobSubTypeNumber = sender.tag
         
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.startUpdatingLocation()
+        self.getJobs()
         
     }
-
+    
+    func backButtonPressed(sender: UIButton)  {
+        
+        
+        for subView in view.subviews {
+            
+            subView.removeFromSuperview()
+        }
+        
+        self.showJobOptions()
+        
+        
+    }
+    
     func getJobs() {
-                
+        
+        print(jobTypeNumber)
+        print(jobSubTypeNumber)
+        
         let querie = PFQuery(className: "Job")
         querie.includeKey("user")
-        querie.whereKey("user", notEqualTo: PFUser.currentUser()!)
-        querie.whereKey("jobLocation", nearGeoPoint: self.geoPoint, withinKilometers: 60)
+//        querie.whereKey("user", notEqualTo: PFUser.currentUser()!)
         querie.whereKey("open", equalTo: true)
-        querie.whereKey("maxUsersReached", equalTo: false)
         querie.whereKey("finished", equalTo: false)
+        querie.whereKey("jobTypeNumber", equalTo: self.jobTypeNumber)
+        querie.whereKey("jobSubTypeNumber", equalTo: self.jobSubTypeNumber)
         
         if PFUser.currentUser()!["jobsAppliedToArray"] != nil {
             
@@ -244,19 +278,22 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
                 
                 if ((jobs?.count) != nil) {
                     
+                    for subView in self.view.subviews {
+                        
+                        if subView.isKindOfClass(UIButton) {
+                            
+                            subView.removeFromSuperview()
+                        }
+                    }
+                    
                     for job in jobs! {
                         
-                        let user = job["user"] as! PFUser
-                        let point = job["jobLocation"] as! PFGeoPoint
-                        let annotation = DWAnnotation()
-                        annotation.coordinate = CLLocationCoordinate2DMake(point.latitude, point.longitude)
-                        annotation.title = job["jobDescription"] as? String
-                        annotation.subtitle = user["displayName"] as? String
-                        annotation.jobType = job["jobType"] as! String
-                        self.mapView.addAnnotation(annotation)
-                        
+                        print(job)
                         self.jobsArray.append(job)
                         
+                        self.tableView.hidden = false
+                        self.tableView.reloadData()
+                        
                     }
                 }
             }
@@ -265,341 +302,50 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
 
     }
     
-    func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 1
+    }
+
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
        
-        print(mapView.selectedAnnotations)
-        
-        for annotation in mapView.selectedAnnotations {
-            
-            print(annotation.title)
-        }
-    }
-    
-    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
-        
-        
-        let identifier = "pin"
-        var view: MKAnnotationView
-    
-        if annotation.title! == "Current Location" {
-            
-            view = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-            view.canShowCallout = true
-            view.calloutOffset = CGPoint(x: -5, y: 5)
-
-            view.image = UIImage(named: "currentUser")
-            view.backgroundColor = UIColor.ThosColor()
-            view.layer.cornerRadius = view.frame.size.width / 2
-            
-            view.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure) as UIView
-            view.layer.shadowColor = UIColor.darkGrayColor().CGColor
-            view.layer.shadowOffset = CGSizeMake(1.0, 1.0)
-            view.layer.shadowOpacity = 0.9
-
-            
-        } else {
-
-            
-            if let dequeuedView = mapView.dequeueReusableAnnotationViewWithIdentifier(identifier) { // 2
-                dequeuedView.annotation = annotation
-                view = dequeuedView
-            
-            } else {
-            // 3
-                if annotation.isKindOfClass(DWAnnotation) {
-                    
-                    let dwAnnotation = annotation as! DWAnnotation
-                    view = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-                    view.canShowCallout = true
-                    view.calloutOffset = CGPoint(x: -5, y: 5)
-                    view.image = setAnnotationType(dwAnnotation.valueForKey("jobType") as! String)
-
-                    view.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure) as UIView
-                    view.layer.shadowColor = UIColor.darkGrayColor().CGColor
-                    view.layer.shadowOffset = CGSizeMake(1.0, 1.0)
-                    view.layer.shadowOpacity = 0.9
-
-                } else {
-                    
-                    view = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-
-                }
-            }
-        }
-        
-        return view
-
-    }
-    
-    func setAnnotationType(jobType: String) -> UIImage {
-        
-        if jobType == "houseKeeping" {
-        
-            return UIImage(named: "houseKeepingPoint")!
-            
-        } else if jobType == "labour" {
-            
-            return UIImage(named: "labourPoint")!
-            
-        } else {
-            
-            return UIImage()
-        }
+        return jobsArray.count
         
     }
     
-    func mapView(mapView: MKMapView, annotationView anView: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        for job in self.jobsArray {
-            // ToDo set tag or subtitel also because maybe some jobs have te same description
-            if (job["jobDescription"] as! String) == (anView.annotation?.title)! {
-            
-                self.jobSearchBar.resignFirstResponder()
-                self.OpenJobViewWith(job)
-            }
+        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as! jobCell
+        
+        let job = self.jobsArray[indexPath.row]
+        
+        cell.jobDescriptionLabel.text = job["jobDescription"] as? String
+        cell.jobPriceLabel.text = "€ \(job["price"])"
+        
+        let user = job["user"] as! PFUser
+        
+        let userImagefile = user["userImgage"] as! PFFile
+        userImagefile.getDataInBackgroundWithBlock { (data, error) -> Void in
+        
+            cell.userImageView.image = UIImage(data: data!)
+        
         }
+        
+        cell.userImageView.layer.masksToBounds = true
+        cell.userImageView.layer.cornerRadius = 35
+        
+        return cell
+
     }
     
-    func OpenJobViewWith(job: PFObject) {
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        let jobView: SFDraggableDialogView = NSBundle.mainBundle().loadNibNamed("SFDraggableDialogView", owner: self, options: nil)[0] as! SFDraggableDialogView
-        jobView.frame = view.frame
-        jobView.delegate = self
-        jobView.messgageLabel.sizeToFit()
-        jobView.messageText = NSMutableAttributedString(string: job["jobDescription"] as! String)
-        jobView.firstBtnText = "Ik ben geïnteresseerd"
-        jobView.firstBtnBackgroundColor = UIColor.ThosColor()
-        jobView.pfObject = job
-        
-        
-        if job["price"] != nil {
-            
-            jobView.titleText = NSMutableAttributedString(string:"€ \(job["price"] as! NSNumber)")
-            
-        } else {
-            
-            jobView.titleText = NSMutableAttributedString(string:"€ tbd")
-        }
-        if job["jobImage"] != nil {
-
-            let file = job["jobImage"] as! PFFile
-            file.getDataInBackgroundWithBlock({ (data, error) -> Void in
-            
-                if error != nil {
-                
-                    print(error?.localizedDescription)
-                
-                } else {
-                
-                    jobView.photo = UIImage(data: data!)
-                }
-            
-            })
-        
-        
-        } else {
-            
-            jobView.photo = nil
-            
-        }
-        view.addSubview(jobView)
-
+        performSegueWithIdentifier("searchToDetailSegue", sender: nil)
     }
    
-    func draggableDialogView(dialogView: SFDraggableDialogView!, didPressFirstButton firstButton: UIButton!) {
-        
-        
-        let query = PFQuery(className: "Job")
-        query.includeKey("user")
-        query.getObjectInBackgroundWithId(dialogView.pfObject.objectId!) { (job , error ) -> Void in
-            
-            if error != nil {
-                
-                
-            } else {
-                
-                if job!["interestedUsersArray"] != nil {
-                    
-                    var jobArray: [String] = job!["interestedUsersArray"] as! Array
-                   
-                    if jobArray.count < 4 {
-                       
-                        jobArray.append((PFUser.currentUser()?.objectId)!)
-                    
-                        job!["interestedUsersArray"] = jobArray
-                        job?.saveInBackgroundWithBlock({ (saved, error ) -> Void in
-                        
-                            if error != nil {
-                            
-                            
-                            } else {
-                            
-                                if saved == true {
-                                
-                                    self.sendInterestedPush(job!)
-
-                                    self.setNewInterestedArrayCurrentUser((job?.objectId)!)
-                                    
-                                    self.removeAnnotationAndJobView(dialogView)
-                                }
-                            }
-                        })
-                    
-                    } else if jobArray.count == 4 {
-                        
-                        job!["maxUsersReached"] = true
-                        job?.saveInBackgroundWithBlock({ (succes, error ) -> Void in
-                            
-                            if error != nil {
-
-                                print(error?.localizedDescription)
-                            } else {
-                                
-                                print("maxusers reached")
-                            }
-                        })
-                    }
-                    
-                } else {
-                    
-                    var jobArray = [String]()
-                    
-                    jobArray.append((PFUser.currentUser()?.objectId)!)
-                    
-                    job!["interestedUsersArray"] = jobArray
-                    job?.saveInBackgroundWithBlock({ (saved, error ) -> Void in
-                        
-                        if error != nil {
-                            
-                            
-                        } else {
-                            
-                            if saved == true {
-                                
-                                self.sendInterestedPush(job!)
-
-                                self.setNewInterestedArrayCurrentUser((job?.objectId)!)
-                                
-                                self.removeAnnotationAndJobView(dialogView)
-
-                            }
-                        }
-                    })
-
-                }
-            }
-        }
-
-    }
-    
-    
-    func removeAnnotationAndJobView(dialogView: SFDraggableDialogView) {
-        
-        dialogView.dismissWithFadeOut(true)
-        
-        for annotation in mapView.selectedAnnotations {
-            
-            mapView.removeAnnotation(annotation)
-        }
-
-    }
-    
-    func sendInterestedPush(job: PFObject) {
-
-        let pushQuery = PFInstallation.query()
-        pushQuery!.whereKey("user", equalTo: job["user"] as! PFUser)
-        let descriptionString = job["jobDescription"] as! String
-        
-        let dataDIC:[String: AnyObject] = [
-            
-            "alert"             : "Someone is intersted in your job: \(descriptionString)",
-            "type"              : "interested",
-            "badge"             : "increment",
-            "sound"             : "message-sent.aiff"
-        ]
-        
-        let push = PFPush()
-        
-        push.setQuery(pushQuery)
-        push.setData(dataDIC)
-        push.sendPushInBackground()
-
-    }
-    
-    func setNewInterestedArrayCurrentUser(jobId: String) {
-        
-        let querie = PFUser.query()
-        querie?.whereKey("objectId", equalTo: (PFUser.currentUser()?.objectId)!)
-        querie?.getFirstObjectInBackgroundWithBlock({ (currentUser, error) -> Void in
-            
-            if error != nil {
-                
-                
-            } else {
-                
-                if currentUser!["jobsAppliedToArray"] != nil {
-                    
-                    var jobsAppliedToArray: [String] = currentUser!["jobsAppliedToArray"] as! Array
-                    jobsAppliedToArray.append(jobId)
-                  
-                    PFUser.currentUser()!["jobsAppliedToArray"] = jobsAppliedToArray
-                    PFUser.currentUser()?.saveInBackground()
-                    
-                } else {
-                    
-                    var jobsAppliedToArray = [String]()
-                    jobsAppliedToArray.append(jobId)
-                    PFUser.currentUser()!["jobsAppliedToArray"] = jobsAppliedToArray
-                    PFUser.currentUser()?.saveInBackground()
-
-                }
-            }
-        })
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
     }
     
-    // cllocatationManagerDelagateFunctions
-    
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
-        locationManager.stopUpdatingLocation()
-        
-        
-        if self.geoPoint == nil {
-            
-            self.geoPoint = PFGeoPoint(location: locationManager.location)
-            
-            mapView.showsUserLocation = true
-            mapView.delegate = self
-            MapViewLocationManager.delegate = self
-            MapViewLocationManager.startUpdatingLocation()
-            mapView.region = MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2D(latitude: self.geoPoint.latitude, longitude: self.geoPoint.longitude), 40000, 40000)
-
-            let installation = PFInstallation.currentInstallation()
-            
-            if PFUser.currentUser() != nil {
-                
-                installation["location"] = self.geoPoint
-                
-            }
-            
-            installation.saveInBackground()
-            self.getJobs()
-        }
-        
-    }
-    
-    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
-        
-        print("failed location")
-        
-    }
-    
-    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
-        
-//        print("changed")
-    }
-
     // searchbar delegates
     
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
@@ -608,32 +354,10 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
         // show all annotations
         if searchBar.text! == "" {
             
-            for annotation in self.mapView.annotations {
-                
-                self.mapView.viewForAnnotation(annotation)?.hidden = false
-            }
+  
             
         } else {
-            
         
-            for annotation in self.mapView.annotations {
-                
-                let title:NSString = annotation.title!!
-                let range = title.rangeOfString(searchBar.text!, options: .CaseInsensitiveSearch)
-                
-                if range.location != NSNotFound {
-                    
-                    // add annotation again if not currently on map
-                    
-                    self.mapView.viewForAnnotation(annotation)?.hidden = false
-                    
-                } else {
-                    
-                    // remove annotatoins
-                    self.mapView.viewForAnnotation(annotation)?.hidden = true
-
-                }
-            }
 
         }
         
@@ -659,112 +383,15 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
         searchBar.resignFirstResponder()
         searchBar.backgroundColor = UIColor.clearColor()
         
-        for annotation in self.mapView.annotations {
-            
-            self.mapView.viewForAnnotation(annotation)?.hidden = false
-        }
-
     }
     
-    @IBAction func houseKeepingPressed(sender: AnyObject) {
-        
-        let button = sender as! UIButton
-        
-        if button.tag == 0 {
-           
-            self.houseKeepingButton.alpha = 0.3
-            self.labourButton.userInteractionEnabled = false
-            self.houseKeepingButton.tag = 1
-            for annotation in self.mapView.annotations {
-        
-                if annotation.isKindOfClass(DWAnnotation){
-               
-                    let dwAnnotation = annotation as! DWAnnotation
 
-                    if dwAnnotation.jobType == "houseKeeping" {
-                
-                        // add annotation again if not currently on map
-                
-                        self.mapView.viewForAnnotation(annotation)?.hidden = true
-                
-                    }
-                }
-            }
-            
-        } else if button.tag == 1 {
-          
-            self.houseKeepingButton.alpha = 1.0
-            self.labourButton.userInteractionEnabled = true
-            self.houseKeepingButton.tag = 0
-            for annotation in self.mapView.annotations {
-                
-                if annotation.isKindOfClass(DWAnnotation){
-                    
-                    let dwAnnotation = annotation as! DWAnnotation
-                    
-                    if dwAnnotation.jobType == "houseKeeping" {
-                        
-                        // add annotation again if not currently on map
-                        
-                        self.mapView.viewForAnnotation(annotation)?.hidden = false
-                        
-                    }
-                }
-            }
-
-        }
-    }
-
-    
-    @IBAction func labourButtonPRressed(sender: AnyObject) {
+    @IBAction func resetSearchButtonPressed(sender: AnyObject) {
         
-        let button = sender as! UIButton
-        
-        if button.tag == 0 {
-           
-            self.labourButton.alpha = 0.3
-            self.houseKeepingButton.userInteractionEnabled = false
-            self.labourButton.tag = 1
-            for annotation in self.mapView.annotations {
-                
-                if annotation.isKindOfClass(DWAnnotation){
-                    
-                    let dwAnnotation = annotation as! DWAnnotation
-                    
-                    if dwAnnotation.jobType == "labour" {
-                        
-                        // add annotation again if not currently on map
-                        
-                        self.mapView.viewForAnnotation(annotation)?.hidden = true
-                        
-                    }
-                }
-            }
-            
-        } else if button.tag == 1 {
-           
-            self.labourButton.alpha = 1.0
-            self.houseKeepingButton.userInteractionEnabled = true
-            self.labourButton.tag = 0
-            for annotation in self.mapView.annotations {
-                
-                if annotation.isKindOfClass(DWAnnotation){
-                    
-                    let dwAnnotation = annotation as! DWAnnotation
-                    
-                    if dwAnnotation.jobType == "labour" {
-                        
-                        // add annotation again if not currently on map
-                        
-                        self.mapView.viewForAnnotation(annotation)?.hidden = false
-                        
-                    }
-                }
-            }
-            
-        }
-
-        
+        self.tableView.hidden = true
+        self.jobsArray.removeAll(keepCapacity: true)
+        self.showJobOptions()
+        questionLabel.removeFromSuperview()
     }
     
     func checkForMewChats() {
@@ -776,34 +403,29 @@ class SearchForJobsViewController: UIViewController, CLLocationManagerDelegate, 
 
     func openChatFromNotification(notification: NSNotification) {
         
-        let query = PFQuery(className: "Job")
-        query.whereKey("objectId", equalTo: notification.object as! String)
-        query.getFirstObjectInBackgroundWithBlock { (object, error) in
-            if error != nil {
-                
-                print(error)
-                
-            } else {
-                                
-                let storyBoard  = UIStoryboard(name: "Main", bundle: nil)
-                
-                let chatController = storyBoard.instantiateViewControllerWithIdentifier("appliedJobsViewcontroller") as! MyAppliedJobsChatViewController
-                
-                chatController.jobId = object!.objectId
-                chatController.jobGeoPoint = object!.valueForKey("jobLocation") as! PFGeoPoint
-                chatController.jobDescription = object!.valueForKey("jobDescription") as! String
-                chatController.job = object!
-                
-                
-                self.presentViewController(chatController, animated: true, completion: nil)
-                
-            }
-        }
+//        let query = PFQuery(className: "Job")
+//        query.whereKey("objectId", equalTo: notification.object as! String)
+//        query.getFirstObjectInBackgroundWithBlock { (object, error) in
+//            if error != nil {
+//                
+//                print(error)
+//                
+//            } else {
+//                                
+//                let storyBoard  = UIStoryboard(name: "Main", bundle: nil)
+//                
+//                let chatController = storyBoard.instantiateViewControllerWithIdentifier("appliedJobsViewcontroller") as! MyAppliedJobsChatViewController
+//                
+//                chatController.jobId = object!.objectId
+//                chatController.jobGeoPoint = object!.valueForKey("jobLocation") as! PFGeoPoint
+//                chatController.jobDescription = object!.valueForKey("jobDescription") as! String
+//                chatController.job = object!
+//                
+//                
+//                self.presentViewController(chatController, animated: true, completion: nil)
+//                
+//            }
+//        }
     }
 
-}
-
-class DWAnnotation: MKPointAnnotation {
-    
-    var jobType: String!
 }

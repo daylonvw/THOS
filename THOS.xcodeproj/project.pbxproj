@@ -126,6 +126,7 @@
 		03CB45991CA5D01D0040D770 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03CB45981CA5D01D0040D770 /* FBSDKCoreKit.framework */; };
 		03CB459C1CA5D2CD0040D770 /* CreateAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CB459A1CA5D2CD0040D770 /* CreateAccountViewController.swift */; };
 		03CB459D1CA5D2CD0040D770 /* LoginVCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CB459B1CA5D2CD0040D770 /* LoginVCViewController.swift */; };
+		03D957021D36C6D800CF8C2D /* JobDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D957011D36C6D800CF8C2D /* JobDetailViewController.swift */; };
 		03E680441D2E894100C4DCDF /* SelectNewJobTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E680431D2E894100C4DCDF /* SelectNewJobTypeViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -318,6 +319,7 @@
 		03CB45981CA5D01D0040D770 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		03CB459A1CA5D2CD0040D770 /* CreateAccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateAccountViewController.swift; sourceTree = "<group>"; };
 		03CB459B1CA5D2CD0040D770 /* LoginVCViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginVCViewController.swift; sourceTree = "<group>"; };
+		03D957011D36C6D800CF8C2D /* JobDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JobDetailViewController.swift; sourceTree = "<group>"; };
 		03E680431D2E894100C4DCDF /* SelectNewJobTypeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectNewJobTypeViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -374,12 +376,12 @@
 		033AB8B31CA9A89900DB6916 /* Help seekersVC */ = {
 			isa = PBXGroup;
 			children = (
+				03E680431D2E894100C4DCDF /* SelectNewJobTypeViewController.swift */,
 				03CB44791CA5CBF50040D770 /* CreateJobViewController.swift */,
 				03CB447A1CA5CBF50040D770 /* MyPostedJobsViewController.swift */,
 				03CB447B1CA5CBF50040D770 /* helpSeekerProfileViewController.swift */,
 				03CB447C1CA5CBF50040D770 /* JobChatViewController.swift */,
 				03CB447D1CA5CBF50040D770 /* HelpSeekerTabbarControllerViewController.swift */,
-				03E680431D2E894100C4DCDF /* SelectNewJobTypeViewController.swift */,
 			);
 			name = "Help seekersVC";
 			sourceTree = "<group>";
@@ -388,6 +390,7 @@
 			isa = PBXGroup;
 			children = (
 				03CB447E1CA5CBF50040D770 /* SearchForJobsViewController.swift */,
+				03D957011D36C6D800CF8C2D /* JobDetailViewController.swift */,
 				03CB447F1CA5CBF50040D770 /* MyJobsAppliedViewController.swift */,
 				03CB44801CA5CBF50040D770 /* JobSeekerProfileViewController.swift */,
 				03CB44811CA5CBF50040D770 /* MyAppliedJobsChatViewController.swift */,
@@ -947,6 +950,7 @@
 				03CB453E1CA5CCBB0040D770 /* JSQMessagesTimestampFormatter.m in Sources */,
 				03CB451D1CA5CCBB0040D770 /* FBAnnotation.swift in Sources */,
 				03CB45611CA5CCBB0040D770 /* Utilities.swift in Sources */,
+				03D957021D36C6D800CF8C2D /* JobDetailViewController.swift in Sources */,
 				03CB45381CA5CCBB0040D770 /* JSQMessagesKeyboardController.m in Sources */,
 				03CB45411CA5CCBB0040D770 /* JSQMessagesCollectionViewFlowLayout.m in Sources */,
 				03CB45501CA5CCBB0040D770 /* JSQMessagesCollectionViewCellOutgoing.m in Sources */,

@@ -8,18 +8,26 @@
 
 import UIKit
 
-class CreateJobViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class CreateJobViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     @IBOutlet var jobDescriptionTextView: UITextView!
     @IBOutlet var postJobButton: UIButton!
     @IBOutlet var priceTextField: UITextField!
     
-    @IBOutlet var firstDateOption: UIButton!
-    @IBOutlet var secondDateOption: UIButton!
-    @IBOutlet var thirdDateOption: UIButton!
+    @IBOutlet var openDatePickerViewButton: UIButton!
     
-    let locationManager = CLLocationManager()
-    var jobPFGeoPoint: PFGeoPoint!
+    var datePickerView: UIView!
+    var selectButton: UIButton!
+    var jobDateOptions = [NSDate]()
+    var datePicker: UIDatePicker!
+    
+    var optionDateOne: NSDate!
+    var optionDateTwo: NSDate!
+    var optionDateThree: NSDate!
+    
+    @IBOutlet var firstDateLabel: UILabel!
+    @IBOutlet var secondDateLabel: UILabel!
+    @IBOutlet var thirdDateLabel: UILabel!
     
     var cloudImage: UIImageView!
     
@@ -57,11 +65,7 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         dismissViewButton.addTarget(self, action: #selector(self.dismissViewButtonPressed), forControlEvents: .TouchUpInside)
         
         view.addSubview(dismissViewButton)
-      
-        getlocation()
-
-        
-        NSNotificationCenter.defaultCenter().addObserverForName("openedWitdPushFromJobHelper", object: nil, queue: nil) { (notification: NSNotification) -> Void in
+    NSNotificationCenter.defaultCenter().addObserverForName("openedWitdPushFromJobHelper", object: nil, queue: nil) { (notification: NSNotification) -> Void in
             
             self.openChatFromNotification(notification)
         }
@@ -78,24 +82,89 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    @IBAction func dateOptionsButtonPressed(sender: AnyObject) {
+        
+        openDatePickerForButton()
+    }
 
-    @IBAction func postJobButtonPressed(sender: AnyObject) {
+    func openDatePickerForButton() {
         
-       self.checkForRequiredInfo()
+        self.jobDateOptions.removeAll(keepCapacity: true)
+        
+        datePickerView = UIView(frame: view.frame)
+        datePickerView.backgroundColor = UIColor(white: 0.3, alpha: 0.4)
+        
+        let datePickerBackgroundView = UIView(frame: CGRect(x: 0, y: view.frame.size.height / 2, width: view.frame.width, height: view.frame.size.height / 2))
+        datePickerBackgroundView.backgroundColor = UIColor.whiteColor()
+        
+        datePicker = UIDatePicker(frame: CGRect(x: 0, y: 10, width: view.frame.size.width, height: 200))
+        datePicker.datePickerMode = .Date
+        
+        selectButton = UIButton(frame: CGRect(x: 10, y: datePickerBackgroundView.frame.size.height - 60, width: view.frame.size.width - 20, height: 50))
+        selectButton.setTitle("Kies als eerste datum", forState: .Normal)
+        selectButton.backgroundColor = UIColor.ThosColor()
+        selectButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        selectButton.addTarget(self, action: #selector(self.addDateToArray), forControlEvents: .TouchUpInside)
+        
+    
+        datePickerBackgroundView.addSubview(selectButton)
+        datePickerBackgroundView.addSubview(datePicker)
+        datePickerView.addSubview(datePickerBackgroundView)
+        self.view.addSubview(datePickerView)
+        
+    }
+    
+    func addDateToArray() {
+        
+        openDatePickerViewButton.setTitle("Klik hier om een datum te wijzigen", forState: .Normal)
+        
+        if self.jobDateOptions.count < 3 {
+            
+            self.jobDateOptions.append(datePicker.date)
+            
 
+            if jobDateOptions.count == 1 {
+                
+                selectButton.setTitle("Kies als tweede datum", forState: .Normal)
+
+            } else if jobDateOptions.count == 2 {
+                
+                selectButton.setTitle("Kies als derde datum", forState: .Normal)
+
+            }
+            
+            if jobDateOptions.count == 3 {
+                
+                datePickerView.removeFromSuperview()
+                
+                showDateOptions()
+                
+                
+            }
+            
+        }
     }
     
-    
-    @IBAction func firstDateButtonPressed(sender: AnyObject) {
+    func showDateOptions() {
         
-    }
+        var dateStringArray = [String]()
         
-    @IBAction func secondDateButtonPressed(sender: AnyObject) {
+        for date in jobDateOptions {
+            
+            let formatter = NSDateFormatter()
+            formatter.dateStyle = .MediumStyle
+            let dateString = formatter.stringFromDate(date)
+            
+            dateStringArray.append(dateString)
+
+        }
         
-    }
-    
-    @IBAction func thirdDateButtonPressed(sender: AnyObject) {
         
+        firstDateLabel.text = "1. \(dateStringArray[0])"
+        secondDateLabel.text = "2. \(dateStringArray[1])"
+        thirdDateLabel.text = "3. \(dateStringArray[2])"
+
     }
     
     func checkForRequiredInfo() {
@@ -106,12 +175,6 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
             self.missingItemsArray.append("opdrachtomschrijving")
         }
         
-        if self.jobPFGeoPoint == nil {
-            
-            self.allRequiredJobInfoEntered = false
-            self.missingItemsArray.append("Opdracht locatie")
-
-        }
         
         let priceString = self.priceTextField.text!
         
@@ -120,6 +183,12 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
             self.allRequiredJobInfoEntered = false
             self.missingItemsArray.append("opdracht prijs")
 
+        }
+        
+        if jobDateOptions.count < 3 {
+            
+            self.allRequiredJobInfoEntered = false
+            self.missingItemsArray.append("opdracht datum")
         }
         
         if self.allRequiredJobInfoEntered == true {
@@ -132,6 +201,12 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
             
             self.openalertViewController("")
         }
+        
+    }
+    
+    @IBAction func postJobButtonPressed(sender: AnyObject) {
+        
+        self.checkForRequiredInfo()
         
     }
     
@@ -176,12 +251,6 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
             
         }
         
-        if self.jobPFGeoPoint != nil {
-            
-            job["jobLocation"] = self.jobPFGeoPoint
-            
-        }
-        
         if self.jobDescriptionTextView.text != "" {
             
             job["jobDescription"] = self.jobDescriptionTextView.text
@@ -192,12 +261,17 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         job["userId"] = PFUser.currentUser()?.objectId
         job["open"] = true
         job["finished"] = false
-        job["maxUsersReached"] = false
         job["posterAcceptedDate"] = false
         job["helperAcceptedDate"] = false
         job["posterReadLastText"] = false
         job["helperReadLastText"] = false
-
+        job["firtsOptionDate"] = jobDateOptions[0]
+        job["secondsOptionDate"] = jobDateOptions[1]
+        job["thirdOptionDate"] = jobDateOptions[2]
+        job["jobTypeNumber"] = self.jobType
+        job["jobSubTypeNumber"] = self.jobSubType
+        
+        
         job.saveInBackgroundWithBlock { (succes, error) -> Void in
             
             if error != nil {
@@ -220,154 +294,32 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
     func sendNearByPush() {
         // todo
         
-        let pushQuery = PFInstallation.query()
-        pushQuery?.whereKey("installationId", notEqualTo:PFInstallation().installationId)
-        pushQuery?.whereKey("location", nearGeoPoint: self.jobPFGeoPoint, withinKilometers: 100)
-        
-        let dataDIC:[String: AnyObject] = [
-            
-            "alert"             : "Nieuwe opdracht in de buurt",
-            "type"              : "new job",
-            "badge"             : "increment",
-            "sound"             : "message-sent.aiff"
-        ]
-        
-        let push = PFPush()
-        
-        push.setQuery(pushQuery)
-        push.setData(dataDIC)
-        push.sendPushInBackground()
-
-    }
-    
-    
-    func resetUI() {
-        
-        self.jobDescriptionTextView.backgroundColor = UIColor(white: 1.0, alpha: 0.8)
-        self.jobDescriptionTextView.textColor = UIColor.darkGrayColor()
-        self.jobDescriptionTextView.text = ""
-        
-        self.priceTextField.text = ""
-        
-        self.jobDescriptionTextView.hidden = false
-        self.priceTextField.hidden = false
-        
-        self.postJobButton.alpha = 1.0
-        
-        self.cloudImage.removeFromSuperview()
-
-        self.missingItemsArray.removeAll(keepCapacity: true)
-        self.missingItemsString = ""
+//        let pushQuery = PFInstallation.query()
+//        pushQuery?.whereKey("installationId", notEqualTo:PFInstallation().installationId)
+//        pushQuery?.whereKey("location", nearGeoPoint: self.jobPFGeoPoint, withinKilometers: 100)
+//        
+//        let dataDIC:[String: AnyObject] = [
+//            
+//            "alert"             : "Nieuwe opdracht in de buurt",
+//            "type"              : "new job",
+//            "badge"             : "increment",
+//            "sound"             : "message-sent.aiff"
+//        ]
+//        
+//        let push = PFPush()
+//        
+//        push.setQuery(pushQuery)
+//        push.setData(dataDIC)
+//        push.sendPushInBackground()
 
     }
     
     
     func animatePostButton() {
         
-        self.jobDescriptionTextView.hidden = true
-        self.priceTextField.hidden = true
-        
-        
-        cloudImage = UIImageView(frame: CGRect(x: 0, y: 0, width: 250, height: 230))
-        cloudImage.center = CGPointMake(view.center.x, 150)
-        cloudImage.image = UIImage(named: "cloudImage")
-        cloudImage.layer.shadowColor = UIColor.blackColor().CGColor
-        cloudImage.layer.shadowOffset = CGSizeMake(1.0, 1.0)
-        cloudImage.layer.shadowOpacity = 0.8
-        self.view.addSubview(cloudImage)
-
-        let path = UIBezierPath()
-        path.moveToPoint(CGPoint(x: self.postJobButton.center.x,y: self.postJobButton.center.y))
-       
-        path.addCurveToPoint(CGPoint(x: self.view.center.x,y: 30), controlPoint1: CGPoint(x: view.frame.width - 20, y: view.center.y), controlPoint2: CGPoint(x: 10, y: 110))
-        
-        // create a new CAKeyframeAnimation that animates the objects position
-        let anim = CAKeyframeAnimation(keyPath: "position")
-        
-        // set the animations path to our bezier curve
-        anim.path = path.CGPath
-        
-        anim.repeatCount = 1.0
-        anim.duration = 1.5
-        
-        self.postJobButton.layer.addAnimation(anim, forKey: "animate position along path")
-        
-        UIView.animateWithDuration(1.5, animations: { () -> Void in
-           
-            self.postJobButton.alpha = 0.0
-            
-            }) { (finished) -> Void in
-             
-                self.resetUI()
-        }
-
+        self.dismissViewControllerAnimated(true, completion: nil)
 
     }
-    
-    func getlocation() {
-        
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.startUpdatingLocation()
-        
-    }
-    
-    
-// cllocatationManagerDelagateFunctions
-    
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
-        locationManager.stopUpdatingLocation()
-            
-        self.jobPFGeoPoint = PFGeoPoint(location: locationManager.location)
-        
-        let geoCoder = CLGeocoder()
-        let location = CLLocation(latitude: self.jobPFGeoPoint.latitude, longitude: self.jobPFGeoPoint.longitude)
-        
-        geoCoder.reverseGeocodeLocation(location, completionHandler: { (placemarks, error) -> Void in
-            
-            // Place details
-            var placeMark: CLPlacemark!
-            placeMark = placemarks?[0]
-            
-            // City
-            if let city = placeMark.addressDictionary!["City"] as? NSString {
-                
-//                self.currentPostionButton.setTitle("Opdracht locatie is \(city)", forState: .Normal)
-                
-                print(city)
-            }
-
-        })
-    
-        let installation = PFInstallation.currentInstallation()
-        
-        if PFUser.currentUser() != nil {
-            
-            installation["location"] = self.jobPFGeoPoint
-            
-        }
-        
-        installation.saveInBackground()
-
-    
-        
-    }
-    
-    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
-        
-        print("failed location")
-        
-    }
-    
-    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
-        
-        print("changed")
-    }
-
-    
     
 // textFieldDelagate
     

@@ -112,19 +112,6 @@ class helpSeekerProfileViewController: UIViewController {
         }
         
     }
-
-    @IBAction func switchUserTypeButtonPressed(sender: AnyObject) {
-        
-        
-        PFUser.currentUser()?.setValue("helper", forKey: "userType")
-        PFUser.currentUser()?.saveInBackground()
-        
-        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        let controller = storyBoard.instantiateViewControllerWithIdentifier("SeekingJobTabbarVC")
-        
-        self.presentViewController(controller, animated: true, completion: nil)
-
-    }
     
     @IBAction func feedBackButtonPressed(sender: AnyObject) {
         
@@ -167,15 +154,14 @@ class helpSeekerProfileViewController: UIViewController {
         object.setObject(feedbackText, forKey:"feedback")
         object.setObject(PFUser.currentUser()!, forKey: "user")
         object.saveInBackground()
+
+    }
+    
+    @IBAction func BackButtonPressed(sender: AnyObject) {
         
-        // create uialertController
-        
-//        let alert = UIAlertView(title:NSLocalizedString("Thank you", comment: ""), message:NSLocalizedString("We appreciate the feedback", comment: ""), delegate: self, cancelButtonTitle: "OK")
-//        alert.alpha = 0.9
-//        alert.opaque = true
-//        
-//        alert.show()
+        self.dismissViewControllerAnimated(true, completion: nil)
         
     }
+    
 
 }

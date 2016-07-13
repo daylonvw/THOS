@@ -45,14 +45,7 @@ class SelectNewJobTypeViewController: UIViewController {
     }
     
     func showJobOptions() {
-        
-        let companyLabel = UILabel(frame: CGRect(x: 10, y: 20, width: view.frame.size.width - 20, height: 40))
-        companyLabel.textColor = UIColor.ThosColor()
-        companyLabel.text = "The house of service"
-        companyLabel.adjustsFontSizeToFitWidth = true
-        companyLabel.textAlignment = .Center
-        companyLabel.font = UIFont.systemFontOfSize(24, weight: UIFontWeightThin)
-        
+    
         questionLabel = UILabel(frame: CGRect(x: 10, y: 70, width: view.frame.size.width - 20, height: 60))
         questionLabel.textColor = UIColor.ThosColor()
         questionLabel.text = "Zoek je een Held voor klussen binnen het het of voor buiten het huis?"
@@ -82,7 +75,6 @@ class SelectNewJobTypeViewController: UIViewController {
         backButton.titleLabel?.adjustsFontSizeToFitWidth = true
         backButton.hidden = true
         
-        view.addSubview(companyLabel)
         view.addSubview(questionLabel)
         view.addSubview(outdoorHeroButton)
         view.addSubview(indoorHeroButton)
