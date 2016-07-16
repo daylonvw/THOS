@@ -63,8 +63,8 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
         refreshContol.addTarget(self, action: #selector(MyPostedJobsViewController.refreshPulled), forControlEvents: .ValueChanged)
         self.tableView.addSubview(refreshContol)
         
-        segmentedControl  = HMSegmentedControl(sectionTitles: ["Held", "Nog", "Ik"])
-        segmentedControl.frame = CGRectMake(0, 20, view.frame.width, 50)
+        segmentedControl  = HMSegmentedControl(sectionTitles: ["Held geregeld", "Nog geen Held", "Uit te voeren"])
+        segmentedControl.frame = CGRectMake(0, 64, view.frame.width, 50)
         segmentedControl.selectedSegmentIndex = 0
         segmentedControl.backgroundColor = UIColor.whiteColor()
         segmentedControl.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.darkGrayColor()]
@@ -111,7 +111,7 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
             
         } else if self.statusSegmentedControl.selectedSegmentIndex == 2 {
             
-            self.getMyOpenWithoutInterestedUsersJobs()
+            self.getMyJobsToBeDone()
 
         }
 
@@ -136,7 +136,7 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
             
         } else if sender.selectedSegmentIndex == 2 {
             
-            self.getMyOpenWithoutInterestedUsersJobs()
+            self.getMyJobsToBeDone()
         }
 
     }
@@ -185,7 +185,6 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
         let querie = PFQuery(className: "Job")
         querie.whereKey("user", equalTo: PFUser.currentUser()!)
         querie.whereKey("open", equalTo: true)
-        querie.includeKey("acceptedUser")
         querie.findObjectsInBackgroundWithBlock { (jobs, error ) -> Void in
             
             if error != nil {
@@ -198,21 +197,9 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
                     
                     for job in jobs! {
                         
-                        if job["interestedUsersArray"] != nil {
-                            
-                            if job["posterReadLastText"] as! Bool == false && self.myPostedJobsArray.count != 0 {
-                            
-                                self.myPostedJobsArray.insert(job, atIndex: 0)
-                                self.tableView.reloadData()
-                                self.refreshContol.endRefreshing()
-                            
-                            } else {
-                            
-                                self.myPostedJobsArray.append(job)
-                                self.tableView.reloadData()
-                                self.refreshContol.endRefreshing()
-                            }
-                        }
+                        self.myPostedJobsArray.append(job)
+                        self.tableView.reloadData()
+                        self.refreshContol.endRefreshing()
                     }
                     
                 } 
@@ -222,12 +209,11 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
 
     }
 
-    func getMyOpenWithoutInterestedUsersJobs() {
+    func getMyJobsToBeDone() {
         
         let querie = PFQuery(className: "Job")
-        querie.whereKey("user", equalTo: PFUser.currentUser()!)
-        querie.whereKey("open", equalTo: true)
-        querie.includeKey("acceptedUser")
+        querie.whereKey("acceptedUser", equalTo: PFUser.currentUser()!)
+        querie.whereKey("open", equalTo: false)
         querie.findObjectsInBackgroundWithBlock { (jobs, error ) -> Void in
             
             if error != nil {
@@ -237,24 +223,13 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
             } else {
                                 
                 if ((jobs?.count) != nil) {
-                    
+                    // todo unread text to top
                     for job in jobs! {
                         
-                        if job["interestedUsersArray"] == nil {
-                            
-                            if job["posterReadLastText"] as! Bool == false && self.myPostedJobsArray.count != 0 {
-                                
-                                self.myPostedJobsArray.insert(job, atIndex: 0)
-                                self.tableView.reloadData()
-                                self.refreshContol.endRefreshing()
-                                
-                            } else {
-                                
-                                self.myPostedJobsArray.append(job)
-                                self.tableView.reloadData()
-                                self.refreshContol.endRefreshing()
-                            }
-                        }
+                        self.myPostedJobsArray.append(job)
+                        self.tableView.reloadData()
+                        self.refreshContol.endRefreshing()
+                        
                     }
                 }
             }
@@ -277,7 +252,7 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! MyPostedJobsCell
-        
+        cell.acceptedDateLbel.adjustsFontSizeToFitWidth =  true
         let object  = self.myPostedJobsArray[indexPath.row]
         
         if object["posterReadLastText"] as! Bool == false {
@@ -322,12 +297,23 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
             
         } else if object["acceptedDate"] != nil {
             
-            let formatter = NSDateFormatter()
-            formatter.dateStyle = .MediumStyle
-            let dateString = formatter.stringFromDate(object["acceptedDate"] as! NSDate)
+            if self.segmentedControl.selectedSegmentIndex == 0{
+                
+                let formatter = NSDateFormatter()
+                formatter.dateStyle = .MediumStyle
+                let dateString = formatter.stringFromDate(object["acceptedDate"] as! NSDate)
             
-            cell.acceptedDateLbel.text = "De Held komt op \(dateString)"
-            
+                cell.acceptedDateLbel.text = "De Held komt op \(dateString)"
+                
+            } else if self.segmentedControl.selectedSegmentIndex == 2 {
+                
+                let formatter = NSDateFormatter()
+                formatter.dateStyle = .MediumStyle
+                let dateString = formatter.stringFromDate(object["acceptedDate"] as! NSDate)
+                
+                cell.acceptedDateLbel.text = "Deze klus moet je uitvoeren op \(dateString)"
+
+            }
         }
        
         return cell
