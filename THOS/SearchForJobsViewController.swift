@@ -51,7 +51,6 @@ class SearchForJobsViewController: UIViewController, UISearchBarDelegate, UITabl
         centerX = view.center.x
         centerY = view.center.y
         
-        self.showJobOptions()
         
 //        NSNotificationCenter.defaultCenter().addObserverForName("openedWitdPushFromJobPoster", object: nil, queue: nil) { (notification: NSNotification) -> Void in
 //            
@@ -64,7 +63,20 @@ class SearchForJobsViewController: UIViewController, UISearchBarDelegate, UITabl
         
         super.viewDidAppear(true)
         
+        tableView.hidden = true
+        
         self.checkForMewChats()
+        
+        self.tableView.hidden = true
+        self.jobsArray.removeAll(keepCapacity: true)
+        self.showJobOptions()
+        
+        if questionLabel != nil {
+            
+          questionLabel.removeFromSuperview()  
+        }
+
+
     }
 
 
@@ -339,10 +351,17 @@ class SearchForJobsViewController: UIViewController, UISearchBarDelegate, UITabl
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        performSegueWithIdentifier("searchToDetailSegue", sender: nil)
+        performSegueWithIdentifier("searchToDetailSegue", sender: indexPath)
     }
    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        let indexPath = sender as! NSIndexPath
+        if segue.destinationViewController.isKindOfClass(JobDetailViewController) {
+            
+            let destinationViewController = segue.destinationViewController as! JobDetailViewController
+            destinationViewController.job = jobsArray[indexPath.row]
+        }
         
     }
     

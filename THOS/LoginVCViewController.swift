@@ -108,6 +108,11 @@ class LoginVCViewController: UIViewController {
     
     func continueWithFacebookLogin() {
         
+        for subView in view.subviews {
+            
+            subView.hidden = true
+        }
+        
         let permissionsArray = ["public_profile", "email", "user_friends"]
         
         PFFacebookUtils.logInInBackgroundWithReadPermissions(permissionsArray) {
@@ -125,6 +130,13 @@ class LoginVCViewController: UIViewController {
                 }
                 
             } else {
+                
+                
+                for subView in self.view.subviews {
+                    
+                    subView.hidden = false
+                }
+
                 
                 print("Uh oh. The user cancelled the Facebook login.")
             }

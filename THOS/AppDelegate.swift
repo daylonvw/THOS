@@ -114,6 +114,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
         
+        // todo 
         if application.applicationState == .Active {
             
             let typeString = userInfo["type"] as! String

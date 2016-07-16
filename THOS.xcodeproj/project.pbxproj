@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0362591E1CF1CECA00AB26EE /* The House of Service legal BU.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 0362591D1CF1CEC900AB26EE /* The House of Service legal BU.pdf */; };
+		0372D7881D3A70E2004E24A8 /* HMSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 0372D7871D3A70E2004E24A8 /* HMSegmentedControl.m */; };
 		03BD051A1CBB72B9000B84A0 /* test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03BD05191CBB72B9000B84A0 /* test.swift */; };
 		03BD052E1CBB7345000B84A0 /* libPayPalMobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 03BD05261CBB7345000B84A0 /* libPayPalMobile.a */; };
 		03BD053B1CBB7396000B84A0 /* libCardIO.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 03BD05381CBB7396000B84A0 /* libCardIO.a */; };
@@ -22,10 +23,6 @@
 		03CB44861CA5CBF50040D770 /* JobChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CB447C1CA5CBF50040D770 /* JobChatViewController.swift */; };
 		03CB44871CA5CBF50040D770 /* HelpSeekerTabbarControllerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CB447D1CA5CBF50040D770 /* HelpSeekerTabbarControllerViewController.swift */; };
 		03CB44881CA5CBF50040D770 /* SearchForJobsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CB447E1CA5CBF50040D770 /* SearchForJobsViewController.swift */; };
-		03CB44891CA5CBF50040D770 /* MyJobsAppliedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CB447F1CA5CBF50040D770 /* MyJobsAppliedViewController.swift */; };
-		03CB448A1CA5CBF50040D770 /* JobSeekerProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CB44801CA5CBF50040D770 /* JobSeekerProfileViewController.swift */; };
-		03CB448B1CA5CBF50040D770 /* MyAppliedJobsChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CB44811CA5CBF50040D770 /* MyAppliedJobsChatViewController.swift */; };
-		03CB448C1CA5CBF50040D770 /* JobSeekerTabbarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CB44821CA5CBF50040D770 /* JobSeekerTabbarController.swift */; };
 		03CB451C1CA5CCBB0040D770 /* dare.png in Resources */ = {isa = PBXBuildFile; fileRef = 03CB448E1CA5CCBB0040D770 /* dare.png */; };
 		03CB451D1CA5CCBB0040D770 /* FBAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CB448F1CA5CCBB0040D770 /* FBAnnotation.swift */; };
 		03CB451E1CA5CCBB0040D770 /* FBAnnotationCluster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CB44901CA5CCBB0040D770 /* FBAnnotationCluster.swift */; };
@@ -132,6 +129,8 @@
 
 /* Begin PBXFileReference section */
 		0362591D1CF1CEC900AB26EE /* The House of Service legal BU.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "The House of Service legal BU.pdf"; sourceTree = "<group>"; };
+		0372D7861D3A70E1004E24A8 /* HMSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HMSegmentedControl.h; sourceTree = "<group>"; };
+		0372D7871D3A70E2004E24A8 /* HMSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HMSegmentedControl.m; sourceTree = "<group>"; };
 		03BD05191CBB72B9000B84A0 /* test.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = test.swift; path = THOS/test.swift; sourceTree = SOURCE_ROOT; };
 		03BD05261CBB7345000B84A0 /* libPayPalMobile.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libPayPalMobile.a; sourceTree = "<group>"; };
 		03BD05271CBB7345000B84A0 /* PayPalConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PayPalConfiguration.h; sourceTree = "<group>"; };
@@ -164,10 +163,6 @@
 		03CB447C1CA5CBF50040D770 /* JobChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JobChatViewController.swift; sourceTree = "<group>"; };
 		03CB447D1CA5CBF50040D770 /* HelpSeekerTabbarControllerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpSeekerTabbarControllerViewController.swift; sourceTree = "<group>"; };
 		03CB447E1CA5CBF50040D770 /* SearchForJobsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchForJobsViewController.swift; sourceTree = "<group>"; };
-		03CB447F1CA5CBF50040D770 /* MyJobsAppliedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyJobsAppliedViewController.swift; sourceTree = "<group>"; };
-		03CB44801CA5CBF50040D770 /* JobSeekerProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JobSeekerProfileViewController.swift; sourceTree = "<group>"; };
-		03CB44811CA5CBF50040D770 /* MyAppliedJobsChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyAppliedJobsChatViewController.swift; sourceTree = "<group>"; };
-		03CB44821CA5CBF50040D770 /* JobSeekerTabbarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JobSeekerTabbarController.swift; sourceTree = "<group>"; };
 		03CB448E1CA5CCBB0040D770 /* dare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dare.png; sourceTree = "<group>"; };
 		03CB448F1CA5CCBB0040D770 /* FBAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FBAnnotation.swift; sourceTree = "<group>"; };
 		03CB44901CA5CCBB0040D770 /* FBAnnotationCluster.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FBAnnotationCluster.swift; sourceTree = "<group>"; };
@@ -373,32 +368,6 @@
 			name = Login;
 			sourceTree = "<group>";
 		};
-		033AB8B31CA9A89900DB6916 /* Help seekersVC */ = {
-			isa = PBXGroup;
-			children = (
-				03E680431D2E894100C4DCDF /* SelectNewJobTypeViewController.swift */,
-				03CB44791CA5CBF50040D770 /* CreateJobViewController.swift */,
-				03CB447A1CA5CBF50040D770 /* MyPostedJobsViewController.swift */,
-				03CB447B1CA5CBF50040D770 /* helpSeekerProfileViewController.swift */,
-				03CB447C1CA5CBF50040D770 /* JobChatViewController.swift */,
-				03CB447D1CA5CBF50040D770 /* HelpSeekerTabbarControllerViewController.swift */,
-			);
-			name = "Help seekersVC";
-			sourceTree = "<group>";
-		};
-		033AB8B41CA9A8B000DB6916 /* HelpersVC */ = {
-			isa = PBXGroup;
-			children = (
-				03CB447E1CA5CBF50040D770 /* SearchForJobsViewController.swift */,
-				03D957011D36C6D800CF8C2D /* JobDetailViewController.swift */,
-				03CB447F1CA5CBF50040D770 /* MyJobsAppliedViewController.swift */,
-				03CB44801CA5CBF50040D770 /* JobSeekerProfileViewController.swift */,
-				03CB44811CA5CBF50040D770 /* MyAppliedJobsChatViewController.swift */,
-				03CB44821CA5CBF50040D770 /* JobSeekerTabbarController.swift */,
-			);
-			name = HelpersVC;
-			sourceTree = "<group>";
-		};
 		033AB8B51CA9A8D500DB6916 /* Assets + storyBoard */ = {
 			isa = PBXGroup;
 			children = (
@@ -407,6 +376,31 @@
 				03CB446B1CA5CB710040D770 /* LaunchScreen.storyboard */,
 			);
 			name = "Assets + storyBoard";
+			sourceTree = "<group>";
+		};
+		0372D7841D3A54E8004E24A8 /* New Thos */ = {
+			isa = PBXGroup;
+			children = (
+				03CB447D1CA5CBF50040D770 /* HelpSeekerTabbarControllerViewController.swift */,
+				03CB447B1CA5CBF50040D770 /* helpSeekerProfileViewController.swift */,
+				03E680431D2E894100C4DCDF /* SelectNewJobTypeViewController.swift */,
+				03CB44791CA5CBF50040D770 /* CreateJobViewController.swift */,
+				03CB447E1CA5CBF50040D770 /* SearchForJobsViewController.swift */,
+				03D957011D36C6D800CF8C2D /* JobDetailViewController.swift */,
+				03CB447A1CA5CBF50040D770 /* MyPostedJobsViewController.swift */,
+				03CB447C1CA5CBF50040D770 /* JobChatViewController.swift */,
+			);
+			name = "New Thos";
+			sourceTree = "<group>";
+		};
+		0372D7851D3A70C9004E24A8 /* HMSegmentedControll */ = {
+			isa = PBXGroup;
+			children = (
+				0372D7861D3A70E1004E24A8 /* HMSegmentedControl.h */,
+				0372D7871D3A70E2004E24A8 /* HMSegmentedControl.m */,
+			);
+			name = HMSegmentedControll;
+			path = "../../THOS/PayPal-iOS-SDK-master/CardIO";
 			sourceTree = "<group>";
 		};
 		03BD05251CBB7345000B84A0 /* PayPalMobile */ = {
@@ -467,8 +461,7 @@
 				03CB45631CA5CD300040D770 /* AppDelegate.swift */,
 				033AB8B51CA9A8D500DB6916 /* Assets + storyBoard */,
 				033AB8B21CA9A87E00DB6916 /* Login */,
-				033AB8B31CA9A89900DB6916 /* Help seekersVC */,
-				033AB8B41CA9A8B000DB6916 /* HelpersVC */,
+				0372D7841D3A54E8004E24A8 /* New Thos */,
 				03CB44B11CA5CCBB0040D770 /* Supporting files */,
 				03CB45121CA5CCBB0040D770 /* JSQMessagesViewController */,
 				03CB451B1CA5CCBB0040D770 /* JSQSound */,
@@ -578,6 +571,7 @@
 				03CB446E1CA5CB710040D770 /* Info.plist */,
 				03BD05191CBB72B9000B84A0 /* test.swift */,
 				03CB448E1CA5CCBB0040D770 /* dare.png */,
+				0372D7851D3A70C9004E24A8 /* HMSegmentedControll */,
 				03BD052F1CBB7396000B84A0 /* CardIO */,
 				03BD05251CBB7345000B84A0 /* PayPalMobile */,
 				03CB44961CA5CCBB0040D770 /* FBCluster */,
@@ -885,7 +879,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				03CB448C1CA5CBF50040D770 /* JobSeekerTabbarController.swift in Sources */,
 				03CB459D1CA5D2CD0040D770 /* LoginVCViewController.swift in Sources */,
 				03CB45421CA5CCBB0040D770 /* JSQMessagesCollectionViewFlowLayoutInvalidationContext.m in Sources */,
 				03CB45431CA5CCBB0040D770 /* JSQMessagesCollectionViewLayoutAttributes.m in Sources */,
@@ -908,12 +901,10 @@
 				03CB45581CA5CCBB0040D770 /* JSQMessagesToolbarContentView.m in Sources */,
 				03CB45471CA5CCBB0040D770 /* JSQMessagesAvatarImage.m in Sources */,
 				03CB452F1CA5CCBB0040D770 /* UIImage+ImageEffects.m in Sources */,
-				03CB44891CA5CBF50040D770 /* MyJobsAppliedViewController.swift in Sources */,
 				03CB45331CA5CCBB0040D770 /* NSString+JSQMessages.m in Sources */,
 				03CB45521CA5CCBB0040D770 /* JSQMessagesComposerTextView.m in Sources */,
 				03CB455C1CA5CCBB0040D770 /* Constants.swift in Sources */,
 				03CB45531CA5CCBB0040D770 /* JSQMessagesInputToolbar.m in Sources */,
-				03CB448A1CA5CBF50040D770 /* JobSeekerProfileViewController.swift in Sources */,
 				03CB44881CA5CBF50040D770 /* SearchForJobsViewController.swift in Sources */,
 				03CB45371CA5CCBB0040D770 /* UIView+JSQMessages.m in Sources */,
 				03CB453F1CA5CCBB0040D770 /* JSQMessagesToolbarButtonFactory.m in Sources */,
@@ -951,6 +942,7 @@
 				03CB451D1CA5CCBB0040D770 /* FBAnnotation.swift in Sources */,
 				03CB45611CA5CCBB0040D770 /* Utilities.swift in Sources */,
 				03D957021D36C6D800CF8C2D /* JobDetailViewController.swift in Sources */,
+				0372D7881D3A70E2004E24A8 /* HMSegmentedControl.m in Sources */,
 				03CB45381CA5CCBB0040D770 /* JSQMessagesKeyboardController.m in Sources */,
 				03CB45411CA5CCBB0040D770 /* JSQMessagesCollectionViewFlowLayout.m in Sources */,
 				03CB45501CA5CCBB0040D770 /* JSQMessagesCollectionViewCellOutgoing.m in Sources */,
@@ -958,7 +950,6 @@
 				03CB45551CA5CCBB0040D770 /* JSQMessagesLoadEarlierHeaderView.m in Sources */,
 				03CB45221CA5CCBB0040D770 /* FBQuadTree.swift in Sources */,
 				03CB45341CA5CCBB0040D770 /* UIColor+JSQMessages.m in Sources */,
-				03CB448B1CA5CBF50040D770 /* MyAppliedJobsChatViewController.swift in Sources */,
 				03CB45311CA5CCBB0040D770 /* JSQSystemSoundPlayer+JSQMessages.m in Sources */,
 				03CB45481CA5CCBB0040D770 /* JSQMessagesBubbleImage.m in Sources */,
 				03CB453B1CA5CCBB0040D770 /* JSQMessagesAvatarImageFactory.m in Sources */,
@@ -1091,7 +1082,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dapper.THOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "d9106e6d-d63a-4715-998b-c501913c6bbf";
 				SWIFT_OBJC_BRIDGING_HEADER = "THOS/THOS-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -1122,7 +1113,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dapper.THOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "d9106e6d-d63a-4715-998b-c501913c6bbf";
 				SWIFT_OBJC_BRIDGING_HEADER = "THOS/THOS-Bridging-Header.h";
 			};
 			name = Release;
