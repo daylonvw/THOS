@@ -51,12 +51,15 @@ class SearchForJobsViewController: UIViewController, UISearchBarDelegate, UITabl
         centerX = view.center.x
         centerY = view.center.y
         
-        
 //        NSNotificationCenter.defaultCenter().addObserverForName("openedWitdPushFromJobPoster", object: nil, queue: nil) { (notification: NSNotification) -> Void in
 //            
 //            self.openChatFromNotification(notification)
 //        }
-
+//
+//        NSNotificationCenter.defaultCenter().addObserverForName("userAppliedToJob", object: nil, queue: nil) { (notification: NSNotification) -> Void in
+//        
+//                    self.openChatFromNotification(notification)
+//        }
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -70,12 +73,6 @@ class SearchForJobsViewController: UIViewController, UISearchBarDelegate, UITabl
         self.tableView.hidden = true
         self.jobsArray.removeAll(keepCapacity: true)
         self.showJobOptions()
-        
-        if questionLabel != nil {
-            
-          questionLabel.removeFromSuperview()  
-        }
-
 
     }
 
@@ -290,6 +287,11 @@ class SearchForJobsViewController: UIViewController, UISearchBarDelegate, UITabl
                 
                 if ((jobs?.count) != nil) {
                     
+                    if self.questionLabel != nil {
+                        
+                        self.questionLabel.removeFromSuperview()
+                    }
+                    
                     for subView in self.view.subviews {
                         
                         if subView.isKindOfClass(UIButton) {
@@ -300,7 +302,6 @@ class SearchForJobsViewController: UIViewController, UISearchBarDelegate, UITabl
                     
                     for job in jobs! {
                         
-                        print(job)
                         self.jobsArray.append(job)
                         
                         self.tableView.hidden = false

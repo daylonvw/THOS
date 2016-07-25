@@ -51,8 +51,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //            
 //        }))
         
-//        PFUser.logOut()
-    
         if PFUser.currentUser() != nil {
             
             let storyBoard = UIStoryboard(name: "Main", bundle: nil)
@@ -157,6 +155,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
                 print("poster message recieved")
 
+            } else if typeString == "applied" {
+                
+                let notification = NSNotification(name: "userAppliedToJob", object: userInfo, userInfo: nil)
+                NSNotificationCenter.defaultCenter().postNotification(notification)
+
+                
             }
 
 

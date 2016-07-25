@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SelectNewJobTypeViewController: UIViewController {
+class SelectNewJobTypeViewController: UIViewController, PayPalPaymentDelegate {
     
     var questionLabel: UILabel!
     var outdoorHeroButton: UIButton!
@@ -28,6 +28,26 @@ class SelectNewJobTypeViewController: UIViewController {
     var jobTypeNumber: Int!
     var jobSubTypeNumber: Int!
     
+    #if HAS_CARDIO
+    var acceptCreditCards: Bool = true {
+    didSet {
+    payPalConfig.acceptCreditCards = acceptCreditCards
+    }
+    }
+    
+    
+    #else
+    var acceptCreditCards: Bool = false {
+        didSet {
+            payPalConfig.acceptCreditCards = acceptCreditCards
+        }
+    }
+    #endif
+    
+    var resultText = "" // empty
+    var payPalConfig = PayPalConfiguration() // default
+
+    
     override func viewDidLoad() {
        
         super.viewDidLoad()
@@ -36,6 +56,25 @@ class SelectNewJobTypeViewController: UIViewController {
         centerY = view.center.y
         
         self.showJobOptions()
+        
+        // Set up payPalConfig
+        payPalConfig.acceptCreditCards = true;
+        
+        payPalConfig.merchantName = "T.H.O.S."
+        payPalConfig.merchantPrivacyPolicyURL = NSURL(string: "https://www.paypal.com/webapps/mpp/ua/privacy-full")
+        payPalConfig.merchantUserAgreementURL = NSURL(string: "https://www.paypal.com/webapps/mpp/ua/useragreement-full")
+        
+        PayPalMobile.preconnectWithEnvironment(PayPalEnvironmentSandbox)
+        
+        payPalConfig.languageOrLocale = NSLocale.preferredLanguages()[0]
+        
+        
+        payPalConfig.payPalShippingAddressOption = .PayPal;
+        
+        NSNotificationCenter.defaultCenter().addObserverForName("userAppliedToJob", object: nil, queue: nil) { (notification: NSNotification) in
+            
+            self.openPaypalFromNotification(notification)
+        }
         
     }
 
@@ -215,6 +254,62 @@ class SelectNewJobTypeViewController: UIViewController {
         self.showJobOptions()
         
     
+    }
+
+    func openPaypalFromNotification(notification: NSNotification) {
+        
+            let price = notification.object?.valueForKey("price") as! NSNumber
+        
+        //todo sku
+        let item1 = PayPalItem(name: "T.H.O.S.", withQuantity: 1, withPrice: NSDecimalNumber(decimal: price.decimalValue), withCurrency: "EUR", withSku: notification.object?.valueForKey("sku") as? String )
+        
+        let items = [item1]
+        let subtotal = PayPalItem.totalPriceForItems(items)
+        
+        // Optional: include payment details
+        let shipping = NSDecimalNumber(string: "5.99")
+        let tax = NSDecimalNumber(string: "2.50")
+        
+        let paymentDetails = PayPalPaymentDetails(subtotal: subtotal, withShipping: shipping, withTax: tax)
+        
+        let total = subtotal.decimalNumberByAdding(shipping).decimalNumberByAdding(tax)
+        
+        let payment = PayPalPayment(amount: total, currencyCode: "EUR", shortDescription: "T.H.O.S. \(notification.object?.valueForKey("description"))", intent: .Sale)
+        
+        payment.items = items
+        payment.paymentDetails = paymentDetails
+        
+        
+        if (payment.processable) {
+            
+            let paymentViewController = PayPalPaymentViewController(payment: payment, configuration: payPalConfig, delegate: self)
+            self.presentViewController(paymentViewController!, animated: true, completion: nil)
+            
+        } else {
+            
+            print("Payment not processalbe: \(payment)")
+            
+        }
+        
+    }
+    
+    func payPalPaymentDidCancel(paymentViewController: PayPalPaymentViewController) {
+        print("PayPal Payment Cancelled")
+        resultText = ""
+        paymentViewController.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func payPalPaymentViewController(paymentViewController: PayPalPaymentViewController, didCompletePayment completedPayment: PayPalPayment) {
+        print("PayPal Payment Success !")
+        paymentViewController.dismissViewControllerAnimated(true, completion: { () -> Void in
+            // send completed confirmaion to your server
+            print("Here is your proof of payment:\n\n\(completedPayment.confirmation)\n\nSend this to your server for confirmation and fulfillment.")
+            
+            self.resultText = completedPayment.description
+            
+            // todo send payment to backend
+            
+        })
     }
 
 

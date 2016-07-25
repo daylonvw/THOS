@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0362591E1CF1CECA00AB26EE /* The House of Service legal BU.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 0362591D1CF1CEC900AB26EE /* The House of Service legal BU.pdf */; };
 		0372D7881D3A70E2004E24A8 /* HMSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 0372D7871D3A70E2004E24A8 /* HMSegmentedControl.m */; };
+		03BC6E121D468D0A001D934A /* paypalicon.png in Resources */ = {isa = PBXBuildFile; fileRef = 03BC6E111D468D0A001D934A /* paypalicon.png */; };
 		03BD051A1CBB72B9000B84A0 /* test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03BD05191CBB72B9000B84A0 /* test.swift */; };
 		03BD052E1CBB7345000B84A0 /* libPayPalMobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 03BD05261CBB7345000B84A0 /* libPayPalMobile.a */; };
 		03BD053B1CBB7396000B84A0 /* libCardIO.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 03BD05381CBB7396000B84A0 /* libCardIO.a */; };
@@ -131,6 +132,7 @@
 		0362591D1CF1CEC900AB26EE /* The House of Service legal BU.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "The House of Service legal BU.pdf"; sourceTree = "<group>"; };
 		0372D7861D3A70E1004E24A8 /* HMSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HMSegmentedControl.h; sourceTree = "<group>"; };
 		0372D7871D3A70E2004E24A8 /* HMSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HMSegmentedControl.m; sourceTree = "<group>"; };
+		03BC6E111D468D0A001D934A /* paypalicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = paypalicon.png; sourceTree = "<group>"; };
 		03BD05191CBB72B9000B84A0 /* test.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = test.swift; path = THOS/test.swift; sourceTree = SOURCE_ROOT; };
 		03BD05261CBB7345000B84A0 /* libPayPalMobile.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libPayPalMobile.a; sourceTree = "<group>"; };
 		03BD05271CBB7345000B84A0 /* PayPalConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PayPalConfiguration.h; sourceTree = "<group>"; };
@@ -359,13 +361,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		033AB8B21CA9A87E00DB6916 /* Login */ = {
+		033AB8B21CA9A87E00DB6916 /* Login view controllers */ = {
 			isa = PBXGroup;
 			children = (
 				03CB459A1CA5D2CD0040D770 /* CreateAccountViewController.swift */,
 				03CB459B1CA5D2CD0040D770 /* LoginVCViewController.swift */,
 			);
-			name = Login;
+			name = "Login view controllers";
 			sourceTree = "<group>";
 		};
 		033AB8B51CA9A8D500DB6916 /* Assets + storyBoard */ = {
@@ -378,7 +380,7 @@
 			name = "Assets + storyBoard";
 			sourceTree = "<group>";
 		};
-		0372D7841D3A54E8004E24A8 /* New Thos */ = {
+		0372D7841D3A54E8004E24A8 /* User View Controllers */ = {
 			isa = PBXGroup;
 			children = (
 				03CB447D1CA5CBF50040D770 /* HelpSeekerTabbarControllerViewController.swift */,
@@ -390,7 +392,7 @@
 				03CB447A1CA5CBF50040D770 /* MyPostedJobsViewController.swift */,
 				03CB447C1CA5CBF50040D770 /* JobChatViewController.swift */,
 			);
-			name = "New Thos";
+			name = "User View Controllers";
 			sourceTree = "<group>";
 		};
 		0372D7851D3A70C9004E24A8 /* HMSegmentedControll */ = {
@@ -460,8 +462,8 @@
 			children = (
 				03CB45631CA5CD300040D770 /* AppDelegate.swift */,
 				033AB8B51CA9A8D500DB6916 /* Assets + storyBoard */,
-				033AB8B21CA9A87E00DB6916 /* Login */,
-				0372D7841D3A54E8004E24A8 /* New Thos */,
+				033AB8B21CA9A87E00DB6916 /* Login view controllers */,
+				0372D7841D3A54E8004E24A8 /* User View Controllers */,
 				03CB44B11CA5CCBB0040D770 /* Supporting files */,
 				03CB45121CA5CCBB0040D770 /* JSQMessagesViewController */,
 				03CB451B1CA5CCBB0040D770 /* JSQSound */,
@@ -571,6 +573,7 @@
 				03CB446E1CA5CB710040D770 /* Info.plist */,
 				03BD05191CBB72B9000B84A0 /* test.swift */,
 				03CB448E1CA5CCBB0040D770 /* dare.png */,
+				03BC6E111D468D0A001D934A /* paypalicon.png */,
 				0372D7851D3A70C9004E24A8 /* HMSegmentedControll */,
 				03BD052F1CBB7396000B84A0 /* CardIO */,
 				03BD05251CBB7345000B84A0 /* PayPalMobile */,
@@ -864,6 +867,7 @@
 				03CB44771CA5CBC60040D770 /* Assets.xcassets in Resources */,
 				03CB45561CA5CCBB0040D770 /* JSQMessagesLoadEarlierHeaderView.xib in Resources */,
 				03CB446D1CA5CB710040D770 /* LaunchScreen.storyboard in Resources */,
+				03BC6E121D468D0A001D934A /* paypalicon.png in Resources */,
 				03CB451C1CA5CCBB0040D770 /* dare.png in Resources */,
 				03CB45241CA5CCBB0040D770 /* icCross@2x.png in Resources */,
 				03CB454F1CA5CCBB0040D770 /* JSQMessagesCollectionViewCellIncoming.xib in Resources */,
@@ -1082,7 +1086,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dapper.THOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "d9106e6d-d63a-4715-998b-c501913c6bbf";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "THOS/THOS-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -1113,7 +1117,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dapper.THOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "d9106e6d-d63a-4715-998b-c501913c6bbf";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "THOS/THOS-Bridging-Header.h";
 			};
 			name = Release;

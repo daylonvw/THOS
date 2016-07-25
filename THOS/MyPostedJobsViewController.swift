@@ -20,7 +20,7 @@ class MyPostedJobsCell: UITableViewCell {
     
 }
 
-class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, FloatRatingViewDelegate, SFDraggableDialogViewDelegate {
+class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, FloatRatingViewDelegate, SFDraggableDialogViewDelegate, PayPalPaymentDelegate {
 
     //todo reload when returning from chat
     
@@ -52,6 +52,26 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
     
     var segmentedControl: HMSegmentedControl!
     
+    #if HAS_CARDIO
+    var acceptCreditCards: Bool = true {
+    didSet {
+    payPalConfig.acceptCreditCards = acceptCreditCards
+    }
+    }
+    
+    
+    #else
+    var acceptCreditCards: Bool = false {
+        didSet {
+            payPalConfig.acceptCreditCards = acceptCreditCards
+        }
+    }
+    #endif
+    
+    var resultText = "" // empty
+    var payPalConfig = PayPalConfiguration() // default
+
+    
     override func viewDidLoad() {
        
         super.viewDidLoad()
@@ -77,6 +97,21 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
         self.view.addSubview(segmentedControl)
     
         self.getMyPlannedJobs()
+        
+        // Set up payPalConfig
+        payPalConfig.acceptCreditCards = true;
+        
+        payPalConfig.merchantName = "T.H.O.S."
+        payPalConfig.merchantPrivacyPolicyURL = NSURL(string: "https://www.paypal.com/webapps/mpp/ua/privacy-full")
+        payPalConfig.merchantUserAgreementURL = NSURL(string: "https://www.paypal.com/webapps/mpp/ua/useragreement-full")
+        
+        PayPalMobile.preconnectWithEnvironment(PayPalEnvironmentSandbox)
+        
+        payPalConfig.languageOrLocale = NSLocale.preferredLanguages()[0]
+        
+        
+        payPalConfig.payPalShippingAddressOption = .PayPal;
+
         
     }
     
@@ -145,6 +180,7 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
         
         let querie = PFQuery(className: "Job")
         querie.whereKey("user", equalTo: PFUser.currentUser()!)
+        querie.whereKey("jobTypeNumber", lessThan: 3)
         querie.whereKey("open", equalTo: false)
         querie.includeKey("acceptedUser")
         querie.findObjectsInBackgroundWithBlock { (jobs, error ) -> Void in
@@ -185,6 +221,8 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
         let querie = PFQuery(className: "Job")
         querie.whereKey("user", equalTo: PFUser.currentUser()!)
         querie.whereKey("open", equalTo: true)
+        querie.whereKey("jobTypeNumber", lessThan: 3)
+
         querie.findObjectsInBackgroundWithBlock { (jobs, error ) -> Void in
             
             if error != nil {
@@ -214,6 +252,8 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
         let querie = PFQuery(className: "Job")
         querie.whereKey("acceptedUser", equalTo: PFUser.currentUser()!)
         querie.whereKey("open", equalTo: false)
+        querie.whereKey("jobTypeNumber", lessThan: 3)
+
         querie.findObjectsInBackgroundWithBlock { (jobs, error ) -> Void in
             
             if error != nil {
@@ -275,10 +315,24 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
             
             cell.GoToChatButton.hidden = false
             
-            cell.GoToChatButton.addTarget(self, action: #selector(MyPostedJobsViewController.chatButtonPressed(_:)), forControlEvents: .TouchUpInside)
+            if object["isPaid"] as! Bool == false {
+                
+                cell.GoToChatButton.setImage(UIImage(named: "paypalicon"), forState: .Normal)
+                
+                cell.GoToChatButton.addTarget(self, action: #selector(MyPostedJobsViewController.payButtonPressed(_:)), forControlEvents: .TouchUpInside)
+                
+            } else if object["isPaid"] as! Bool == true {
+                
+                cell.GoToChatButton.setImage(UIImage(named: "toolIcon"), forState: .Normal)
+                
+                cell.GoToChatButton.addTarget(self, action: #selector(MyPostedJobsViewController.chatButtonPressed(_:)), forControlEvents: .TouchUpInside)
+            }
+            
+            
             
         } else if object["open"] as! Bool == true {
             
+            cell.GoToChatButton.setImage(UIImage(named: "toolIcon"), forState: .Normal)
             cell.GoToChatButton.hidden = true
             
 
@@ -289,7 +343,7 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
         let text = "\(description) €\(price)"
 
         cell.descriptionTV.attributedText = getColoredText(text)
-        cell.descriptionTV.font = UIFont.systemFontOfSize(18, weight: UIFontWeightLight)
+        cell.descriptionTV.font = UIFont.systemFontOfSize(18, weight: UIFontWeightSemibold)
         
         if object["acceptedDate"] == nil {
             
@@ -320,6 +374,49 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
         
     }
     
+    func payButtonPressed(sender: UIButton) {
+        
+        let jobCell = sender.superview?.superview as! MyPostedJobsCell
+        
+        let indexPath = self.tableView.indexPathForCell(jobCell)
+        
+        let jobObject = myPostedJobsArray[(indexPath?.row)!]
+        
+        let price = jobObject["price"] as! NSNumber
+        
+        //todo sku
+        let item1 = PayPalItem(name: "T.H.O.S.", withQuantity: 1, withPrice: NSDecimalNumber(decimal: price.decimalValue), withCurrency: "EUR", withSku: jobObject["sku"] as? String )
+        
+        let items = [item1]
+        let subtotal = PayPalItem.totalPriceForItems(items)
+        
+        // Optional: include payment details
+        let shipping = NSDecimalNumber(string: "5.99")
+        let tax = NSDecimalNumber(string: "2.50")
+        
+        let paymentDetails = PayPalPaymentDetails(subtotal: subtotal, withShipping: shipping, withTax: tax)
+        
+        let total = subtotal.decimalNumberByAdding(shipping).decimalNumberByAdding(tax)
+        
+        let payment = PayPalPayment(amount: total, currencyCode: "EUR", shortDescription: "T.H.O.S. \(jobObject["jobDescription"]))", intent: .Sale)
+        
+        payment.items = items
+        payment.paymentDetails = paymentDetails
+        
+        
+        if (payment.processable) {
+            
+            let paymentViewController = PayPalPaymentViewController(payment: payment, configuration: payPalConfig, delegate: self)
+            self.presentViewController(paymentViewController!, animated: true, completion: nil)
+            
+        } else {
+            
+            print("Payment not processalbe: \(payment)")
+            
+        }
+
+    }
+    
     func chatButtonPressed(sender: UIButton) {
 
         let jobCell = sender.superview?.superview as! MyPostedJobsCell
@@ -327,8 +424,6 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
         let indexPath = self.tableView.indexPathForCell(jobCell)
         
         let jobObject: String = myPostedJobsArray[(indexPath?.row)!].objectId!
-       
-        self.location = myPostedJobsArray[(indexPath?.row)!]["jobLocation"] as! PFGeoPoint
         
         self.jobDescription = myPostedJobsArray[(indexPath?.row)!]["jobDescription"] as! String
 
@@ -349,11 +444,29 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
 
     }
     
+    func payPalPaymentDidCancel(paymentViewController: PayPalPaymentViewController) {
+        print("PayPal Payment Cancelled")
+        resultText = ""
+        paymentViewController.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func payPalPaymentViewController(paymentViewController: PayPalPaymentViewController, didCompletePayment completedPayment: PayPalPayment) {
+        print("PayPal Payment Success !")
+        paymentViewController.dismissViewControllerAnimated(true, completion: { () -> Void in
+            // send completed confirmaion to your server
+            print("Here is your proof of payment:\n\n\(completedPayment.confirmation)\n\nSend this to your server for confirmation and fulfillment.")
+            
+            self.resultText = completedPayment.description
+            
+            // todo send payment to backend
+            
+        })
+    }
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
         let controller = segue.destinationViewController as! JobChatViewController
         controller.jobId = self.jobIDForSegue
-        controller.jobGeoPoint = self.location
         controller.jobDescription = self.jobDescription
         controller.job = self.jobForChat
     }
@@ -385,6 +498,15 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
                 string.addAttribute(NSForegroundColorAttributeName, value: UIColor.ThosColor(), range: range)
                 
                 string.endEditing()
+                
+            } else if (!word.hasPrefix("€")) {
+                
+                string.beginEditing()
+                let range:NSRange = (string.string as NSString).rangeOfString(word)
+                string.addAttribute(NSForegroundColorAttributeName, value: UIColor.darkGrayColor(), range: range)
+                
+                string.endEditing()
+
             }
         }
         return string

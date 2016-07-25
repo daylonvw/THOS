@@ -69,6 +69,7 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
             
             self.openChatFromNotification(notification)
         }
+        
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -418,6 +419,8 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
             }
         }
     }
+    
+    
     
     func dismissViewButtonPressed() {
         

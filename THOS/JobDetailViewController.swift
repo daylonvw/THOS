@@ -31,8 +31,7 @@ class JobDetailViewController: UIViewController, UITextViewDelegate {
 
         // Do any additional setup after loading the view.
         jobDescriptionTextView.delegate = self
-
-
+        
         showInfo()
     
     }
@@ -129,7 +128,6 @@ class JobDetailViewController: UIViewController, UITextViewDelegate {
                 }
             }
         }
-        
     }
     
     func animateJobAcceptance() {
@@ -158,7 +156,10 @@ class JobDetailViewController: UIViewController, UITextViewDelegate {
             
             "alert"             : "Someone accepted your job: \(descriptionString)",
             // todo interesed is gone
-            "type"              : "interested",
+            "type"              : "applied",
+            "price"             : job["price"] as! NSNumber,
+            "sku"               : job.objectId!,
+            "description"       : job["jobDescription"] as! String,
             "badge"             : "increment",
             "sound"             : "message-sent.aiff"
         ]

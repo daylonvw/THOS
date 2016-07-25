@@ -19,6 +19,7 @@ class helpSeekerProfileViewController: UIViewController {
     var ratingView: FloatRatingView!
     
     override func viewDidLoad() {
+      
         super.viewDidLoad()
         
         self.userProfileImageView.clipsToBounds = true
