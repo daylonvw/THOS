@@ -28,13 +28,15 @@ class SelectNewJobTypeViewController: UIViewController, PayPalPaymentDelegate {
     var jobTypeNumber: Int!
     var jobSubTypeNumber: Int!
     
+    var paidJob: PFObject!
+    @IBOutlet var goToProfileButton: UIBarButtonItem!
+    
     #if HAS_CARDIO
     var acceptCreditCards: Bool = true {
     didSet {
     payPalConfig.acceptCreditCards = acceptCreditCards
     }
     }
-    
     
     #else
     var acceptCreditCards: Bool = false {
@@ -64,7 +66,7 @@ class SelectNewJobTypeViewController: UIViewController, PayPalPaymentDelegate {
         payPalConfig.merchantPrivacyPolicyURL = NSURL(string: "https://www.paypal.com/webapps/mpp/ua/privacy-full")
         payPalConfig.merchantUserAgreementURL = NSURL(string: "https://www.paypal.com/webapps/mpp/ua/useragreement-full")
         
-        PayPalMobile.preconnectWithEnvironment(PayPalEnvironmentSandbox)
+        PayPalMobile.preconnectWithEnvironment(PayPalEnvironmentProduction)
         
         payPalConfig.languageOrLocale = NSLocale.preferredLanguages()[0]
         
@@ -76,6 +78,40 @@ class SelectNewJobTypeViewController: UIViewController, PayPalPaymentDelegate {
             self.openPaypalFromNotification(notification)
         }
         
+        
+        
+        NSNotificationCenter.defaultCenter().addObserverForName("openedFromNewMessage", object: nil, queue: nil) { (notification: NSNotification) -> Void in
+            
+            self.openChatFromNotification(notification)
+        }
+        
+        let userQuery = PFUser.query()
+        userQuery?.whereKey("objectId", equalTo: PFUser.currentUser()!.objectId!)
+        userQuery?.getFirstObjectInBackgroundWithBlock({ (user , error ) -> Void in
+            
+            if error != nil {
+                
+                // something went wrong
+                
+            } else {
+                
+                let file = user!["userImgage"] as! PFFile
+                file.getDataInBackgroundWithBlock({ (data, error) -> Void in
+                    
+                    if error != nil {
+                        
+                        // something went wrong
+                    } else {
+                      
+                        self.goToProfileButton.setBackgroundImage(UIImage(data: data!), forState: .Normal, barMetrics: .Default)
+                    }
+                })
+                
+                
+            }
+        })
+
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -87,7 +123,7 @@ class SelectNewJobTypeViewController: UIViewController, PayPalPaymentDelegate {
     
         questionLabel = UILabel(frame: CGRect(x: 10, y: 70, width: view.frame.size.width - 20, height: 60))
         questionLabel.textColor = UIColor.ThosColor()
-        questionLabel.text = "Zoek je een Held voor klussen binnen het het of voor buiten het huis?"
+        questionLabel.text = "Zoek je een Held voor klussen binnen of buiten het huis?"
         questionLabel.numberOfLines = 2
         questionLabel.adjustsFontSizeToFitWidth = true
         questionLabel.textAlignment = .Center
@@ -258,10 +294,14 @@ class SelectNewJobTypeViewController: UIViewController, PayPalPaymentDelegate {
 
     func openPaypalFromNotification(notification: NSNotification) {
         
-            let price = notification.object?.valueForKey("price") as! NSNumber
         
-        //todo sku
-        let item1 = PayPalItem(name: "T.H.O.S.", withQuantity: 1, withPrice: NSDecimalNumber(decimal: price.decimalValue), withCurrency: "EUR", withSku: notification.object?.valueForKey("sku") as? String )
+        print(notification)
+        
+        let price = notification.object?.valueForKey("price") as! NSNumber
+        let objectString = (notification.object!.valueForKey("sku")) as! String
+        let descriptionString = (notification.object!.valueForKey("description")) as! String
+
+        let item1 = PayPalItem(name: "T.H.O.S.", withQuantity: 1, withPrice: 0.1, withCurrency: "EUR", withSku: objectString )
         
         let items = [item1]
         let subtotal = PayPalItem.totalPriceForItems(items)
@@ -270,15 +310,18 @@ class SelectNewJobTypeViewController: UIViewController, PayPalPaymentDelegate {
         let shipping = NSDecimalNumber(string: "5.99")
         let tax = NSDecimalNumber(string: "2.50")
         
-        let paymentDetails = PayPalPaymentDetails(subtotal: subtotal, withShipping: shipping, withTax: tax)
+        let paymentDetails = PayPalPaymentDetails(subtotal: subtotal, withShipping: 0, withTax: 0)
         
-        let total = subtotal.decimalNumberByAdding(shipping).decimalNumberByAdding(tax)
+        let total = subtotal.decimalNumberByAdding(0).decimalNumberByAdding(0)
         
-        let payment = PayPalPayment(amount: total, currencyCode: "EUR", shortDescription: "T.H.O.S. \(notification.object?.valueForKey("description"))", intent: .Sale)
+        let payment = PayPalPayment(amount: total, currencyCode: "EUR", shortDescription: descriptionString, intent: .Sale)
         
         payment.items = items
         payment.paymentDetails = paymentDetails
         
+        self.paidJob = PFObject(className: "Job")
+        self.paidJob.objectId = objectString
+        print(self.paidJob.objectId!)
         
         if (payment.processable) {
             
@@ -297,6 +340,7 @@ class SelectNewJobTypeViewController: UIViewController, PayPalPaymentDelegate {
         print("PayPal Payment Cancelled")
         resultText = ""
         paymentViewController.dismissViewControllerAnimated(true, completion: nil)
+        self.paidJob = nil
     }
     
     func payPalPaymentViewController(paymentViewController: PayPalPaymentViewController, didCompletePayment completedPayment: PayPalPayment) {
@@ -310,6 +354,9 @@ class SelectNewJobTypeViewController: UIViewController, PayPalPaymentDelegate {
             // todo send payment to backend
             
         })
+        
+        self.paidJob["isPaid"] = true
+        self.paidJob.saveInBackground()
     }
 
 
@@ -322,5 +369,32 @@ class SelectNewJobTypeViewController: UIViewController, PayPalPaymentDelegate {
             createViewController.jobSubType = jobSubTypeNumber
         }
     }
+    
+    func openChatFromNotification(notification: NSNotification) {
+        print(notification)
+        let query = PFQuery(className: "Job")
+        query.whereKey("objectId", equalTo: notification.object as! String)
+        query.getFirstObjectInBackgroundWithBlock { (object, error) in
+            if error != nil {
+                
+                print(error)
+                
+            } else {
+                
+                let storyBoard  = UIStoryboard(name: "Main", bundle: nil)
+                
+                let chatController = storyBoard.instantiateViewControllerWithIdentifier("postedJobsChatController") as! JobChatViewController
+                
+                chatController.jobId = object!.objectId
+                chatController.jobDescription = object!.valueForKey("jobDescription") as! String
+                chatController.job = object!
+                
+                
+                self.presentViewController(chatController, animated: true, completion: nil)
+                
+            }
+        }
+    }
+
  
 }

@@ -66,6 +66,15 @@ class SearchForJobsViewController: UIViewController, UISearchBarDelegate, UITabl
         
         super.viewDidAppear(true)
         
+        for subView in view.subviews {
+    
+            if subView.isKindOfClass(UILabel) || subView.isKindOfClass(UIButton) {
+            
+                subView.removeFromSuperview()
+                
+            }
+        }
+        
         tableView.hidden = true
         
         self.checkForMewChats()
@@ -245,10 +254,13 @@ class SearchForJobsViewController: UIViewController, UISearchBarDelegate, UITabl
     
     func backButtonPressed(sender: UIButton)  {
         
-        
         for subView in view.subviews {
             
-            subView.removeFromSuperview()
+            if subView.isKindOfClass(UILabel) || subView.isKindOfClass(UIButton) {
+                
+                subView.removeFromSuperview()
+                
+            }
         }
         
         self.showJobOptions()
@@ -263,7 +275,7 @@ class SearchForJobsViewController: UIViewController, UISearchBarDelegate, UITabl
         
         let querie = PFQuery(className: "Job")
         querie.includeKey("user")
-//        querie.whereKey("user", notEqualTo: PFUser.currentUser()!)
+        querie.whereKey("user", notEqualTo: PFUser.currentUser()!)
         querie.whereKey("open", equalTo: true)
         querie.whereKey("finished", equalTo: false)
         querie.whereKey("jobTypeNumber", equalTo: self.jobTypeNumber)

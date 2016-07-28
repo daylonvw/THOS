@@ -34,9 +34,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         
         let dataDIC:[String: AnyObject] = [
-            
+            // thos test
             PayPalEnvironmentProduction  : "AZQBwHitGqLUtLqmAF1Bhtu3EHWeSWg4qLieqkGq3P2cH6AyfBv1_in96k1ES0k1SH3SmtJBW_-Jt22d",
             PayPalEnvironmentSandbox     : "ATm4QyVrD6ijwAi_em8qvHUIA4Noa3f0IOhiCV478Mo7e7t9t7YRaXHzLj-pQJeepI-DH1HRgoyLHzIB"
+            
         ]
         
         PayPalMobile.initializeWithClientIdsForEnvironments(dataDIC)
@@ -117,44 +118,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             let typeString = userInfo["type"] as! String
           
-            if typeString == "jobHelperMessage" {
-                
-                print("helper message")
+            if typeString == "newMessage" {
                 
                 let notification = NSNotification(name: "message", object: typeString, userInfo: userInfo)
-                NSNotificationCenter.defaultCenter().postNotificationName("messageFromJobHelperRecieved", object: notification)
+                NSNotificationCenter.defaultCenter().postNotificationName("newMessageRecieved", object: notification)
                 
-            } else if typeString == "jobPosterMessage" {
-                
-                print("poster message")
-                
-                let notification = NSNotification(name: "message", object: typeString, userInfo: userInfo)
-                NSNotificationCenter.defaultCenter().postNotificationName("messageFromJobPosterRecieved", object: notification)
             }
             
         } else {
             
             let typeString = userInfo["type"] as! String
             
-            if typeString == "jobHelperMessage" {
+            if typeString == "newMessage" {
                 
                 let jobString = userInfo["job"]
                 
-                let notification = NSNotification(name: "openedWitdPushFromJobHelper", object: jobString, userInfo: nil)
+                let notification = NSNotification(name: "openedFromNewMessage", object: jobString, userInfo: nil)
                 NSNotificationCenter.defaultCenter().postNotification(notification)
-
-                print("helper message received")
-
-                
-            } else if typeString == "jobPosterMessage" {
-                
-                let jobString = userInfo["job"]
-                
-                let notification = NSNotification(name: "openedWitdPushFromJobPoster", object: jobString, userInfo: nil)
-                NSNotificationCenter.defaultCenter().postNotification(notification)
-
-                print("poster message recieved")
-
+            
             } else if typeString == "applied" {
                 
                 let notification = NSNotification(name: "userAppliedToJob", object: userInfo, userInfo: nil)

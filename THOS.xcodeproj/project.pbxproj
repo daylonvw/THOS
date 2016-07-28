@@ -24,7 +24,6 @@
 		03CB44861CA5CBF50040D770 /* JobChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CB447C1CA5CBF50040D770 /* JobChatViewController.swift */; };
 		03CB44871CA5CBF50040D770 /* HelpSeekerTabbarControllerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CB447D1CA5CBF50040D770 /* HelpSeekerTabbarControllerViewController.swift */; };
 		03CB44881CA5CBF50040D770 /* SearchForJobsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CB447E1CA5CBF50040D770 /* SearchForJobsViewController.swift */; };
-		03CB451C1CA5CCBB0040D770 /* dare.png in Resources */ = {isa = PBXBuildFile; fileRef = 03CB448E1CA5CCBB0040D770 /* dare.png */; };
 		03CB451D1CA5CCBB0040D770 /* FBAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CB448F1CA5CCBB0040D770 /* FBAnnotation.swift */; };
 		03CB451E1CA5CCBB0040D770 /* FBAnnotationCluster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CB44901CA5CCBB0040D770 /* FBAnnotationCluster.swift */; };
 		03CB451F1CA5CCBB0040D770 /* FBAnnotationClusterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CB44911CA5CCBB0040D770 /* FBAnnotationClusterView.swift */; };
@@ -165,7 +164,6 @@
 		03CB447C1CA5CBF50040D770 /* JobChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JobChatViewController.swift; sourceTree = "<group>"; };
 		03CB447D1CA5CBF50040D770 /* HelpSeekerTabbarControllerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpSeekerTabbarControllerViewController.swift; sourceTree = "<group>"; };
 		03CB447E1CA5CBF50040D770 /* SearchForJobsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchForJobsViewController.swift; sourceTree = "<group>"; };
-		03CB448E1CA5CCBB0040D770 /* dare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dare.png; sourceTree = "<group>"; };
 		03CB448F1CA5CCBB0040D770 /* FBAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FBAnnotation.swift; sourceTree = "<group>"; };
 		03CB44901CA5CCBB0040D770 /* FBAnnotationCluster.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FBAnnotationCluster.swift; sourceTree = "<group>"; };
 		03CB44911CA5CCBB0040D770 /* FBAnnotationClusterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FBAnnotationClusterView.swift; sourceTree = "<group>"; };
@@ -572,7 +570,6 @@
 				03CB44781CA5CBF40040D770 /* THOS-Bridging-Header.h */,
 				03CB446E1CA5CB710040D770 /* Info.plist */,
 				03BD05191CBB72B9000B84A0 /* test.swift */,
-				03CB448E1CA5CCBB0040D770 /* dare.png */,
 				03BC6E111D468D0A001D934A /* paypalicon.png */,
 				0372D7851D3A70C9004E24A8 /* HMSegmentedControll */,
 				03BD052F1CBB7396000B84A0 /* CardIO */,
@@ -868,7 +865,6 @@
 				03CB45561CA5CCBB0040D770 /* JSQMessagesLoadEarlierHeaderView.xib in Resources */,
 				03CB446D1CA5CB710040D770 /* LaunchScreen.storyboard in Resources */,
 				03BC6E121D468D0A001D934A /* paypalicon.png in Resources */,
-				03CB451C1CA5CCBB0040D770 /* dare.png in Resources */,
 				03CB45241CA5CCBB0040D770 /* icCross@2x.png in Resources */,
 				03CB454F1CA5CCBB0040D770 /* JSQMessagesCollectionViewCellIncoming.xib in Resources */,
 				03CB45511CA5CCBB0040D770 /* JSQMessagesCollectionViewCellOutgoing.xib in Resources */,

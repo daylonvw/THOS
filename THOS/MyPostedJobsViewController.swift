@@ -25,13 +25,13 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
     //todo reload when returning from chat
     
     @IBOutlet var tableView: UITableView!
-    @IBOutlet var statusSegmentedControl: UISegmentedControl!
     
     var myPostedJobsArray = [PFObject]()
     var userView: userPopUpView!
     var acceptedUser: PFUser!
     var selectedJob: PFObject!
     var jobDescription: String!
+    var paidJob: PFObject!
 
     var location: PFGeoPoint!
 
@@ -105,7 +105,7 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
         payPalConfig.merchantPrivacyPolicyURL = NSURL(string: "https://www.paypal.com/webapps/mpp/ua/privacy-full")
         payPalConfig.merchantUserAgreementURL = NSURL(string: "https://www.paypal.com/webapps/mpp/ua/useragreement-full")
         
-        PayPalMobile.preconnectWithEnvironment(PayPalEnvironmentSandbox)
+        PayPalMobile.preconnectWithEnvironment(PayPalEnvironmentProduction)
         
         payPalConfig.languageOrLocale = NSLocale.preferredLanguages()[0]
         
@@ -136,15 +136,15 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
             self.tableView.reloadData()
         }
         
-        if self.statusSegmentedControl.selectedSegmentIndex == 0 {
+        if self.segmentedControl.selectedSegmentIndex == 0 {
             
             self.getMyPlannedJobs()
             
-        } else if self.statusSegmentedControl.selectedSegmentIndex == 1 {
+        } else if self.segmentedControl.selectedSegmentIndex == 1 {
             
             self.getMyOpenWithInterestedUsersJobs()
             
-        } else if self.statusSegmentedControl.selectedSegmentIndex == 2 {
+        } else if self.segmentedControl.selectedSegmentIndex == 2 {
             
             self.getMyJobsToBeDone()
 
@@ -154,7 +154,7 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func statusChanged(sender: HMSegmentedControl) {
-        print(sender.selectedSegmentIndex)
+        
         if myPostedJobsArray.count > 0 {
             
             myPostedJobsArray.removeAll(keepCapacity: true)
@@ -295,86 +295,131 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
         cell.acceptedDateLbel.adjustsFontSizeToFitWidth =  true
         let object  = self.myPostedJobsArray[indexPath.row]
         
-        if object["posterReadLastText"] as! Bool == false {
-            
-            let pulseAnimation = CABasicAnimation(keyPath: "opacity")
-            pulseAnimation.duration = 0.5
-            pulseAnimation.fromValue = 0
-            pulseAnimation.toValue = 1
-            pulseAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-            pulseAnimation.autoreverses = true
-            pulseAnimation.repeatCount = FLT_MAX
-            cell.GoToChatButton.layer.addAnimation(pulseAnimation, forKey: nil)
-            
-        } else if object["posterReadLastText"] as! Bool == true {
-            
-            
-        }
+        let description = object["jobDescription"] as! String
+        let price = object["price"] as! NSNumber
+        let text = "\(description) €\(price)"
+        
+        cell.descriptionTV.attributedText = getColoredText(text)
+        cell.descriptionTV.font = UIFont.systemFontOfSize(18, weight: UIFontWeightSemibold)
 
-        if object["open"] as! Bool == false {
+        if self.segmentedControl.selectedSegmentIndex == 0 {
+            
+//            if object["posterReadLastText"] as! Bool == false {
+//                
+//                let pulseAnimation = CABasicAnimation(keyPath: "opacity")
+//                pulseAnimation.duration = 0.5
+//                pulseAnimation.fromValue = 0
+//                pulseAnimation.toValue = 1
+//                pulseAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+//                pulseAnimation.autoreverses = true
+//                pulseAnimation.repeatCount = FLT_MAX
+//                cell.GoToChatButton.layer.addAnimation(pulseAnimation, forKey: nil)
+//                
+//            }
             
             cell.GoToChatButton.hidden = false
             
             if object["isPaid"] as! Bool == false {
-                
+                    
                 cell.GoToChatButton.setImage(UIImage(named: "paypalicon"), forState: .Normal)
-                
-                cell.GoToChatButton.addTarget(self, action: #selector(MyPostedJobsViewController.payButtonPressed(_:)), forControlEvents: .TouchUpInside)
-                
+              
+                cell.GoToChatButton.addTarget(self, action: #selector(MyPostedJobsViewController.buttonPressed(_:)), forControlEvents: .TouchUpInside)
+                    
             } else if object["isPaid"] as! Bool == true {
-                
+                    
                 cell.GoToChatButton.setImage(UIImage(named: "toolIcon"), forState: .Normal)
                 
-                cell.GoToChatButton.addTarget(self, action: #selector(MyPostedJobsViewController.chatButtonPressed(_:)), forControlEvents: .TouchUpInside)
+                cell.GoToChatButton.addTarget(self, action: #selector(MyPostedJobsViewController.buttonPressed(_:)), forControlEvents: .TouchUpInside)
             }
+                
             
+            let formatter = NSDateFormatter()
+            formatter.dateStyle = .MediumStyle
+            let dateString = formatter.stringFromDate(object["acceptedDate"] as! NSDate)
+            cell.acceptedDateLbel.text = "De Held komt op \(dateString)"
             
-            
-        } else if object["open"] as! Bool == true {
+        } else if self.segmentedControl.selectedSegmentIndex == 1 {
             
             cell.GoToChatButton.setImage(UIImage(named: "toolIcon"), forState: .Normal)
             cell.GoToChatButton.hidden = true
             
-
-        }
-        
-        let description = object["jobDescription"] as! String
-        let price = object["price"] as! NSNumber
-        let text = "\(description) €\(price)"
-
-        cell.descriptionTV.attributedText = getColoredText(text)
-        cell.descriptionTV.font = UIFont.systemFontOfSize(18, weight: UIFontWeightSemibold)
-        
-        if object["acceptedDate"] == nil {
-            
             cell.acceptedDateLbel.text = ""
+
             
-        } else if object["acceptedDate"] != nil {
+        } else if self.segmentedControl.selectedSegmentIndex == 2 {
             
-            if self.segmentedControl.selectedSegmentIndex == 0{
-                
-                let formatter = NSDateFormatter()
-                formatter.dateStyle = .MediumStyle
-                let dateString = formatter.stringFromDate(object["acceptedDate"] as! NSDate)
+//            if object["posterReadLastText"] as! Bool == false {
+//                
+//                let pulseAnimation = CABasicAnimation(keyPath: "opacity")
+//                pulseAnimation.duration = 0.5
+//                pulseAnimation.fromValue = 0
+//                pulseAnimation.toValue = 1
+//                pulseAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+//                pulseAnimation.autoreverses = true
+//                pulseAnimation.repeatCount = FLT_MAX
+//                cell.GoToChatButton.layer.addAnimation(pulseAnimation, forKey: nil)
+//                
+//            }
             
-                cell.acceptedDateLbel.text = "De Held komt op \(dateString)"
+            if object["isPaid"] as! Bool == false {
                 
-            } else if self.segmentedControl.selectedSegmentIndex == 2 {
+                cell.GoToChatButton.setImage(UIImage(named: "toolIcon"), forState: .Normal)
+                cell.GoToChatButton.hidden = true
                 
-                let formatter = NSDateFormatter()
-                formatter.dateStyle = .MediumStyle
-                let dateString = formatter.stringFromDate(object["acceptedDate"] as! NSDate)
+            } else if object["isPaid"] as! Bool == true {
                 
-                cell.acceptedDateLbel.text = "Deze klus moet je uitvoeren op \(dateString)"
+                cell.GoToChatButton.addTarget(self, action: #selector(MyPostedJobsViewController.buttonPressed(_:)), forControlEvents: .TouchUpInside)
+                cell.GoToChatButton.hidden = false
 
             }
+            
+
+            let formatter = NSDateFormatter()
+            formatter.dateStyle = .MediumStyle
+            let dateString = formatter.stringFromDate(object["acceptedDate"] as! NSDate)
+            cell.acceptedDateLbel.text = "Deze klus moet je uitvoeren op \(dateString)"
+                    
         }
-       
+
         return cell
         
     }
     
-    func payButtonPressed(sender: UIButton) {
+    func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
+        
+        if self.segmentedControl.selectedSegmentIndex == 1 {
+            
+            return .Delete
+            
+        } else {
+            
+            return .None
+        }
+    }
+    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        if self.segmentedControl.selectedSegmentIndex == 1 {
+            
+            if editingStyle == .Delete {
+                
+                let jobObjectToDelete = self.myPostedJobsArray[indexPath.row]
+                self.myPostedJobsArray.removeAtIndex(indexPath.row)
+                jobObjectToDelete.deleteInBackgroundWithBlock({ (suceeded, error) in
+                    
+                    if error == nil {
+                        
+                        if suceeded == true {
+                            
+                            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+                        }
+                    }
+                })
+            }
+        }
+    }
+    
+    func buttonPressed(sender: UIButton) {
         
         let jobCell = sender.superview?.superview as! MyPostedJobsCell
         
@@ -382,27 +427,40 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
         
         let jobObject = myPostedJobsArray[(indexPath?.row)!]
         
+        
+        if jobObject["isPaid"] as! Bool == false {
+            
+            self.payButtonPressed(jobObject)
+            
+        } else if jobObject["isPaid"] as! Bool == true {
+            
+            self.chatButtonPressed(jobObject)
+        }
+        
+    }
+    
+    func payButtonPressed(jobObject: PFObject) {
+        
         let price = jobObject["price"] as! NSNumber
         
-        //todo sku
-        let item1 = PayPalItem(name: "T.H.O.S.", withQuantity: 1, withPrice: NSDecimalNumber(decimal: price.decimalValue), withCurrency: "EUR", withSku: jobObject["sku"] as? String )
+        let item1 = PayPalItem(name: "T.H.O.S.", withQuantity: 1, withPrice: 0.1, withCurrency: "EUR", withSku: jobObject["sku"] as? String )
         
         let items = [item1]
         let subtotal = PayPalItem.totalPriceForItems(items)
         
-        // Optional: include payment details
         let shipping = NSDecimalNumber(string: "5.99")
         let tax = NSDecimalNumber(string: "2.50")
+        // shipping and tax here
+        let paymentDetails = PayPalPaymentDetails(subtotal: subtotal, withShipping: 0, withTax: 0)
+        //and here
+        let total = subtotal.decimalNumberByAdding(0).decimalNumberByAdding(0)
         
-        let paymentDetails = PayPalPaymentDetails(subtotal: subtotal, withShipping: shipping, withTax: tax)
-        
-        let total = subtotal.decimalNumberByAdding(shipping).decimalNumberByAdding(tax)
-        
-        let payment = PayPalPayment(amount: total, currencyCode: "EUR", shortDescription: "T.H.O.S. \(jobObject["jobDescription"]))", intent: .Sale)
+        let payment = PayPalPayment(amount: total, currencyCode: "EUR", shortDescription: "T.H.O.S. \(jobObject["jobDescription"])", intent: .Sale)
         
         payment.items = items
         payment.paymentDetails = paymentDetails
         
+        self.paidJob = jobObject
         
         if (payment.processable) {
             
@@ -417,22 +475,13 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
 
     }
     
-    func chatButtonPressed(sender: UIButton) {
+    func chatButtonPressed(jobObject: PFObject) {
+        
+        self.jobDescription = jobObject["jobDescription"] as! String
 
-        let jobCell = sender.superview?.superview as! MyPostedJobsCell
+        self.jobForChat = jobObject
+        self.jobIDForSegue = jobObject.objectId
         
-        let indexPath = self.tableView.indexPathForCell(jobCell)
-        
-        let jobObject: String = myPostedJobsArray[(indexPath?.row)!].objectId!
-        
-        self.jobDescription = myPostedJobsArray[(indexPath?.row)!]["jobDescription"] as! String
-
-        self.jobForChat = self.myPostedJobsArray[(indexPath?.row)!]
-        self.jobIDForSegue = jobObject
-        
-        jobCell.backgroundColor = UIColor.whiteColor()
-        self.tableView.reloadData()
-
         goToChatVC()
         
         
@@ -448,6 +497,8 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
         print("PayPal Payment Cancelled")
         resultText = ""
         paymentViewController.dismissViewControllerAnimated(true, completion: nil)
+        self.paidJob = nil
+        
     }
     
     func payPalPaymentViewController(paymentViewController: PayPalPaymentViewController, didCompletePayment completedPayment: PayPalPayment) {
@@ -458,9 +509,31 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
             
             self.resultText = completedPayment.description
             
+            
             // todo send payment to backend
             
         })
+        
+        self.paidJob["isPaid"] = true
+        self.paidJob.saveInBackgroundWithBlock { (succeded, error) in
+            
+            if error  == nil {
+                
+                if succeded == true {
+                    
+                    if self.myPostedJobsArray.count > 0 {
+                        
+                        self.myPostedJobsArray.removeAll(keepCapacity: true)
+                        self.tableView.reloadData()
+                        self.getMyPlannedJobs()
+
+                    }
+
+                }
+            }
+        }
+        
+       
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {

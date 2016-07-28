@@ -44,13 +44,6 @@ class helpSeekerProfileViewController: UIViewController {
                     } else {
                         
                         self.userProfileImageView.image = UIImage(data: data!)
-//                        let tintColor = UIColor(red: 150.0/255.0, green: 179.0/255.0, blue: 188.0/255.0, alpha: 0.7)
-                        
-//                        let bluredImage = UIImage(data: data!)?.applyLightEffect()
-                        
-//                        self.backgroundImageView.image = bluredImage
-                        
-                    
 
                     }
                 })

@@ -65,10 +65,6 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         dismissViewButton.addTarget(self, action: #selector(self.dismissViewButtonPressed), forControlEvents: .TouchUpInside)
         
         view.addSubview(dismissViewButton)
-    NSNotificationCenter.defaultCenter().addObserverForName("openedWitdPushFromJobHelper", object: nil, queue: nil) { (notification: NSNotification) -> Void in
-            
-            self.openChatFromNotification(notification)
-        }
         
     }
     
@@ -273,6 +269,7 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         job["thirdOptionDate"] = jobDateOptions[2]
         job["jobTypeNumber"] = self.jobType
         job["jobSubTypeNumber"] = self.jobSubType
+        job["isPaid"] = false
         
         
         job.saveInBackgroundWithBlock { (succes, error) -> Void in
@@ -286,37 +283,12 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
                 if succes == true {
                     
                     self.animatePostButton()
-                    self.sendNearByPush()
                 }
             }
         }
 
         
     }
-    
-    func sendNearByPush() {
-        // todo
-        
-//        let pushQuery = PFInstallation.query()
-//        pushQuery?.whereKey("installationId", notEqualTo:PFInstallation().installationId)
-//        pushQuery?.whereKey("location", nearGeoPoint: self.jobPFGeoPoint, withinKilometers: 100)
-//        
-//        let dataDIC:[String: AnyObject] = [
-//            
-//            "alert"             : "Nieuwe opdracht in de buurt",
-//            "type"              : "new job",
-//            "badge"             : "increment",
-//            "sound"             : "message-sent.aiff"
-//        ]
-//        
-//        let push = PFPush()
-//        
-//        push.setQuery(pushQuery)
-//        push.setData(dataDIC)
-//        push.sendPushInBackground()
-
-    }
-    
     
     func animatePostButton() {
         
@@ -392,35 +364,6 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
 //        tabBarController.checkForMewChats()
 
     }
-    
-    func openChatFromNotification(notification: NSNotification) {
-        
-        let query = PFQuery(className: "Job")
-        query.whereKey("objectId", equalTo: notification.object as! String)
-        query.getFirstObjectInBackgroundWithBlock { (object, error) in
-            if error != nil {
-                
-                print(error)
-                
-            } else {
-                
-                let storyBoard  = UIStoryboard(name: "Main", bundle: nil)
-                
-                let chatController = storyBoard.instantiateViewControllerWithIdentifier("postedJobsChatController") as! JobChatViewController
-                
-                chatController.jobId = object!.objectId
-                chatController.jobGeoPoint = object!.valueForKey("jobLocation") as! PFGeoPoint
-                chatController.jobDescription = object!.valueForKey("jobDescription") as! String
-                chatController.job = object!
-
-                
-                self.presentViewController(chatController, animated: true, completion: nil)
-
-            }
-        }
-    }
-    
-    
     
     func dismissViewButtonPressed() {
         

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -1061,7 +1061,7 @@
                                 <color key="separatorColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <inset key="separatorInset" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" rowHeight="143" id="oKa-2t-AS3" customClass="MyPostedJobsCell" customModule="THOS" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="Cell" rowHeight="143" id="oKa-2t-AS3" customClass="MyPostedJobsCell" customModule="THOS" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="oKa-2t-AS3" id="1YV-aP-xJT">
@@ -1297,9 +1297,7 @@
                             </mask>
                         </variation>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Mijn opdrachten" image="envellopeIcon" id="v9s-Ft-gcc">
-                        <inset key="imageInsets" minX="2" minY="2" maxX="2" maxY="2"/>
-                    </tabBarItem>
+                    <tabBarItem key="tabBarItem" title="Mijn opdrachten" image="envellopeIcon" id="v9s-Ft-gcc"/>
                     <connections>
                         <outlet property="tableView" destination="DiB-mS-Q5G" id="daZ-TI-DnX"/>
                         <segue destination="NN6-a6-5kE" kind="presentation" identifier="myPostedJobsToChatSegue" id="3yP-Gk-vCp"/>
@@ -1549,7 +1547,7 @@
                                 </textAttributes>
                                 <items>
                                     <navigationItem title="The house of service" id="Bqi-bH-TNi">
-                                        <barButtonItem key="leftBarButtonItem" image="userIcon" id="FiV-7H-dop">
+                                        <barButtonItem key="leftBarButtonItem" image="userIcon" style="plain" id="FiV-7H-dop">
                                             <inset key="imageInsets" minX="2" minY="2" maxX="2" maxY="2"/>
                                             <color key="tintColor" red="0.48627450979999998" green="0.64705882349999999" blue="0.69019607839999997" alpha="1" colorSpace="calibratedRGB"/>
                                             <connections>
@@ -1597,10 +1595,9 @@
                             </mask>
                         </variation>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Plaatsen" image="createIcon" id="h6T-zh-4t8">
-                        <inset key="imageInsets" minX="2" minY="2" maxX="2" maxY="2"/>
-                    </tabBarItem>
+                    <tabBarItem key="tabBarItem" title="Plaatsen" image="createIcon" id="h6T-zh-4t8"/>
                     <connections>
+                        <outlet property="goToProfileButton" destination="FiV-7H-dop" id="rmZ-Tf-VEq"/>
                         <segue destination="QFH-tF-UTX" kind="presentation" identifier="jobTypeToJobInfoSegue" modalTransitionStyle="flipHorizontal" id="AjJ-DZ-hL7"/>
                     </connections>
                 </viewController>
@@ -1920,9 +1917,7 @@
         <scene sceneID="zmE-Po-KS6">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="gwW-b6-Y6Y" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Zoeken" image="searchIcon" id="kbw-R8-Wqo">
-                        <inset key="imageInsets" minX="2" minY="2" maxX="2" maxY="2"/>
-                    </tabBarItem>
+                    <tabBarItem key="tabBarItem" title="Zoeken" image="searchIcon" id="kbw-R8-Wqo"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="ahW-hU-JdZ">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
