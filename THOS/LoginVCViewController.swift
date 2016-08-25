@@ -9,7 +9,7 @@
 import UIKit
 import ParseFacebookUtilsV4
 
-class LoginVCViewController: UIViewController {
+class LoginVCViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet var userNameTextField: UITextField!
     @IBOutlet var userPassWordTextField: UITextField!
@@ -24,17 +24,26 @@ class LoginVCViewController: UIViewController {
     var acceptButton: UIButton!
     
     override func viewDidLoad() {
+       
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
         let loginButton = FBSDKLoginButton()
         loginButton.center = CGPointMake(view.center.x, view.center.y + 200)
         
-        facebookLoginButton.setTitle(" Login met Facebook", forState: .Normal)
-        facebookLoginButton.setImage(loginButton.imageView?.image, forState: .Normal)
-        facebookLoginButton.setBackgroundImage(loginButton.backgroundImageForState(.Normal), forState: .Normal)
+        facebookLoginButton.contentHorizontalAlignment = .Left
+        facebookLoginButton.setTitleColor(UIColor.ThosColor(), forState: .Normal)
+        
+        userCreateNewAccountButton.contentHorizontalAlignment = .Left
+
+        userLoginButton.contentHorizontalAlignment = .Left
+        userLoginButton.setTitleColor(UIColor.ThosColor(), forState: .Normal)
+
         
         self.userCreateNewAccountButton.titleLabel?.adjustsFontSizeToFitWidth = true
+        
+        userNameTextField.delegate = self
+        userPassWordTextField.delegate = self
         
     }
 
@@ -270,5 +279,13 @@ class LoginVCViewController: UIViewController {
         
         self.performSegueWithIdentifier("loginVCtoCreateAccountVCsegue", sender: self)
     }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        
+        textField.resignFirstResponder()
+        
+        return true
+    }
+
 }
 

@@ -8,12 +8,16 @@
 
 import UIKit
 
-class CreateAccountViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
+class CreateAccountViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate, KACircleCropViewControllerDelegate {
 
     @IBOutlet var userImageView: UIImageView!
     @IBOutlet var userEmailTextField: UITextField!
     @IBOutlet var userPassWordTextFiled: UITextField!
     @IBOutlet var userNameTextField: UITextField!
+    @IBOutlet var createAccountButton: UIButton!
+    @IBOutlet var backButton: UIButton!
+    @IBOutlet var addImageIcon: UIImageView!
+    @IBOutlet var addImageButton: UIButton!
     
     var enteredAllInfo: Bool!
     var termsView: UIWebView!
@@ -25,16 +29,17 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(CreateAccountViewController.selectImagePressed))
-        gestureRecognizer.numberOfTapsRequired = 1
-        self.userImageView.userInteractionEnabled = true
-        self.userImageView.addGestureRecognizer(gestureRecognizer)
-   
-        self.userImageView.layer.cornerRadius = 50
-        self.userImageView.layer.masksToBounds = true
+        userImageView.backgroundColor = UIColor.ThosColor()
+        
+        createAccountButton.contentHorizontalAlignment = .Left
+        createAccountButton.setTitleColor(UIColor.ThosColor(), forState: .Normal)
+        
+        backButton.contentHorizontalAlignment = .Left
+        
         
         userEmailTextField.delegate = self
         userPassWordTextFiled.delegate = self
+        userNameTextField.delegate = self
         
         enteredAllInfo = true
         
@@ -45,7 +50,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         // Dispose of any resources that can be recreated.
     }
     
-    func selectImagePressed() {
+    @IBAction func selectImagePressed() {
 
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
@@ -70,8 +75,29 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         
             self.userImageView.image = image
             self.userImageView.highlighted = true
+            self.addImageIcon.hidden = true
+            self.addImageButton.setTitle("Kies een andere foto", forState: .Normal)
+        
+            let circleCropController = KACircleCropViewController(withImage: image)
+            circleCropController.delegate = self
+            presentViewController(circleCropController, animated: true, completion: nil)
+
         
     }
+    
+    
+    func circleCropDidCancel() {
+        //Basic dismiss
+        dismissViewControllerAnimated(false, completion: nil)
+    }
+    
+    func circleCropDidCropImage(image: UIImage) {
+        //Same as dismiss but we also return the image
+        userImageView.image = image
+        dismissViewControllerAnimated(false, completion: nil)
+    }
+    
+
     
     @IBAction func createButtonPressed(sender: AnyObject) {
         

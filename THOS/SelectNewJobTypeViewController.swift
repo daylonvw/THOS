@@ -29,7 +29,9 @@ class SelectNewJobTypeViewController: UIViewController, PayPalPaymentDelegate {
     var jobSubTypeNumber: Int!
     
     var paidJob: PFObject!
-    @IBOutlet var goToProfileButton: UIBarButtonItem!
+    
+    @IBOutlet var navItem: UINavigationItem!
+    
     
     #if HAS_CARDIO
     var acceptCreditCards: Bool = true {
@@ -45,7 +47,7 @@ class SelectNewJobTypeViewController: UIViewController, PayPalPaymentDelegate {
         }
     }
     #endif
-    
+
     var resultText = "" // empty
     var payPalConfig = PayPalConfiguration() // default
 
@@ -85,32 +87,35 @@ class SelectNewJobTypeViewController: UIViewController, PayPalPaymentDelegate {
             self.openChatFromNotification(notification)
         }
         
-        let userQuery = PFUser.query()
-        userQuery?.whereKey("objectId", equalTo: PFUser.currentUser()!.objectId!)
-        userQuery?.getFirstObjectInBackgroundWithBlock({ (user , error ) -> Void in
-            
-            if error != nil {
-                
-                // something went wrong
-                
-            } else {
-                
-                let file = user!["userImgage"] as! PFFile
-                file.getDataInBackgroundWithBlock({ (data, error) -> Void in
-                    
-                    if error != nil {
-                        
-                        // something went wrong
-                    } else {
-                      
-                        self.goToProfileButton.setBackgroundImage(UIImage(data: data!), forState: .Normal, barMetrics: .Default)
-                    }
-                })
-                
-                
-            }
-        })
-
+//        let userQuery = PFUser.query()
+//        userQuery?.whereKey("objectId", equalTo: PFUser.currentUser()!.objectId!)
+//        userQuery?.getFirstObjectInBackgroundWithBlock({ (user , error ) -> Void in
+//            
+//            if error != nil {
+//                
+//                // something went wrong
+//                
+//            } else {
+//                
+//                let file = user!["userImgage"] as! PFFile
+//                file.getDataInBackgroundWithBlock({ (data, error) -> Void in
+//                    
+//                    if error != nil {
+//                        
+//                        // something went wrong
+//                    } else {
+//                        
+//                        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+//                        imageView.image = UIImage(data: data!)
+//                        
+//                        self.navItem.leftBarButtonItem?.image = imageView.image
+//                        
+//                    }
+//                })
+//                
+//                
+//            }
+//        })
 
     }
 
@@ -395,6 +400,4 @@ class SelectNewJobTypeViewController: UIViewController, PayPalPaymentDelegate {
             }
         }
     }
-
- 
 }
