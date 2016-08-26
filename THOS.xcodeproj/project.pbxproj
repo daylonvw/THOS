@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		035E8F9B1D6F5CC600A22F2B /* OpenSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 035E8F971D6F5CC600A22F2B /* OpenSans-Bold.ttf */; };
+		035E8F9C1D6F5CC600A22F2B /* OpenSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 035E8F981D6F5CC600A22F2B /* OpenSans-Light.ttf */; };
+		035E8F9D1D6F5CC600A22F2B /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 035E8F991D6F5CC600A22F2B /* OpenSans-Regular.ttf */; };
+		035E8F9E1D6F5CC600A22F2B /* OpenSans-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 035E8F9A1D6F5CC600A22F2B /* OpenSans-Semibold.ttf */; };
 		0362591E1CF1CECA00AB26EE /* The House of Service legal BU.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 0362591D1CF1CEC900AB26EE /* The House of Service legal BU.pdf */; };
 		0372D7881D3A70E2004E24A8 /* HMSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 0372D7871D3A70E2004E24A8 /* HMSegmentedControl.m */; };
 		03BC6E121D468D0A001D934A /* paypalicon.png in Resources */ = {isa = PBXBuildFile; fileRef = 03BC6E111D468D0A001D934A /* paypalicon.png */; };
@@ -131,6 +135,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		035E8F971D6F5CC600A22F2B /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Bold.ttf"; sourceTree = "<group>"; };
+		035E8F981D6F5CC600A22F2B /* OpenSans-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Light.ttf"; sourceTree = "<group>"; };
+		035E8F991D6F5CC600A22F2B /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Regular.ttf"; sourceTree = "<group>"; };
+		035E8F9A1D6F5CC600A22F2B /* OpenSans-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Semibold.ttf"; sourceTree = "<group>"; };
 		0362591D1CF1CEC900AB26EE /* The House of Service legal BU.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "The House of Service legal BU.pdf"; sourceTree = "<group>"; };
 		0372D7861D3A70E1004E24A8 /* HMSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HMSegmentedControl.h; sourceTree = "<group>"; };
 		0372D7871D3A70E2004E24A8 /* HMSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HMSegmentedControl.m; sourceTree = "<group>"; };
@@ -384,6 +392,17 @@
 			name = "Assets + storyBoard";
 			sourceTree = "<group>";
 		};
+		035E8F961D6F5C7700A22F2B /* fonts */ = {
+			isa = PBXGroup;
+			children = (
+				035E8F971D6F5CC600A22F2B /* OpenSans-Bold.ttf */,
+				035E8F981D6F5CC600A22F2B /* OpenSans-Light.ttf */,
+				035E8F991D6F5CC600A22F2B /* OpenSans-Regular.ttf */,
+				035E8F9A1D6F5CC600A22F2B /* OpenSans-Semibold.ttf */,
+			);
+			name = fonts;
+			sourceTree = "<group>";
+		};
 		0372D7841D3A54E8004E24A8 /* User View Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -577,6 +596,7 @@
 				03CB446E1CA5CB710040D770 /* Info.plist */,
 				03BD05191CBB72B9000B84A0 /* test.swift */,
 				03BC6E111D468D0A001D934A /* paypalicon.png */,
+				035E8F961D6F5C7700A22F2B /* fonts */,
 				03CB54D11D4B47D500A60A21 /* crop */,
 				0372D7851D3A70C9004E24A8 /* HMSegmentedControll */,
 				03BD052F1CBB7396000B84A0 /* CardIO */,
@@ -880,10 +900,14 @@
 				03CB453A1CA5CCBB0040D770 /* JSQMessagesViewController.xib in Resources */,
 				03CB44771CA5CBC60040D770 /* Assets.xcassets in Resources */,
 				03CB45561CA5CCBB0040D770 /* JSQMessagesLoadEarlierHeaderView.xib in Resources */,
+				035E8F9B1D6F5CC600A22F2B /* OpenSans-Bold.ttf in Resources */,
 				03CB446D1CA5CB710040D770 /* LaunchScreen.storyboard in Resources */,
+				035E8F9C1D6F5CC600A22F2B /* OpenSans-Light.ttf in Resources */,
 				03BC6E121D468D0A001D934A /* paypalicon.png in Resources */,
+				035E8F9E1D6F5CC600A22F2B /* OpenSans-Semibold.ttf in Resources */,
 				03CB45241CA5CCBB0040D770 /* icCross@2x.png in Resources */,
 				03CB454F1CA5CCBB0040D770 /* JSQMessagesCollectionViewCellIncoming.xib in Resources */,
+				035E8F9D1D6F5CC600A22F2B /* OpenSans-Regular.ttf in Resources */,
 				03CB45511CA5CCBB0040D770 /* JSQMessagesCollectionViewCellOutgoing.xib in Resources */,
 				03CB45591CA5CCBB0040D770 /* JSQMessagesToolbarContentView.xib in Resources */,
 			);

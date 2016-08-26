@@ -31,9 +31,16 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         
         userImageView.backgroundColor = UIColor.ThosColor()
         
+        let underlineCreateAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.ThosColor()]
+        let underlineCreateAttributedString = NSAttributedString(string: "Aanmaken", attributes: underlineCreateAttribute)
+        createAccountButton.setAttributedTitle(underlineCreateAttributedString, forState: .Normal)
         createAccountButton.contentHorizontalAlignment = .Left
         createAccountButton.setTitleColor(UIColor.ThosColor(), forState: .Normal)
         
+        
+        let underlineAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.darkGrayColor()]
+        let underlineAttributedString = NSAttributedString(string: "< Terug", attributes: underlineAttribute)
+        backButton.setAttributedTitle(underlineAttributedString, forState: .Normal)
         backButton.contentHorizontalAlignment = .Left
         
         
@@ -73,7 +80,6 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         
         dismissViewControllerAnimated(true, completion: nil)
         
-            self.userImageView.image = image
             self.userImageView.highlighted = true
             self.addImageIcon.hidden = true
             self.addImageButton.setTitle("Kies een andere foto", forState: .Normal)
@@ -85,9 +91,12 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         
     }
     
-    
     func circleCropDidCancel() {
         //Basic dismiss
+        
+        self.addImageIcon.hidden = false
+        self.addImageButton.setTitle("Voeg profielfoto toe", forState: .Normal)
+
         dismissViewControllerAnimated(false, completion: nil)
     }
     

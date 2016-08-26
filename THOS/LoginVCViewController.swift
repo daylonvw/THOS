@@ -31,16 +31,24 @@ class LoginVCViewController: UIViewController, UITextFieldDelegate {
         let loginButton = FBSDKLoginButton()
         loginButton.center = CGPointMake(view.center.x, view.center.y + 200)
         
+        let underlineFacebookAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.ThosColor()]
+        let underlineFacebookAttributedString = NSAttributedString(string: "login met Facebook", attributes: underlineFacebookAttribute)
+        facebookLoginButton.setAttributedTitle(underlineFacebookAttributedString, forState: .Normal)
         facebookLoginButton.contentHorizontalAlignment = .Left
         facebookLoginButton.setTitleColor(UIColor.ThosColor(), forState: .Normal)
         
-        userCreateNewAccountButton.contentHorizontalAlignment = .Left
 
+        let underlineAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.ThosColor()]
+        let underlineLoginAttributedString = NSAttributedString(string: "Login", attributes: underlineAttribute)
+        userLoginButton.setAttributedTitle(underlineLoginAttributedString, forState: .Normal)
         userLoginButton.contentHorizontalAlignment = .Left
         userLoginButton.setTitleColor(UIColor.ThosColor(), forState: .Normal)
-
         
-        self.userCreateNewAccountButton.titleLabel?.adjustsFontSizeToFitWidth = true
+        let underlineNewAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.darkGrayColor()]
+        let underlineNewAttributedString = NSAttributedString(string: "Aanmelden >", attributes: underlineNewAttribute)
+        userCreateNewAccountButton.setAttributedTitle(underlineNewAttributedString, forState: .Normal)
+        userCreateNewAccountButton.contentHorizontalAlignment = .Left
+        userCreateNewAccountButton.titleLabel?.adjustsFontSizeToFitWidth = true
         
         userNameTextField.delegate = self
         userPassWordTextField.delegate = self
