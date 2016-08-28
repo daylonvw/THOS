@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SelectNewJobTypeViewController: UIViewController, PayPalPaymentDelegate {
+class SelectNewJobTypeViewController: UIViewController, PayPalPaymentDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     var questionLabel: UILabel!
     var outdoorHeroButton: UIButton!
@@ -27,11 +27,13 @@ class SelectNewJobTypeViewController: UIViewController, PayPalPaymentDelegate {
 
     var jobTypeNumber: Int!
     var jobSubTypeNumber: Int!
+    var jobtypeImage: UIImage!
     
     var paidJob: PFObject!
     
-    @IBOutlet var navItem: UINavigationItem!
+    @IBOutlet var collectionView: UICollectionView!
     
+    let catagoryArray = ["Binnen het huis", "Buiten het huis", "Afhaal & bezorg"]
     
     #if HAS_CARDIO
     var acceptCreditCards: Bool = true {
@@ -56,10 +58,9 @@ class SelectNewJobTypeViewController: UIViewController, PayPalPaymentDelegate {
        
         super.viewDidLoad()
         
+        
         centerX = view.center.x
         centerY = view.center.y
-        
-        self.showJobOptions()
         
         // Set up payPalConfig
         payPalConfig.acceptCreditCards = true;
@@ -87,35 +88,7 @@ class SelectNewJobTypeViewController: UIViewController, PayPalPaymentDelegate {
             self.openChatFromNotification(notification)
         }
         
-//        let userQuery = PFUser.query()
-//        userQuery?.whereKey("objectId", equalTo: PFUser.currentUser()!.objectId!)
-//        userQuery?.getFirstObjectInBackgroundWithBlock({ (user , error ) -> Void in
-//            
-//            if error != nil {
-//                
-//                // something went wrong
-//                
-//            } else {
-//                
-//                let file = user!["userImgage"] as! PFFile
-//                file.getDataInBackgroundWithBlock({ (data, error) -> Void in
-//                    
-//                    if error != nil {
-//                        
-//                        // something went wrong
-//                    } else {
-//                        
-//                        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
-//                        imageView.image = UIImage(data: data!)
-//                        
-//                        self.navItem.leftBarButtonItem?.image = imageView.image
-//                        
-//                    }
-//                })
-//                
-//                
-//            }
-//        })
+
 
     }
 
@@ -124,178 +97,170 @@ class SelectNewJobTypeViewController: UIViewController, PayPalPaymentDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-    func showJobOptions() {
-    
-        questionLabel = UILabel(frame: CGRect(x: 10, y: 70, width: view.frame.size.width - 20, height: 60))
-        questionLabel.textColor = UIColor.ThosColor()
-        questionLabel.text = "Zoek je een Held voor klussen binnen of buiten het huis?"
-        questionLabel.numberOfLines = 2
-        questionLabel.adjustsFontSizeToFitWidth = true
-        questionLabel.textAlignment = .Center
-        questionLabel.font = UIFont.systemFontOfSize(16, weight: UIFontWeightMedium)
+    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         
-        outdoorHeroButton = UIButton(frame: CGRect(x: 20, y: centerY - 30, width: view.frame.size.width - 40, height: 50))
-        outdoorHeroButton.backgroundColor = UIColor.ThosColor()
-        outdoorHeroButton.setTitle("Klussen buiten het huis", forState: .Normal)
-        outdoorHeroButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        outdoorHeroButton.addTarget(self, action: #selector(self.jobTypeButtonPressed(_:)), forControlEvents: .TouchUpInside)
-        outdoorHeroButton.tag = 0
-        
-        indoorHeroButton = UIButton(frame: CGRect(x: 20, y: centerY + 25, width: view.frame.size.width - 40, height: 50))
-        indoorHeroButton.backgroundColor = UIColor.ThosColor()
-        indoorHeroButton.setTitle("Klussen binnen het huis", forState: .Normal)
-        indoorHeroButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        indoorHeroButton.addTarget(self, action: #selector(self.jobTypeButtonPressed(_:)), forControlEvents: .TouchUpInside)
-        indoorHeroButton.tag = 1
-        
-        backButton = UIButton(frame: CGRect(x: 10, y: view.frame.size.height - 100, width: 60, height: 60))
-        backButton.setTitle("Annuleer", forState: .Normal)
-        backButton.setTitleColor(UIColor.ThosColor(), forState: .Normal)
-        backButton.addTarget(self, action: #selector(self.backButtonPressed(_:)), forControlEvents: .TouchUpInside)
-        backButton.titleLabel?.adjustsFontSizeToFitWidth = true
-        backButton.hidden = true
-        
-        view.addSubview(questionLabel)
-        view.addSubview(outdoorHeroButton)
-        view.addSubview(indoorHeroButton)
-        view.addSubview(backButton)
-
+        return 3
     }
     
-    func jobTypeButtonPressed(sender: UIButton)  {
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        UIView.animateWithDuration(0.2, animations: { 
+        if section == 0 {
             
-            self.outdoorHeroButton.transform = CGAffineTransformMakeTranslation(-400, 0.1)
-            self.indoorHeroButton.transform = CGAffineTransformMakeTranslation(-400, 0.1)
-
-            }) { (Bool) in
-               
-                self.outdoorHeroButton.removeFromSuperview()
-                self.indoorHeroButton.removeFromSuperview()
+            return 5
+            
+        } else if section == 1 {
+            
+            return 3
+            
+        } else {
+            
+            return 2
+        }
+    }
+    
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath)
+        
+        for view in cell.subviews {
+            
+            if view.isKindOfClass(UILabel) || view.isKindOfClass(UIImageView) {
                 
-                if sender.tag == 0 {
+                view.removeFromSuperview()
+            }
+        }
+        
+        if indexPath.row == 0 {
+            
+            let label = UILabel( frame: CGRect(x: 10, y: cell.frame.height / 2, width: cell.frame.size.width - 20, height: cell.frame.height / 2))
+            label.text = catagoryArray[indexPath.section]
+            label.textAlignment = .Left
+            label.textColor = UIColor.whiteColor()
+            label.font = UIFont(name: "OpenSans-Semibold", size: 30.0)
+            label.numberOfLines = 2
+            label.adjustsFontSizeToFitWidth = true
+           
+            cell.addSubview(label)
+            cell.backgroundColor = UIColor.ThosColor()
+            
+        } else {
+            
+            cell.backgroundColor = UIColor.whiteColor()
+           
+            let label = UILabel( frame: CGRect(x: 10, y: cell.frame.height - 50, width: cell.frame.size.width - 20, height: 40))
+            label.textAlignment = .Center
+            label.textColor = UIColor.darkGrayColor()
+            label.font = UIFont(name: "OpenSans-Semibold", size: 20.0)
+            label.adjustsFontSizeToFitWidth = true
+
+            let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: cell.frame.width  / 2, height: cell.frame.width / 2))
+            imageView.center = CGPointMake(cell.frame.width / 2, cell.frame.width / 2)
+            
+            if indexPath.section == 0 {
+                
+                if indexPath.row == 1 {
                     
-                    self.showOutdoorSubTypesOptions()
+                    label.text = "Schoonmaak"
+                    imageView.image = UIImage(named: "IndoorCleaning")
                     
-                } else if sender.tag == 1 {
+                } else if indexPath.row == 2 {
                     
-                    self.showIndoorSubTypesOptions()
+                    label.text = "Oppas"
+                    imageView.image = UIImage(named: "nanny")
+
+                    
+                } else if indexPath.row == 3 {
+                    
+                    label.text = "Houtwerk"
+                    imageView.image = UIImage(named: "woodWork")
+
+
+                } else if indexPath.row == 4 {
+                    
+                    label.text = "Electricien"
+                    imageView.image = UIImage(named: "electrician")
+
+
                 }
                 
-                self.jobTypeNumber = sender.tag
-                self.backButton.hidden = false
+            } else if indexPath.section == 1 {
+                
+                if indexPath.row == 1 {
+                    
+                    label.text = "Rondom het huis"
+                    imageView.image = UIImage(named: "aroundTheHouse")
 
-        }
 
-        
-    }
-    
-    func showOutdoorSubTypesOptions() {
-        
-        questionLabel.text = "Wat voor klus moet de Held doen rondom uw huis?"
+                    
+                } else if indexPath.row == 2 {
+                    
+                    label.text = "In de tuin"
+                    imageView.image = UIImage(named: "garden")
 
-        gardenerButton = UIButton(frame: CGRect(x: 20, y: centerY - 80, width: view.frame.size.width - 40, height: 50))
-        gardenerButton.backgroundColor = UIColor.ThosColor()
-        gardenerButton.setTitle("Hovenier", forState: .Normal)
-        gardenerButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        gardenerButton.addTarget(self, action: #selector(self.subTypeButtonPressed(_:)), forControlEvents: .TouchUpInside)
-        gardenerButton.tag = 0
-        gardenerButton.transform = CGAffineTransformMakeTranslation(+400, 0.1)
 
-        jobsAroundTheHouseButton = UIButton(frame: CGRect(x: 20, y: centerY - 25, width: view.frame.size.width - 40, height: 50))
-        jobsAroundTheHouseButton.backgroundColor = UIColor.ThosColor()
-        jobsAroundTheHouseButton.setTitle("Klussen aan het huis", forState: .Normal)
-        jobsAroundTheHouseButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        jobsAroundTheHouseButton.addTarget(self, action: #selector(self.subTypeButtonPressed(_:)), forControlEvents: .TouchUpInside)
-        jobsAroundTheHouseButton.tag = 1
-        jobsAroundTheHouseButton.transform = CGAffineTransformMakeTranslation(+400, 0.1)
+                }
 
-        deliveryButton = UIButton(frame: CGRect(x: 20, y: centerY + 30, width: view.frame.size.width - 40, height: 50))
-        deliveryButton.backgroundColor = UIColor.ThosColor()
-        deliveryButton.setTitle("Ophaal/bezorg diensten", forState: .Normal)
-        deliveryButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        deliveryButton.addTarget(self, action: #selector(self.subTypeButtonPressed(_:)), forControlEvents: .TouchUpInside)
-        deliveryButton.tag = 2
-        deliveryButton.transform = CGAffineTransformMakeTranslation(+400, 0.1)
+            } else if indexPath.section == 2 {
+                
+                if indexPath.row == 1 {
+                    
+                    label.text = "Vervoer en verzend"
+                    imageView.image = UIImage(named: "pickUp")
 
-        view.addSubview(gardenerButton)
-        view.addSubview(jobsAroundTheHouseButton)
-        view.addSubview(deliveryButton)
-        
-        UIView.animateWithDuration(0.2, animations: {
+
+                    
+                }
+            }
             
-            self.gardenerButton.transform = CGAffineTransformIdentity
-            self.jobsAroundTheHouseButton.transform = CGAffineTransformIdentity
-            self.deliveryButton.transform = CGAffineTransformIdentity
-            
-        })
-   
-
-    }
-    
-    func showIndoorSubTypesOptions()  {
-        
-        questionLabel.text = "Wat voor klus moet de Held in uw huis?"
-
-        carpenterButton = UIButton(frame: CGRect(x: 20, y: centerY - 80, width: view.frame.size.width - 40, height: 50))
-        carpenterButton.backgroundColor = UIColor.ThosColor()
-        carpenterButton.setTitle("Klusjes man", forState: .Normal)
-        carpenterButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        carpenterButton.addTarget(self, action: #selector(self.subTypeButtonPressed(_:)), forControlEvents: .TouchUpInside)
-        carpenterButton.tag = 0
-        carpenterButton.transform = CGAffineTransformMakeTranslation(+400, 0.1)
-
-        electricianButton = UIButton(frame: CGRect(x: 20, y: centerY - 25, width: view.frame.size.width - 40, height: 50))
-        electricianButton.backgroundColor = UIColor.ThosColor()
-        electricianButton.setTitle("Elektricien", forState: .Normal)
-        electricianButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        electricianButton.addTarget(self, action: #selector(self.subTypeButtonPressed(_:)), forControlEvents: .TouchUpInside)
-        electricianButton.tag = 1
-        electricianButton.transform = CGAffineTransformMakeTranslation(+400, 0.1)
-
-        tutorButton = UIButton(frame: CGRect(x: 20, y: centerY + 30, width: view.frame.size.width - 40, height: 50))
-        tutorButton.backgroundColor = UIColor.ThosColor()
-        tutorButton.setTitle("Bijles", forState: .Normal)
-        tutorButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        tutorButton.addTarget(self, action: #selector(self.subTypeButtonPressed(_:)), forControlEvents: .TouchUpInside)
-        tutorButton.tag = 2
-        tutorButton.transform = CGAffineTransformMakeTranslation(+400, 0.1)
-
-        view.addSubview(carpenterButton)
-        view.addSubview(electricianButton)
-        view.addSubview(tutorButton)
-        
-        UIView.animateWithDuration(0.2, animations: {
-            
-            self.carpenterButton.transform = CGAffineTransformIdentity
-            self.electricianButton.transform = CGAffineTransformIdentity
-            self.tutorButton.transform = CGAffineTransformIdentity
-            
-        })
-
-    }
-    
-    func subTypeButtonPressed(sender: UIButton)  {
-        
-        jobSubTypeNumber = sender.tag
-        
-        self.performSegueWithIdentifier("jobTypeToJobInfoSegue", sender: self)
-        
-    }
-    
-    func backButtonPressed(sender: UIButton)  {
-        
-
-        for subView in view.subviews {
-            
-            subView.removeFromSuperview()
+            cell.addSubview(imageView)
+            cell.addSubview(label)
         }
         
-        self.showJobOptions()
-        
-    
+        return cell
     }
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        
+        let size = CGSize(width: (view.frame.width / 2) - 10 , height: (view.frame.width / 2) - 10)
+        
+        return size
+    }
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+       
+        if indexPath.row != 0 {
+            
+            jobTypeNumber = indexPath.section
+            jobSubTypeNumber = indexPath.row
+            
+            let cell = collectionView.cellForItemAtIndexPath(indexPath)
+            
+            for view in (cell?.subviews)! {
+                
+                if view.isKindOfClass(UIImageView) {
+                    
+                    let imageView = view as! UIImageView
+                    self.jobtypeImage = imageView.image
+                }
+            }
+            
+            self.performSegueWithIdentifier("jobTypeToJobInfoSegue", sender: self)
+
+        }
+    }
+    
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if segue.destinationViewController.isKindOfClass(CreateJobViewController) {
+            
+            let createViewController = segue.destinationViewController as! CreateJobViewController
+            createViewController.jobType = jobTypeNumber
+            createViewController.jobSubType = jobSubTypeNumber
+            createViewController.jobtypeImage = jobtypeImage
+        }
+    }
+    
 
     func openPaypalFromNotification(notification: NSNotification) {
         
@@ -365,15 +330,6 @@ class SelectNewJobTypeViewController: UIViewController, PayPalPaymentDelegate {
     }
 
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-     
-        if segue.destinationViewController.isKindOfClass(CreateJobViewController) {
-            
-            let createViewController = segue.destinationViewController as! CreateJobViewController
-            createViewController.jobType = jobTypeNumber
-            createViewController.jobSubType = jobSubTypeNumber
-        }
-    }
     
     func openChatFromNotification(notification: NSNotification) {
         print(notification)

@@ -12,22 +12,27 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
 
     @IBOutlet var jobDescriptionTextView: UITextView!
     @IBOutlet var postJobButton: UIButton!
-    @IBOutlet var priceTextField: UITextField!
+    @IBOutlet var backButton: UIButton!
+    @IBOutlet var jobtypeImageView: UIImageView!
+    @IBOutlet var jobSubjectTextField: UITextField!
     
-    @IBOutlet var openDatePickerViewButton: UIButton!
-    
+    var priceButton: UIButton!
+    var priceTextField: UITextField!
+    var price: NSNumber!
+
     var datePickerView: UIView!
     var selectButton: UIButton!
-    var jobDateOptions = [NSDate]()
+    var jobDateOptions = [NSDate(), NSDate(), NSDate()]
     var datePicker: UIDatePicker!
+    var dateButtonInt: Int!
     
+    var optionOneButton: UIButton!
+    var optionTwoButton: UIButton!
+    var optionThreeButton: UIButton!
+
     var optionDateOne: NSDate!
     var optionDateTwo: NSDate!
     var optionDateThree: NSDate!
-    
-    @IBOutlet var firstDateLabel: UILabel!
-    @IBOutlet var secondDateLabel: UILabel!
-    @IBOutlet var thirdDateLabel: UILabel!
     
     var cloudImage: UIImageView!
     
@@ -35,6 +40,7 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
     
     var jobType: Int!
     var jobSubType: Int!
+    var jobtypeImage: UIImage!
     
     var missingItemsArray = [String]()
     var missingItemsString = ""
@@ -43,28 +49,59 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         super.viewDidLoad()
         
         // set delegates
-        self.jobDescriptionTextView.delegate = self
-        self.priceTextField.delegate = self
         
+        jobtypeImageView.image = jobtypeImage
+        
+        jobDescriptionTextView.delegate = self
         jobDescriptionTextView.backgroundColor = UIColor(white: 1.0, alpha: 0.8)
         jobDescriptionTextView.textColor = UIColor.darkGrayColor()
-        jobDescriptionTextView.font = UIFont.systemFontOfSize(20, weight: UIFontWeightMedium)
-        jobDescriptionTextView.placeholder = "Typ hier de opdrachtomschrijving"
-        jobDescriptionTextView.layer.borderColor = UIColor.ThosColor().CGColor
+        jobDescriptionTextView.font = UIFont(name: "OpenSans", size: 20)
+        jobDescriptionTextView.placeholder = "Opdrachtomschrijving"
+        jobDescriptionTextView.layer.borderColor = UIColor.lightGrayColor().CGColor
         jobDescriptionTextView.layer.borderWidth = 1.0
-
-        priceTextField.layer.borderColor = UIColor.ThosColor().CGColor
-        priceTextField.layer.borderWidth = 1.0
+        
+        jobSubjectTextField.layer.borderColor = UIColor.lightGrayColor().CGColor
+        jobSubjectTextField.layer.borderWidth = 1.0
 
         allRequiredJobInfoEntered = true
         
-        let dismissViewButton = UIButton(frame: CGRect(x: 10, y: view.frame.size.height - 60, width: 60, height: 60))
-        dismissViewButton.setTitle("Annuleer", forState: .Normal)
-        dismissViewButton.setTitleColor(UIColor.ThosColor(), forState: .Normal)
-        dismissViewButton.titleLabel?.adjustsFontSizeToFitWidth = true
-        dismissViewButton.addTarget(self, action: #selector(self.dismissViewButtonPressed), forControlEvents: .TouchUpInside)
+        let height = view.frame.height
+        let width = view.frame.width
         
-        view.addSubview(dismissViewButton)
+        priceButton = UIButton(frame: CGRect(x: 35, y: height - 200, width: width / 2 - 35, height: 50))
+        let underlinePriceAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.darkGrayColor()]
+        let underlinePriceAttributedString = NSAttributedString(string: "€ 0,-", attributes: underlinePriceAttribute)
+        priceButton.setAttributedTitle(underlinePriceAttributedString, forState: .Normal)
+        priceButton.addTarget(self, action: #selector(openPriceTextField), forControlEvents: .TouchUpInside)
+
+        optionOneButton = UIButton(frame: CGRect(x: view.center.x, y: height - 200, width: width / 2 - 35, height: 50))
+        let underlineOneAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.darkGrayColor()]
+        let underlineOneAttributedString = NSAttributedString(string: "Datum 1", attributes: underlineOneAttribute)
+        optionOneButton.setAttributedTitle(underlineOneAttributedString, forState: .Normal)
+        optionOneButton.tag = 0
+        optionOneButton.addTarget(self, action: #selector(dateOptionsButtonPressed(_:)), forControlEvents: .TouchUpInside)
+        
+        optionTwoButton = UIButton(frame: CGRect(x: 35, y: height - 150, width: width / 2 - 35, height: 50))
+        let underlineTwoAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.darkGrayColor()]
+        let underlineTwoAttributedString = NSAttributedString(string: "Datum 2", attributes: underlineTwoAttribute)
+        optionTwoButton.setAttributedTitle(underlineTwoAttributedString, forState: .Normal)
+        optionTwoButton.tag = 1
+        optionTwoButton.addTarget(self, action: #selector(dateOptionsButtonPressed(_:)), forControlEvents: .TouchUpInside)
+
+        optionThreeButton = UIButton(frame: CGRect(x: view.center.x, y: height - 150, width: width / 2 - 35, height: 50))
+        let underlineThreeAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.darkGrayColor()]
+        let underlineThreeAttributedString = NSAttributedString(string: "Datum 3", attributes: underlineThreeAttribute)
+        optionThreeButton.setAttributedTitle(underlineThreeAttributedString, forState: .Normal)
+        optionThreeButton.tag = 2
+        optionThreeButton.addTarget(self, action: #selector(dateOptionsButtonPressed(_:)), forControlEvents: .TouchUpInside)
+
+        view.addSubview(priceButton)
+        view.addSubview(optionOneButton)
+        view.addSubview(optionTwoButton)
+        view.addSubview(optionThreeButton)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+
         
     }
     
@@ -81,15 +118,29 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
     }
     
 
-    
-    @IBAction func dateOptionsButtonPressed(sender: AnyObject) {
+    func openPriceTextField() {
         
-        openDatePickerForButton()
+        priceTextField = UITextField(frame: CGRect(x: 0.0, y: 0.0, width: view.frame.width, height: 50))
+        priceTextField.layer.borderColor = UIColor.ThosColor().CGColor
+        priceTextField.layer.borderWidth = 1.0
+        priceTextField.delegate = self
+        priceTextField.hidden = true
+        priceTextField.keyboardType = .DecimalPad
+        priceTextField.tintColor = UIColor.darkGrayColor()
+        
+        view.addSubview(priceTextField)
+        
+        priceTextField.becomeFirstResponder()
+    }
+    
+     func dateOptionsButtonPressed(sender: UIButton) {
+        
+        openDatePickerForButton(sender.tag)
     }
 
-    func openDatePickerForButton() {
+    func openDatePickerForButton(dateNumber: Int) {
         
-        self.jobDateOptions.removeAll(keepCapacity: true)
+        dateButtonInt = dateNumber
         
         datePickerView = UIView(frame: view.frame)
         datePickerView.backgroundColor = UIColor(white: 0.3, alpha: 0.4)
@@ -101,7 +152,7 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         datePicker.datePickerMode = .Date
         
         selectButton = UIButton(frame: CGRect(x: 10, y: datePickerBackgroundView.frame.size.height - 60, width: view.frame.size.width - 20, height: 50))
-        selectButton.setTitle("Kies als eerste datum", forState: .Normal)
+        selectButton.setTitle("Kies als datum", forState: .Normal)
         selectButton.backgroundColor = UIColor.ThosColor()
         selectButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         selectButton.addTarget(self, action: #selector(self.addDateToArray), forControlEvents: .TouchUpInside)
@@ -116,55 +167,48 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
     
     func addDateToArray() {
         
-        openDatePickerViewButton.setTitle("Klik hier om een datum te wijzigen", forState: .Normal)
+        jobDateOptions.insert(datePicker.date, atIndex: dateButtonInt)
+        jobDateOptions.removeAtIndex(dateButtonInt + 1)
         
-        if self.jobDateOptions.count < 3 {
-            
-            self.jobDateOptions.append(datePicker.date)
-            
-
-            if jobDateOptions.count == 1 {
-                
-                selectButton.setTitle("Kies als tweede datum", forState: .Normal)
-
-            } else if jobDateOptions.count == 2 {
-                
-                selectButton.setTitle("Kies als derde datum", forState: .Normal)
-
-            }
-            
-            if jobDateOptions.count == 3 {
-                
-                datePickerView.removeFromSuperview()
-                
-                showDateOptions()
-                
-                
-            }
-            
-        }
+        datePickerView.removeFromSuperview()
+        
+        updateButtonText(dateButtonInt, date: self.datePicker.date)
+        
     }
     
-    func showDateOptions() {
+    func updateButtonText(buttonNumber: Int, date: NSDate) {
         
-        var dateStringArray = [String]()
+        let formatter = NSDateFormatter()
+        formatter.dateStyle = .MediumStyle
+        let dateString = formatter.stringFromDate(date)
+
         
-        for date in jobDateOptions {
+        if buttonNumber == 0 {
             
-            let formatter = NSDateFormatter()
-            formatter.dateStyle = .MediumStyle
-            let dateString = formatter.stringFromDate(date)
+            let underlineAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.darkGrayColor()]
+            let underlineAttributedString = NSAttributedString(string: dateString, attributes: underlineAttribute)
+
+            self.optionOneButton.setAttributedTitle(underlineAttributedString, forState: .Normal)
             
-            dateStringArray.append(dateString)
+        } else if buttonNumber == 1 {
+            
+            let underlineAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.darkGrayColor()]
+            let underlineAttributedString = NSAttributedString(string: dateString, attributes: underlineAttribute)
+            
+            self.optionTwoButton.setAttributedTitle(underlineAttributedString, forState: .Normal)
+
+        } else if buttonNumber == 2 {
+            
+            let underlineAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.darkGrayColor()]
+            let underlineAttributedString = NSAttributedString(string: dateString, attributes: underlineAttribute)
+            
+            self.optionThreeButton.setAttributedTitle(underlineAttributedString, forState: .Normal)
 
         }
-        
-        
-        firstDateLabel.text = "1. \(dateStringArray[0])"
-        secondDateLabel.text = "2. \(dateStringArray[1])"
-        thirdDateLabel.text = "3. \(dateStringArray[2])"
 
     }
+    
+
     
     func checkForRequiredInfo() {
         
@@ -175,9 +219,8 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         }
         
         
-        let priceString = self.priceTextField.text!
-        
-        if priceString == "" || priceString == "€" || priceString == "€ " {
+
+        if Int(price) < 10 {
             
             self.allRequiredJobInfoEntered = false
             self.missingItemsArray.append("opdracht prijs")
@@ -235,20 +278,6 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
     
         let job = PFObject(className: "Job")
     
-        if self.priceTextField.text! != "" && self.priceTextField.text! != "€ " {
-            
-            let priceString = self.priceTextField.text!
-            
-            let indexStartOfText = priceString.startIndex.advancedBy(2)
-            
-            let PriceSubString = priceString.substringFromIndex(indexStartOfText)
-
-            let price: Int = Int(PriceSubString)!
-            
-            job["price"] = NSNumber(integer: price)
-            
-            
-        }
         
         if self.jobDescriptionTextView.text != "" {
             
@@ -344,16 +373,39 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
 
         let priceString = self.priceTextField.text!
         
+ 
+
         if priceString == "" || priceString == "€" || priceString == "€ " {
             
-            self.priceTextField.text = ""
-            self.priceTextField.resignFirstResponder()
+            // todo pop up
             
         } else {
            
-            self.priceTextField.text = "€ \(priceString)"
+            if self.priceTextField.text! != "" && self.priceTextField.text! != "€ " {
+                
+                let price: Int = Int(self.priceTextField.text!)!
+                
+                self.price = NSNumber(integer: price)
+                
+                
+            }
+           
+            let underlinePriceAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.darkGrayColor()]
+            let underlinePriceAttributedString = NSAttributedString(string: "€ \(priceString)", attributes: underlinePriceAttribute)
+            priceButton.setAttributedTitle(underlinePriceAttributedString, forState: .Normal)
+
             self.priceTextField.resignFirstResponder()
+            self.priceTextField.removeFromSuperview()
         }
+    }
+    
+    func keyboardWillShow(notification: NSNotification)  {
+        
+        print(notification.userInfo![UIKeyboardFrameEndUserInfoKey]?.CGRectValue().origin.y)
+        
+        self.priceTextField.center = CGPointMake(view.frame.width / 2, (notification.userInfo![UIKeyboardFrameEndUserInfoKey]?.CGRectValue().origin.y)! - 25)
+        self.priceTextField.hidden = false
+
     }
     
     // todo check for new chats to new viewController "selectnewjobViewController"
@@ -365,7 +417,7 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
 
     }
     
-    func dismissViewButtonPressed() {
+     @IBAction func dismissViewButtonPressed() {
         
         self.dismissViewControllerAnimated(true, completion: nil)
     }
