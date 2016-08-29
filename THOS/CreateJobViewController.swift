@@ -56,12 +56,19 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         jobDescriptionTextView.backgroundColor = UIColor(white: 1.0, alpha: 0.8)
         jobDescriptionTextView.textColor = UIColor.darkGrayColor()
         jobDescriptionTextView.font = UIFont(name: "OpenSans", size: 20)
-        jobDescriptionTextView.placeholder = "Opdrachtomschrijving"
+        jobDescriptionTextView.placeholder = "Opdrachtomschrijving..."
         jobDescriptionTextView.layer.borderColor = UIColor.lightGrayColor().CGColor
         jobDescriptionTextView.layer.borderWidth = 1.0
         
         jobSubjectTextField.layer.borderColor = UIColor.lightGrayColor().CGColor
         jobSubjectTextField.layer.borderWidth = 1.0
+        jobSubjectTextField.tintColor = UIColor.darkGrayColor()
+        jobSubjectTextField.textAlignment = .Center
+        jobSubjectTextField.backgroundColor = UIColor.whiteColor()
+        jobSubjectTextField.textColor = UIColor.darkGrayColor()
+        jobSubjectTextField.font = UIFont(name: "OpenSans-Semibold", size: 24)
+        jobSubjectTextField.adjustsFontSizeToFitWidth = true
+        jobSubjectTextField.delegate = self
 
         allRequiredJobInfoEntered = true
         
@@ -73,13 +80,17 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         let underlinePriceAttributedString = NSAttributedString(string: "€ 0,-", attributes: underlinePriceAttribute)
         priceButton.setAttributedTitle(underlinePriceAttributedString, forState: .Normal)
         priceButton.addTarget(self, action: #selector(openPriceTextField), forControlEvents: .TouchUpInside)
-
+        priceButton.layer.borderColor = UIColor.lightGrayColor().CGColor
+        priceButton.layer.borderWidth = 1.0
+        
         optionOneButton = UIButton(frame: CGRect(x: view.center.x, y: height - 200, width: width / 2 - 35, height: 50))
         let underlineOneAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.darkGrayColor()]
         let underlineOneAttributedString = NSAttributedString(string: "Datum 1", attributes: underlineOneAttribute)
         optionOneButton.setAttributedTitle(underlineOneAttributedString, forState: .Normal)
         optionOneButton.tag = 0
         optionOneButton.addTarget(self, action: #selector(dateOptionsButtonPressed(_:)), forControlEvents: .TouchUpInside)
+        optionOneButton.layer.borderColor = UIColor.lightGrayColor().CGColor
+        optionOneButton.layer.borderWidth = 1.0
         
         optionTwoButton = UIButton(frame: CGRect(x: 35, y: height - 150, width: width / 2 - 35, height: 50))
         let underlineTwoAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.darkGrayColor()]
@@ -87,14 +98,18 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         optionTwoButton.setAttributedTitle(underlineTwoAttributedString, forState: .Normal)
         optionTwoButton.tag = 1
         optionTwoButton.addTarget(self, action: #selector(dateOptionsButtonPressed(_:)), forControlEvents: .TouchUpInside)
-
+        optionTwoButton.layer.borderColor = UIColor.lightGrayColor().CGColor
+        optionTwoButton.layer.borderWidth = 1.0
+        
         optionThreeButton = UIButton(frame: CGRect(x: view.center.x, y: height - 150, width: width / 2 - 35, height: 50))
         let underlineThreeAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.darkGrayColor()]
         let underlineThreeAttributedString = NSAttributedString(string: "Datum 3", attributes: underlineThreeAttribute)
         optionThreeButton.setAttributedTitle(underlineThreeAttributedString, forState: .Normal)
         optionThreeButton.tag = 2
         optionThreeButton.addTarget(self, action: #selector(dateOptionsButtonPressed(_:)), forControlEvents: .TouchUpInside)
-
+        optionThreeButton.layer.borderColor = UIColor.lightGrayColor().CGColor
+        optionThreeButton.layer.borderWidth = 1.0
+        
         view.addSubview(priceButton)
         view.addSubview(optionOneButton)
         view.addSubview(optionTwoButton)
@@ -109,7 +124,7 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         
         super.viewDidAppear(true)
         
-        self.checkForMewChats()
+//        self.checkForMewChats()
     }
     
     override func didReceiveMemoryWarning() {
@@ -127,7 +142,10 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         priceTextField.hidden = true
         priceTextField.keyboardType = .DecimalPad
         priceTextField.tintColor = UIColor.darkGrayColor()
-        
+        priceTextField.textAlignment = .Center
+        priceTextField.backgroundColor = UIColor.whiteColor()
+        priceTextField.textColor = UIColor.darkGrayColor()
+        priceTextField.font = UIFont(name: "OpenSans", size: 22)
         view.addSubview(priceTextField)
         
         priceTextField.becomeFirstResponder()
@@ -212,6 +230,12 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
     
     func checkForRequiredInfo() {
         
+        if jobSubjectTextField.text == "" {
+            
+            self.allRequiredJobInfoEntered = false
+            self.missingItemsArray.append("opdracht onderwerp")
+        }
+        
         if jobDescriptionTextView.text == "" {
         
             self.allRequiredJobInfoEntered = false
@@ -219,12 +243,14 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         }
         
         
-
-        if Int(price) < 10 {
+        if price != nil {
             
-            self.allRequiredJobInfoEntered = false
-            self.missingItemsArray.append("opdracht prijs")
+            if Int(price) < 10 {
+            
+                self.allRequiredJobInfoEntered = false
+                self.missingItemsArray.append("opdracht prijs")
 
+            }
         }
         
         if jobDateOptions.count < 3 {
@@ -279,6 +305,11 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         let job = PFObject(className: "Job")
     
         
+        if self.jobSubjectTextField.text != "" {
+            
+            job["jobSubject"] =  self.jobSubjectTextField.text
+        }
+        
         if self.jobDescriptionTextView.text != "" {
             
             job["jobDescription"] = self.jobDescriptionTextView.text
@@ -330,6 +361,10 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         
+        self.jobDescriptionTextView.userInteractionEnabled = true
+        
+        textField.resignFirstResponder()
+        
         return true
     }
     
@@ -338,14 +373,21 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
     func textFieldDidBeginEditing(textField: UITextField) {
     
         self.jobDescriptionTextView.userInteractionEnabled = false
-
-        if textField == self.priceTextField {
+        
+        if textField == self.jobSubjectTextField {
             
-            let numberToolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 50))
-            numberToolbar.barStyle = .Default
-            numberToolbar.items = [UIBarButtonItem(title: "Klaar", style: .Plain, target: self, action: #selector(CreateJobViewController.resignNumberpad))]
-            numberToolbar.sizeToFit()
-            self.priceTextField.inputAccessoryView = numberToolbar
+            
+        } else {
+
+            if textField == self.priceTextField {
+            
+                let numberToolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 50))
+                numberToolbar.barStyle = .Default
+                numberToolbar.items = [UIBarButtonItem(title: "Klaar", style: .Plain, target: self, action: #selector(CreateJobViewController.resignNumberpad))]
+                numberToolbar.sizeToFit()
+                self.priceTextField.inputAccessoryView = numberToolbar
+            
+            }
             
         }
     }
@@ -354,6 +396,7 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
     
     func textViewShouldBeginEditing(textView: UITextView) -> Bool {
         
+    
         return true
     }
     
@@ -369,18 +412,51 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
     
     func resignNumberpad() {
         
+        var stringContainsOnlyNumbers = true
+        
         self.jobDescriptionTextView.userInteractionEnabled = true
 
         let priceString = self.priceTextField.text!
         
- 
+        for char in priceString.characters {
+            
+            if char == "0" || char == "1" || char == "2" || char == "3" || char == "4" || char == "5" || char == "6" || char == "7" || char == "8" || char == "9" {
+                
+                
+                
+            } else {
+                
+                stringContainsOnlyNumbers = false
+            }
+            
+        }
+        
+        
+        if stringContainsOnlyNumbers == false {
+            
+            let controller = UIAlertController(title: "Gebruik aub alleen ronde getallen", message: "geen letters, comma's en punten", preferredStyle: .Alert)
+            
+            let cancelAction = UIAlertAction(title: "Oke", style: .Default, handler: nil)
+            
+            controller.addAction(cancelAction)
+            self.presentViewController(controller, animated: true, completion: nil)
 
+            
+        } else if stringContainsOnlyNumbers == true {
+            
+            self.createPriceWithString(priceString)
+        }
+    }
+    
+    func createPriceWithString(priceString: String) {
+        
         if priceString == "" || priceString == "€" || priceString == "€ " {
             
-            // todo pop up
+            self.priceTextField.resignFirstResponder()
+            self.priceTextField.removeFromSuperview()
             
         } else {
-           
+            
             if self.priceTextField.text! != "" && self.priceTextField.text! != "€ " {
                 
                 let price: Int = Int(self.priceTextField.text!)!
@@ -389,11 +465,11 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
                 
                 
             }
-           
+            
             let underlinePriceAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.darkGrayColor()]
             let underlinePriceAttributedString = NSAttributedString(string: "€ \(priceString)", attributes: underlinePriceAttribute)
             priceButton.setAttributedTitle(underlinePriceAttributedString, forState: .Normal)
-
+            
             self.priceTextField.resignFirstResponder()
             self.priceTextField.removeFromSuperview()
         }
@@ -401,21 +477,23 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
     
     func keyboardWillShow(notification: NSNotification)  {
         
-        print(notification.userInfo![UIKeyboardFrameEndUserInfoKey]?.CGRectValue().origin.y)
-        
-        self.priceTextField.center = CGPointMake(view.frame.width / 2, (notification.userInfo![UIKeyboardFrameEndUserInfoKey]?.CGRectValue().origin.y)! - 25)
-        self.priceTextField.hidden = false
+        if self.priceTextField != nil {
+            
+            self.priceTextField.center = CGPointMake(view.frame.width / 2, (notification.userInfo![UIKeyboardFrameEndUserInfoKey]?.CGRectValue().origin.y)! - 25)
+            self.priceTextField.hidden = false
+        }
+
 
     }
     
     // todo check for new chats to new viewController "selectnewjobViewController"
  
-    func checkForMewChats() {
-    
-//        let tabBarController = self.parentViewController as! HelpSeekerTabbarControllerViewController
-//        tabBarController.checkForMewChats()
-
-    }
+//    func checkForMewChats() {
+//    
+////        let tabBarController = self.parentViewController as! HelpSeekerTabbarControllerViewController
+////        tabBarController.checkForMewChats()
+//
+//    }
     
      @IBAction func dismissViewButtonPressed() {
         

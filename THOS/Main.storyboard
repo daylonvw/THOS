@@ -76,7 +76,7 @@
                                     <constraint firstAttribute="height" constant="40" id="zQm-Lg-egP"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="OpenSans-Light" family="Open Sans" pointSize="20"/>
-                                <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
+                                <textInputTraits key="textInputTraits" keyboardType="emailAddress" returnKeyType="done"/>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="zQm-Lg-egP"/>
@@ -96,7 +96,7 @@
                                     <constraint firstAttribute="height" constant="40" id="Zmh-LW-Lei"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="OpenSans-Light" family="Open Sans" pointSize="20"/>
-                                <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
+                                <textInputTraits key="textInputTraits" returnKeyType="done" secureTextEntry="YES"/>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="Zmh-LW-Lei"/>
@@ -409,7 +409,7 @@
                                     <constraint firstAttribute="height" constant="40" id="SnX-ZL-iKb"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="OpenSans-Light" family="Open Sans" pointSize="17"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" returnKeyType="done"/>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="SnX-ZL-iKb"/>
@@ -428,7 +428,7 @@
                                     <constraint firstAttribute="height" constant="40" id="Ozf-n0-i5x"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="OpenSans-Light" family="Open Sans" pointSize="17"/>
-                                <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
+                                <textInputTraits key="textInputTraits" keyboardType="emailAddress" returnKeyType="done"/>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="Ozf-n0-i5x"/>
@@ -447,7 +447,7 @@
                                     <constraint firstAttribute="height" constant="40" id="i6N-q3-jca"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="OpenSans-Light" family="Open Sans" pointSize="17"/>
-                                <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
+                                <textInputTraits key="textInputTraits" returnKeyType="done" secureTextEntry="YES"/>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="i6N-q3-jca"/>
@@ -734,7 +734,8 @@
                                                             <exclude reference="Gc1-ei-Pzb"/>
                                                         </mask>
                                                     </variation>
-                                                    <variation key="heightClass=regular">
+                                                    <variation key="heightClass=regular" misplaced="YES">
+                                                        <rect key="frame" x="90" y="20" width="140" height="50"/>
                                                         <mask key="constraints">
                                                             <include reference="Gc1-ei-Pzb"/>
                                                         </mask>
@@ -753,7 +754,8 @@
                                                             <exclude reference="NOT-kN-eVt"/>
                                                         </mask>
                                                     </variation>
-                                                    <variation key="heightClass=regular">
+                                                    <variation key="heightClass=regular" misplaced="YES">
+                                                        <rect key="frame" x="90" y="78" width="140" height="20"/>
                                                         <mask key="constraints">
                                                             <include reference="NOT-kN-eVt"/>
                                                         </mask>
@@ -1156,7 +1158,8 @@
                                                             <exclude reference="mm5-ev-Mgj"/>
                                                         </mask>
                                                     </variation>
-                                                    <variation key="heightClass=regular">
+                                                    <variation key="heightClass=regular" misplaced="YES">
+                                                        <rect key="frame" x="10" y="20" width="220" height="60"/>
                                                         <mask key="constraints">
                                                             <include reference="mm5-ev-Mgj"/>
                                                         </mask>
@@ -1204,7 +1207,8 @@
                                                             <exclude reference="i2e-xs-MWi"/>
                                                         </mask>
                                                     </variation>
-                                                    <variation key="heightClass=regular">
+                                                    <variation key="heightClass=regular" misplaced="YES">
+                                                        <rect key="frame" x="60" y="90" width="170" height="40"/>
                                                         <mask key="constraints">
                                                             <include reference="i2e-xs-MWi"/>
                                                         </mask>
@@ -1553,13 +1557,13 @@
                                 <exclude reference="wL0-S9-EjH"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="rmT-xr-fMh"/>
                                 <exclude reference="0Kz-2i-p1n"/>
                                 <exclude reference="6Jf-SN-Kvc"/>
                                 <exclude reference="F4Y-gw-E6e"/>
                                 <exclude reference="7BG-Gj-si6"/>
                                 <exclude reference="rqb-R4-SVw"/>
                                 <exclude reference="uzk-9H-BUj"/>
-                                <exclude reference="rmT-xr-fMh"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
@@ -1568,13 +1572,13 @@
                                 <include reference="wL0-S9-EjH"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="rmT-xr-fMh"/>
                                 <include reference="0Kz-2i-p1n"/>
                                 <include reference="6Jf-SN-Kvc"/>
                                 <include reference="F4Y-gw-E6e"/>
                                 <include reference="7BG-Gj-si6"/>
                                 <include reference="rqb-R4-SVw"/>
                                 <include reference="uzk-9H-BUj"/>
-                                <include reference="rmT-xr-fMh"/>
                             </mask>
                         </variation>
                     </view>
@@ -1643,14 +1647,15 @@
                                     </mask>
                                 </variation>
                             </imageView>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder=" Onderwerp..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oIc-sO-Wy5">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder=" Onderwerp..." textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oIc-sO-Wy5">
                                 <rect key="frame" x="-25" y="-30" width="97" height="30"/>
                                 <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="iyq-54-hNa"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="24"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="30"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="done"/>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="iyq-54-hNa"/>
@@ -1734,19 +1739,19 @@
                                 <exclude reference="tIN-Sr-A27"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="AtO-Wf-frJ"/>
+                                <exclude reference="3LI-Eb-Pzb"/>
+                                <exclude reference="RpN-Rd-yMV"/>
+                                <exclude reference="tvD-DB-FLx"/>
                                 <exclude reference="E32-RF-EGK"/>
                                 <exclude reference="OtI-SV-nBq"/>
+                                <exclude reference="eMz-LD-ULv"/>
+                                <exclude reference="xxE-uQ-ffG"/>
                                 <exclude reference="8g0-pw-iR1"/>
                                 <exclude reference="ewh-X5-z2f"/>
                                 <exclude reference="EIe-4D-tQ0"/>
                                 <exclude reference="Q7g-ct-xRN"/>
                                 <exclude reference="aD9-Wc-1dr"/>
-                                <exclude reference="3LI-Eb-Pzb"/>
-                                <exclude reference="RpN-Rd-yMV"/>
-                                <exclude reference="tvD-DB-FLx"/>
-                                <exclude reference="eMz-LD-ULv"/>
-                                <exclude reference="xxE-uQ-ffG"/>
-                                <exclude reference="AtO-Wf-frJ"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
@@ -1758,19 +1763,19 @@
                                 <include reference="tIN-Sr-A27"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="AtO-Wf-frJ"/>
+                                <include reference="3LI-Eb-Pzb"/>
+                                <include reference="RpN-Rd-yMV"/>
+                                <include reference="tvD-DB-FLx"/>
                                 <include reference="E32-RF-EGK"/>
                                 <include reference="OtI-SV-nBq"/>
+                                <include reference="eMz-LD-ULv"/>
+                                <include reference="xxE-uQ-ffG"/>
                                 <include reference="8g0-pw-iR1"/>
                                 <include reference="ewh-X5-z2f"/>
                                 <include reference="EIe-4D-tQ0"/>
                                 <include reference="Q7g-ct-xRN"/>
                                 <include reference="aD9-Wc-1dr"/>
-                                <include reference="3LI-Eb-Pzb"/>
-                                <include reference="RpN-Rd-yMV"/>
-                                <include reference="tvD-DB-FLx"/>
-                                <include reference="eMz-LD-ULv"/>
-                                <include reference="xxE-uQ-ffG"/>
-                                <include reference="AtO-Wf-frJ"/>
                             </mask>
                         </variation>
                     </view>
