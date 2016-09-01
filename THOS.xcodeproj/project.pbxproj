@@ -13,6 +13,7 @@
 		035E8F9E1D6F5CC600A22F2B /* OpenSans-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 035E8F9A1D6F5CC600A22F2B /* OpenSans-Semibold.ttf */; };
 		0362591E1CF1CECA00AB26EE /* The House of Service legal BU.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 0362591D1CF1CEC900AB26EE /* The House of Service legal BU.pdf */; };
 		0372D7881D3A70E2004E24A8 /* HMSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 0372D7871D3A70E2004E24A8 /* HMSegmentedControl.m */; };
+		0385E5181D789A1400E79316 /* SHowUserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0385E5171D789A1400E79316 /* SHowUserProfileViewController.swift */; };
 		03BC6E121D468D0A001D934A /* paypalicon.png in Resources */ = {isa = PBXBuildFile; fileRef = 03BC6E111D468D0A001D934A /* paypalicon.png */; };
 		03BD051A1CBB72B9000B84A0 /* test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03BD05191CBB72B9000B84A0 /* test.swift */; };
 		03BD052E1CBB7345000B84A0 /* libPayPalMobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 03BD05261CBB7345000B84A0 /* libPayPalMobile.a */; };
@@ -142,6 +143,7 @@
 		0362591D1CF1CEC900AB26EE /* The House of Service legal BU.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "The House of Service legal BU.pdf"; sourceTree = "<group>"; };
 		0372D7861D3A70E1004E24A8 /* HMSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HMSegmentedControl.h; sourceTree = "<group>"; };
 		0372D7871D3A70E2004E24A8 /* HMSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HMSegmentedControl.m; sourceTree = "<group>"; };
+		0385E5171D789A1400E79316 /* SHowUserProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SHowUserProfileViewController.swift; sourceTree = "<group>"; };
 		03BC6E111D468D0A001D934A /* paypalicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = paypalicon.png; sourceTree = "<group>"; };
 		03BD05191CBB72B9000B84A0 /* test.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = test.swift; path = THOS/test.swift; sourceTree = SOURCE_ROOT; };
 		03BD05261CBB7345000B84A0 /* libPayPalMobile.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libPayPalMobile.a; sourceTree = "<group>"; };
@@ -412,6 +414,7 @@
 				03CB44791CA5CBF50040D770 /* CreateJobViewController.swift */,
 				03CB447E1CA5CBF50040D770 /* SearchForJobsViewController.swift */,
 				03D957011D36C6D800CF8C2D /* JobDetailViewController.swift */,
+				0385E5171D789A1400E79316 /* SHowUserProfileViewController.swift */,
 				03CB447A1CA5CBF50040D770 /* MyPostedJobsViewController.swift */,
 				03CB447C1CA5CBF50040D770 /* JobChatViewController.swift */,
 			);
@@ -992,6 +995,7 @@
 				03CB45501CA5CCBB0040D770 /* JSQMessagesCollectionViewCellOutgoing.m in Sources */,
 				03CB45461CA5CCBB0040D770 /* JSQMessage.m in Sources */,
 				03CB45551CA5CCBB0040D770 /* JSQMessagesLoadEarlierHeaderView.m in Sources */,
+				0385E5181D789A1400E79316 /* SHowUserProfileViewController.swift in Sources */,
 				03CB45221CA5CCBB0040D770 /* FBQuadTree.swift in Sources */,
 				03CB45341CA5CCBB0040D770 /* UIColor+JSQMessages.m in Sources */,
 				03CB45311CA5CCBB0040D770 /* JSQSystemSoundPlayer+JSQMessages.m in Sources */,

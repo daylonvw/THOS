@@ -178,13 +178,13 @@ class helpSeekerProfileViewController: UIViewController, UITableViewDelegate, UI
                 }
                 
             }
-            let underlineAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.ThosColor(),NSFontAttributeName: UIFont(name: "OpenSans", size: 18.0)!]
+            let underlineAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.ThosColor(),NSFontAttributeName: UIFont(name: "OpenSans", size: 22.0)!]
             let underlineAttributedString = NSAttributedString(string: "Opmerkingen", attributes: underlineAttribute)
             cell.textLabel?.attributedText = underlineAttributedString
             
         } else if indexPath.row == 8 {
             
-            let underlineAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.ThosColor(), NSFontAttributeName: UIFont(name: "OpenSans", size: 18.0)!]
+            let underlineAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.ThosColor(), NSFontAttributeName: UIFont(name: "OpenSans", size: 22.0)!]
             let underlineAttributedString = NSAttributedString(string: "Uitloggen", attributes: underlineAttribute)
             cell.textLabel?.attributedText = underlineAttributedString
         }

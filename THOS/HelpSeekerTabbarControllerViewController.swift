@@ -23,7 +23,7 @@ class HelpSeekerTabbarControllerViewController: UITabBarController {
             
             if baritem != item {
                 
-                baritem.imageInsets = UIEdgeInsetsMake(2, 2, 2, 2)
+                baritem.imageInsets = UIEdgeInsetsMake(1, 1, 1, 1)
                 
             } else {
                 
@@ -66,7 +66,7 @@ class HelpSeekerTabbarControllerViewController: UITabBarController {
             
             if baritem != item {
                 
-                baritem.imageInsets = UIEdgeInsetsMake(2, 2, 2, 2)
+                baritem.imageInsets = UIEdgeInsetsMake(1, 1, 1, 1)
                 
             } else {
                 
@@ -76,8 +76,8 @@ class HelpSeekerTabbarControllerViewController: UITabBarController {
         }
         
         let item = items[2]
-        item.image = UIImage(named: "envellopeIcon")
-        item.selectedImage = UIImage(named: "envellopeIcon")
+        item.image = UIImage(named: "myAds")
+        item.selectedImage = UIImage(named: "myAds")
 
         
     }

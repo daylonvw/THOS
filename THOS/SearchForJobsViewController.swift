@@ -41,13 +41,20 @@ class SearchForJobsViewController: UIViewController, UISearchBarDelegate, UITabl
         
         centerX = view.center.x
         centerY = view.center.y
+        
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarMetrics: .Default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        // set on previous controller
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.Plain, target:nil, action:nil)
+        
+        self.tableView.contentInset = UIEdgeInsetsMake(-64.0, 0.0, 0.0, 0.0)
 
     }
     
     override func viewDidAppear(animated: Bool) {
         
         super.viewDidAppear(true)
-                
+        
     }
 
 
