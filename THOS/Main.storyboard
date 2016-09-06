@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -20,6 +20,8 @@
             <string>OpenSans-Light</string>
             <string>OpenSans-Light</string>
             <string>OpenSans-Light</string>
+            <string>OpenSans-Light</string>
+            <string>OpenSans-Light</string>
         </mutableArray>
         <mutableArray key="OpenSans-Regular.ttf">
             <string>OpenSans</string>
@@ -30,6 +32,7 @@
             <string>OpenSans</string>
         </mutableArray>
         <mutableArray key="OpenSans-Semibold.ttf">
+            <string>OpenSans-Semibold</string>
             <string>OpenSans-Semibold</string>
             <string>OpenSans-Semibold</string>
             <string>OpenSans-Semibold</string>
@@ -833,6 +836,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Z7I-Pq-Xly" id="4YC-MV-DZi">
+                                            <rect key="frame" x="0.0" y="0.0" width="240" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -855,10 +859,10 @@
                                 <exclude reference="UqX-7J-ARX"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="o4O-cu-xi0"/>
                                 <exclude reference="L2p-RC-dQT"/>
                                 <exclude reference="fIA-eC-uBm"/>
                                 <exclude reference="pDY-uU-i7h"/>
-                                <exclude reference="o4O-cu-xi0"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
@@ -866,10 +870,10 @@
                                 <include reference="UqX-7J-ARX"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="o4O-cu-xi0"/>
                                 <include reference="L2p-RC-dQT"/>
                                 <include reference="fIA-eC-uBm"/>
                                 <include reference="pDY-uU-i7h"/>
-                                <include reference="o4O-cu-xi0"/>
                             </mask>
                         </variation>
                     </view>
@@ -891,6 +895,7 @@
                         <viewControllerLayoutGuide type="bottom" id="4sw-B7-3ur"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="3ki-I4-7qq">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="qya-UG-Ip0">
@@ -901,6 +906,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="yfW-TQ-3hJ" id="x0z-nU-8za">
+                                            <rect key="frame" x="0.0" y="0.0" width="240" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -925,10 +931,10 @@
                                 <exclude reference="qya-UG-Ip0"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="KB1-Rh-Wr7"/>
                                 <exclude reference="3Ar-Qv-NEX"/>
                                 <exclude reference="kU1-EC-edM"/>
                                 <exclude reference="v2h-y2-UPg"/>
-                                <exclude reference="KB1-Rh-Wr7"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
@@ -936,10 +942,10 @@
                                 <include reference="qya-UG-Ip0"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="KB1-Rh-Wr7"/>
                                 <include reference="3Ar-Qv-NEX"/>
                                 <include reference="kU1-EC-edM"/>
                                 <include reference="v2h-y2-UPg"/>
-                                <include reference="KB1-Rh-Wr7"/>
                             </mask>
                         </variation>
                     </view>
@@ -982,7 +988,7 @@
                                                         </constraint>
                                                     </constraints>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                                    <fontDescription key="fontDescription" name="OpenSans-Semibold" family="Open Sans" pointSize="20"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                     <variation key="default">
                                                         <mask key="constraints">
@@ -1029,7 +1035,7 @@
                                                             <variation key="heightClass=regular" constant="40"/>
                                                         </constraint>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <fontDescription key="fontDescription" name="OpenSans-Light" family="Open Sans" pointSize="14"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                     <variation key="default">
@@ -1049,7 +1055,7 @@
                                                         <constraint firstAttribute="width" constant="135" id="TV2-xL-xa4"/>
                                                         <constraint firstAttribute="height" constant="18" id="lS9-OG-tjf"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <fontDescription key="fontDescription" name="OpenSans-Light" family="Open Sans" pointSize="14"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                     <variation key="default">
@@ -1142,10 +1148,11 @@
                                 </constraints>
                                 <color key="barTintColor" red="0.054901960780000002" green="0.54901960780000003" blue="0.79607843140000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <textAttributes key="titleTextAttributes">
-                                    <fontDescription key="fontDescription" type="system" weight="light" pointSize="20"/>
+                                    <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="24"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </textAttributes>
                                 <items>
-                                    <navigationItem id="nNj-CQ-yGN"/>
+                                    <navigationItem title="Mijn opdrachten" id="nNj-CQ-yGN"/>
                                 </items>
                                 <variation key="default">
                                     <mask key="constraints">

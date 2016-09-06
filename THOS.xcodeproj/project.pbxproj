@@ -132,6 +132,7 @@
 		03CB54D51D4B47ED00A60A21 /* KACircleCropScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CB54D31D4B47ED00A60A21 /* KACircleCropScrollView.swift */; };
 		03CB54D71D4B4E6700A60A21 /* KACircleCropViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CB54D61D4B4E6700A60A21 /* KACircleCropViewController.swift */; };
 		03D957021D36C6D800CF8C2D /* JobDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D957011D36C6D800CF8C2D /* JobDetailViewController.swift */; };
+		03E071821D7F4D060085009A /* SetJobtypeMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E071811D7F4D060085009A /* SetJobtypeMedia.swift */; };
 		03E680441D2E894100C4DCDF /* SelectNewJobTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E680431D2E894100C4DCDF /* SelectNewJobTypeViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -331,6 +332,7 @@
 		03CB54D31D4B47ED00A60A21 /* KACircleCropScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KACircleCropScrollView.swift; sourceTree = "<group>"; };
 		03CB54D61D4B4E6700A60A21 /* KACircleCropViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KACircleCropViewController.swift; sourceTree = "<group>"; };
 		03D957011D36C6D800CF8C2D /* JobDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JobDetailViewController.swift; sourceTree = "<group>"; };
+		03E071811D7F4D060085009A /* SetJobtypeMedia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetJobtypeMedia.swift; sourceTree = "<group>"; };
 		03E680431D2E894100C4DCDF /* SelectNewJobTypeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectNewJobTypeViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -413,6 +415,7 @@
 				03E680431D2E894100C4DCDF /* SelectNewJobTypeViewController.swift */,
 				03CB44791CA5CBF50040D770 /* CreateJobViewController.swift */,
 				03CB447E1CA5CBF50040D770 /* SearchForJobsViewController.swift */,
+				03E071811D7F4D060085009A /* SetJobtypeMedia.swift */,
 				03D957011D36C6D800CF8C2D /* JobDetailViewController.swift */,
 				0385E5171D789A1400E79316 /* SHowUserProfileViewController.swift */,
 				03CB447A1CA5CBF50040D770 /* MyPostedJobsViewController.swift */,
@@ -968,6 +971,7 @@
 				03CB45571CA5CCBB0040D770 /* JSQMessagesMediaPlaceholderView.m in Sources */,
 				03CB45291CA5CCBB0040D770 /* FloatRatingView.swift in Sources */,
 				03BD051A1CBB72B9000B84A0 /* test.swift in Sources */,
+				03E071821D7F4D060085009A /* SetJobtypeMedia.swift in Sources */,
 				03CB45391CA5CCBB0040D770 /* JSQMessagesViewController.m in Sources */,
 				03CB452D1CA5CCBB0040D770 /* UITextView+Placeholder.m in Sources */,
 				03CB44871CA5CBF50040D770 /* HelpSeekerTabbarControllerViewController.swift in Sources */,

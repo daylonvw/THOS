@@ -150,64 +150,18 @@ class SearchForJobsViewController: UIViewController, UISearchBarDelegate, UITabl
        
         if showCatagories == true {
        
-                if indexPath.section == 0 {
+            cell.userImageView.image = getJotTypeMedia(indexPath.section, subtype: indexPath.row).0
+            cell.jobDescriptionLabel.text = getJotTypeMedia(indexPath.section, subtype: indexPath.row).1
             
-                    if indexPath.row == 0 {
-                
-                        cell.jobDescriptionLabel.text = "Schoonmaak"
-                        cell.userImageView.image = UIImage(named: "IndoorCleaning")
-                
-                    } else if indexPath.row == 1 {
-                
-                        cell.jobDescriptionLabel.text = "Oppas"
-                        cell.userImageView.image = UIImage(named: "nanny")
-                
-                
-                    } else if indexPath.row == 2 {
-                
-                        cell.jobDescriptionLabel.text = "Houtwerk"
-                        cell.userImageView.image = UIImage(named: "woodWork")
-                
-                
-                    } else if indexPath.row == 3 {
-                
-                        cell.jobDescriptionLabel.text = "Electricien"
-                        cell.userImageView.image = UIImage(named: "electrician")
-                
-                
-                    }
-            
-                } else if indexPath.section == 1 {
-            
-                    if indexPath.row == 0 {
-                
-                        cell.jobDescriptionLabel.text = "Rondom het huis"
-                        cell.userImageView.image = UIImage(named: "aroundTheHouse")
-                    
-                    } else if indexPath.row == 1 {
-                
-                        cell.jobDescriptionLabel.text = "In de tuin"
-                        cell.userImageView.image = UIImage(named: "garden")
-                
-                
-                    }
-                    
-                } else if indexPath.section == 2 {
-            
-                    if indexPath.row == 0 {
-                
-                        cell.jobDescriptionLabel.text = "Vervoer en verzend"
-                        cell.userImageView.image = UIImage(named: "pickUp")
-                    }
-            }
 
         } else if showCatagories == false {
             
             let job = self.jobsArray[indexPath.row]
             
             cell.jobDescriptionLabel.text = job["jobDescription"] as? String
-                        
-            cell.userImageView.image = catagorieImage
+            let jobtype = job["jobTypeNumber"] as! NSNumber
+            let jobSubType = job["jobSubTypeNumber"] as! NSNumber
+            cell.userImageView.image = getJotTypeMedia(jobtype, subtype: jobSubType).0
             
         }
 
@@ -301,6 +255,4 @@ class SearchForJobsViewController: UIViewController, UISearchBarDelegate, UITabl
         tableView.reloadData()
     }
     
-
-
 }

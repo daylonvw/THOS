@@ -155,62 +155,10 @@ class SelectNewJobTypeViewController: UIViewController, PayPalPaymentDelegate, U
 
             let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: cell.frame.width  / 2, height: cell.frame.width / 2))
             imageView.center = CGPointMake(cell.frame.width / 2, cell.frame.width / 2)
+            imageView.contentMode = .ScaleAspectFit
             
-            if indexPath.section == 0 {
-                
-                if indexPath.row == 1 {
-                    
-                    label.text = "Schoonmaak"
-                    imageView.image = UIImage(named: "IndoorCleaning")
-                    
-                } else if indexPath.row == 2 {
-                    
-                    label.text = "Oppas"
-                    imageView.image = UIImage(named: "nanny")
-
-                    
-                } else if indexPath.row == 3 {
-                    
-                    label.text = "Houtwerk"
-                    imageView.image = UIImage(named: "woodWork")
-
-
-                } else if indexPath.row == 4 {
-                    
-                    label.text = "Electricien"
-                    imageView.image = UIImage(named: "electrician")
-
-
-                }
-                
-            } else if indexPath.section == 1 {
-                
-                if indexPath.row == 1 {
-                    
-                    label.text = "Rondom het huis"
-                    imageView.image = UIImage(named: "aroundTheHouse")
-
-
-                    
-                } else if indexPath.row == 2 {
-                    
-                    label.text = "In de tuin"
-                    imageView.image = UIImage(named: "garden")
-
-
-                }
-
-            } else if indexPath.section == 2 {
-                
-                if indexPath.row == 1 {
-                    
-                    label.text = "Vervoer en verzend"
-                    imageView.image = UIImage(named: "pickUp")
-
-
-                    
-                }
-            }
+            imageView.image = getJotTypeMedia(indexPath.section, subtype: indexPath.row - 1).0
+            label.text = getJotTypeMedia(indexPath.section, subtype: indexPath.row - 1).1
             
             cell.addSubview(imageView)
             cell.addSubview(label)
@@ -261,11 +209,7 @@ class SelectNewJobTypeViewController: UIViewController, PayPalPaymentDelegate, U
         }
     }
     
-
     func openPaypalFromNotification(notification: NSNotification) {
-        
-        
-        print(notification)
         
         let price = notification.object?.valueForKey("price") as! NSNumber
         let objectString = (notification.object!.valueForKey("sku")) as! String
@@ -356,4 +300,5 @@ class SelectNewJobTypeViewController: UIViewController, PayPalPaymentDelegate, U
             }
         }
     }
+
 }

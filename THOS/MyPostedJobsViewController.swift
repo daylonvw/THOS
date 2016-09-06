@@ -296,7 +296,7 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
         let object  = self.myPostedJobsArray[indexPath.row]
         
         let description = object["jobDescription"] as! String
-        let price = object["price"] as? NSNumber
+        let price = object["price"] as! NSNumber
         let text = "\(description) €\(price)"
         
         cell.descriptionTV.attributedText = getColoredText(text)
