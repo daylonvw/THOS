@@ -23,6 +23,7 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
     var datePickerView: UIView!
     var selectButton: UIButton!
     var jobDateOptions = [NSDate(), NSDate(), NSDate()]
+    let compareDate = NSDate()
     var datePicker: UIDatePicker!
     var dateButtonInt: Int!
     
@@ -253,10 +254,21 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
             }
         }
         
-        if jobDateOptions.count < 3 {
+        let formatter = NSDateFormatter()
+        formatter.dateStyle = .MediumStyle
+        
+        
+        
+        for jobDate in jobDateOptions {
             
-            self.allRequiredJobInfoEntered = false
-            self.missingItemsArray.append("opdracht datum")
+            let compareDateString = formatter.stringFromDate(compareDate)
+            let jobDateString = formatter.stringFromDate(jobDate)
+            
+            if compareDateString == jobDateString {
+                
+                self.allRequiredJobInfoEntered = false
+                self.missingItemsArray.append("opdracht datum")
+            }
         }
         
         if self.allRequiredJobInfoEntered == true {

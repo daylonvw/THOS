@@ -415,11 +415,11 @@
 				03E680431D2E894100C4DCDF /* SelectNewJobTypeViewController.swift */,
 				03CB44791CA5CBF50040D770 /* CreateJobViewController.swift */,
 				03CB447E1CA5CBF50040D770 /* SearchForJobsViewController.swift */,
-				03E071811D7F4D060085009A /* SetJobtypeMedia.swift */,
 				03D957011D36C6D800CF8C2D /* JobDetailViewController.swift */,
 				0385E5171D789A1400E79316 /* SHowUserProfileViewController.swift */,
 				03CB447A1CA5CBF50040D770 /* MyPostedJobsViewController.swift */,
 				03CB447C1CA5CBF50040D770 /* JobChatViewController.swift */,
+				03E071811D7F4D060085009A /* SetJobtypeMedia.swift */,
 			);
 			name = "User View Controllers";
 			sourceTree = "<group>";

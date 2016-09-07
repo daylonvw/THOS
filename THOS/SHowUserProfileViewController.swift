@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SHowUserProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class SHowUserProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     var userImage: UIImage!
     var userName: String!
@@ -16,13 +16,67 @@ class SHowUserProfileViewController: UIViewController, UITableViewDelegate, UITa
     
     var width: CGFloat!
 
+    var portfoliaCollectionView: UICollectionView!
+    var layout: UICollectionViewFlowLayout!
+    
+    var portfolio = [UIImage]()
+    
+    var enlargedPortfolioImageView: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         width = view.frame.width
 
-        // Do any additional setup after loading the view.
+        layout = UICollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        layout.itemSize = CGSize(width: 60, height: 60)
+        layout.scrollDirection = .Horizontal
+        
+        portfoliaCollectionView = UICollectionView(frame: CGRect(x: 35, y: 20, width: width - 70, height: 140), collectionViewLayout: self.layout)
+        portfoliaCollectionView.dataSource = self
+        portfoliaCollectionView.delegate = self
+        portfoliaCollectionView.registerClass(UICollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
+        portfoliaCollectionView.backgroundColor = UIColor.whiteColor()
+
+    
+        let portfolioQuery = PFQuery(className: "Portfolio")
+        portfolioQuery.whereKey("user", equalTo: self.user)
+        portfolioQuery.findObjectsInBackgroundWithBlock { (objects, error) in
+            
+            if error != nil {
+                
+                print(error?.localizedDescription)
+                
+            } else {
+                
+                if objects?.count > 0 {
+                    
+                    for object in objects! {
+                        
+                    
+                        let pictureFile = object["image"] as? PFFile
+                        pictureFile?.getDataInBackgroundWithBlock({ (data, error) in
+                        
+                            if error != nil {
+                            
+                                print(error?.localizedDescription)
+                            
+                            } else {
+                                
+                                let image = UIImage(data: data!)
+                                self.portfolio.append(image!)
+                                
+                                self.portfoliaCollectionView.reloadData()
+                            }
+                        })
+                    
+                
+                    }
+                }
+                
+            }
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -32,7 +86,7 @@ class SHowUserProfileViewController: UIViewController, UITableViewDelegate, UITa
     
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 8
+        return 7
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -106,23 +160,27 @@ class SHowUserProfileViewController: UIViewController, UITableViewDelegate, UITa
                 
                 
             } else if indexPath.row == 4 {
-                
-                // portfolio
+            
+            let nameLabel = UILabel(frame: CGRect(x: 35.0, y: 10.0, width: width - 70, height: 50))
+            nameLabel.text = "Portfolio"
+            nameLabel.textAlignment = .Left
+            nameLabel.font = UIFont(name: "OpenSans", size: 32)
+            nameLabel.textColor = UIColor.darkGrayColor()
+
+            cell.addSubview(portfoliaCollectionView)
+            cell.addSubview(nameLabel)
+
             
             } else if indexPath.row == 5 {
                 
-                let underlineAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.ThosColor(),NSFontAttributeName: UIFont(name: "OpenSans", size: 22.0)!]
-                let underlineAttributedString = NSAttributedString(string: "Stuur bericht", attributes: underlineAttribute)
-                cell.textLabel?.attributedText = underlineAttributedString
-                
+            let underlineAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.redColor(), NSFontAttributeName: UIFont(name: "OpenSans", size: 16.0)!]
+            let underlineAttributedString = NSAttributedString(string: "Blokkeer", attributes: underlineAttribute)
+            cell.textLabel?.attributedText = underlineAttributedString
+            
             } else if indexPath.row == 6 {
             
-                let underlineAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.redColor(), NSFontAttributeName: UIFont(name: "OpenSans", size: 16.0)!]
-                let underlineAttributedString = NSAttributedString(string: "Blokkeer", attributes: underlineAttribute)
-                cell.textLabel?.attributedText = underlineAttributedString
-                
-            } else if indexPath.row == 7 {
 
+                
             }
         
         return cell
@@ -138,13 +196,57 @@ class SHowUserProfileViewController: UIViewController, UITableViewDelegate, UITa
             
         } else if indexPath.row == 1  || indexPath.row == 4 {
             
-            return 160
+            return 180
             
         }  else {
             
             return 50
             
         }
+    }
+    
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
+        return portfolio.count
+    }
+    
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath)
+        cell.backgroundColor = UIColor.lightGrayColor()
+        
+        cell.layer.cornerRadius = 6
+        
+        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
+        imageView.image = portfolio[indexPath.row]
+        imageView.layer.cornerRadius = 6
+        imageView.layer.masksToBounds = true
+        cell.addSubview(imageView)
+        
+        return cell
+    }
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        
+        let tapgesture = UITapGestureRecognizer()
+        tapgesture.numberOfTapsRequired  = 1
+        tapgesture.addTarget(self, action: #selector(dismissEnlargedPortfolioImageView))
+        
+        
+        enlargedPortfolioImageView = UIImageView(frame: self.view.frame)
+        enlargedPortfolioImageView.image = self.portfolio[indexPath.row]
+        enlargedPortfolioImageView.userInteractionEnabled = true
+        enlargedPortfolioImageView.addGestureRecognizer(tapgesture)
+        enlargedPortfolioImageView.contentMode = .ScaleAspectFit
+        enlargedPortfolioImageView.backgroundColor = UIColor.blackColor()
+        
+        self.view.addSubview(enlargedPortfolioImageView)
+    }
+    
+    
+    func dismissEnlargedPortfolioImageView() {
+        
+        enlargedPortfolioImageView.removeFromSuperview()
     }
 
     /*

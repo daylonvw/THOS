@@ -81,7 +81,7 @@ class JobDetailViewController: UIViewController, UITextViewDelegate, UITableView
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 6
+        return 5
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -153,27 +153,24 @@ class JobDetailViewController: UIViewController, UITextViewDelegate, UITableView
             let dateStringThree = formatter.stringFromDate(dateThree)
             
             let optionOneButton = UIButton(frame: CGRect(x: view.center.x, y: 20, width: width / 2 - 35, height: 70))
-            let underlineOneAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.darkGrayColor()]
-            let underlineOneAttributedString = NSAttributedString(string: dateStringOne, attributes: underlineOneAttribute)
-            optionOneButton.setAttributedTitle(underlineOneAttributedString, forState: .Normal)
+            optionOneButton.setTitle(dateStringOne, forState: .Normal)
+            optionOneButton.setTitleColor(UIColor.darkGrayColor(), forState: .Normal)
             optionOneButton.tag = 0
             optionOneButton.addTarget(self, action: #selector(firstDateButtonPressed(_:)), forControlEvents: .TouchUpInside)
             optionOneButton.layer.borderColor = UIColor(white: 0.95, alpha: 0.9).CGColor
             optionOneButton.layer.borderWidth = 1.0
             
             let optionTwoButton = UIButton(frame: CGRect(x: 35, y: 90, width: width / 2 - 35, height: 70))
-            let underlineTwoAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.darkGrayColor()]
-            let underlineTwoAttributedString = NSAttributedString(string: dateStringTwo, attributes: underlineTwoAttribute)
-            optionTwoButton.setAttributedTitle(underlineTwoAttributedString, forState: .Normal)
+            optionTwoButton.setTitle(dateStringTwo, forState: .Normal)
+            optionTwoButton.setTitleColor(UIColor.darkGrayColor(), forState: .Normal)
             optionTwoButton.tag = 1
             optionTwoButton.addTarget(self, action: #selector(secondDateButtonPressed(_:)), forControlEvents: .TouchUpInside)
             optionTwoButton.layer.borderColor = UIColor(white: 0.95, alpha: 0.9).CGColor
             optionTwoButton.layer.borderWidth = 1.0
             
             let optionThreeButton = UIButton(frame: CGRect(x: view.center.x, y: 90, width: width / 2 - 35, height: 70))
-            let underlineThreeAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.darkGrayColor()]
-            let underlineThreeAttributedString = NSAttributedString(string: dateStringThree, attributes: underlineThreeAttribute)
-            optionThreeButton.setAttributedTitle(underlineThreeAttributedString, forState: .Normal)
+            optionThreeButton.setTitle(dateStringThree, forState: .Normal)
+            optionThreeButton.setTitleColor(UIColor.darkGrayColor(), forState: .Normal)
             optionThreeButton.tag = 2
             optionThreeButton.addTarget(self, action: #selector(thirdDateButtonPressed(_:)), forControlEvents: .TouchUpInside)
             optionThreeButton.layer.borderColor = UIColor(white: 0.95, alpha: 0.9).CGColor
@@ -187,18 +184,8 @@ class JobDetailViewController: UIViewController, UITextViewDelegate, UITableView
             
         } else if indexPath.row == 4 {
             
-            let underlineAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.ThosColor(), NSFontAttributeName: UIFont(name: "OpenSans", size: 26.0)!]
-            let underlineAttributedString = NSAttributedString(string: "Stuur bericht", attributes: underlineAttribute)
-
-            let label = UILabel(frame: CGRect(x: 35.0, y: 0.0, width: width - 70, height: 60))
-    
-            label.attributedText = underlineAttributedString
-            
-            cell.addSubview(label)
-            
-        } else if indexPath.row == 5 {
-            
             // nothing yet
+            
         }
 
 
@@ -239,22 +226,48 @@ class JobDetailViewController: UIViewController, UITextViewDelegate, UITableView
     }
     
      func firstDateButtonPressed(sender: AnyObject) {
-        print("one")
+       
         acceptedDate = dateOne
+        openAccentAlertController()
     }
     
+    
+    
      func secondDateButtonPressed(sender: AnyObject) {
-        print("two")
+       
         acceptedDate = dateTwo
+        openAccentAlertController()
     }
     
      func thirdDateButtonPressed(sender: AnyObject) {
-        print("three")
+       
         acceptedDate = dateThree
+        openAccentAlertController()
     }
     
     
-    func acceptButtonPressed(sender: AnyObject) {
+    func openAccentAlertController() {
+        
+        let formatter = NSDateFormatter()
+        formatter.dateStyle = .MediumStyle
+        
+        let stringFromDate = formatter.stringFromDate(acceptedDate)
+        
+        let alertcontroller = UIAlertController(title: "Je bent een HELD", message: "Je staat op het punt om deze opdracht te accepteren op \(stringFromDate)", preferredStyle: .Alert)
+        
+        let cancelAction = UIAlertAction(title: "Annuleren", style: .Default, handler: nil)
+        
+        let acceptAction = UIAlertAction(title: "Yes dat gaan we doen", style: .Default) { (acction) in
+            
+            self.acceptJob()
+        }
+        
+        alertcontroller.addAction(acceptAction)
+        alertcontroller.addAction(cancelAction)
+        self.presentViewController(alertcontroller, animated: true, completion: nil)
+    }
+    
+    func acceptJob() {
         
         job["acceptedDate"] = acceptedDate
         job["acceptedUser"] = PFUser.currentUser()

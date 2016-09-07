@@ -712,7 +712,8 @@
                                                             <exclude reference="Klo-a0-XxX"/>
                                                         </mask>
                                                     </variation>
-                                                    <variation key="heightClass=regular">
+                                                    <variation key="heightClass=regular" misplaced="YES">
+                                                        <rect key="frame" x="60" y="10" width="160" height="40"/>
                                                         <mask key="constraints">
                                                             <include reference="Klo-a0-XxX"/>
                                                         </mask>
@@ -995,7 +996,8 @@
                                                             <exclude reference="mm5-ev-Mgj"/>
                                                         </mask>
                                                     </variation>
-                                                    <variation key="heightClass=regular">
+                                                    <variation key="heightClass=regular" misplaced="YES">
+                                                        <rect key="frame" x="10" y="20" width="220" height="60"/>
                                                         <mask key="constraints">
                                                             <include reference="mm5-ev-Mgj"/>
                                                         </mask>
@@ -1043,7 +1045,8 @@
                                                             <exclude reference="i2e-xs-MWi"/>
                                                         </mask>
                                                     </variation>
-                                                    <variation key="heightClass=regular">
+                                                    <variation key="heightClass=regular" misplaced="YES">
+                                                        <rect key="frame" x="60" y="90" width="170" height="40"/>
                                                         <mask key="constraints">
                                                             <include reference="i2e-xs-MWi"/>
                                                         </mask>

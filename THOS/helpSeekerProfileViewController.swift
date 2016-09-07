@@ -8,7 +8,7 @@
 
 import UIKit
 
-class helpSeekerProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class helpSeekerProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     
     @IBOutlet var tableView: UITableView!
@@ -20,47 +20,79 @@ class helpSeekerProfileViewController: UIViewController, UITableViewDelegate, UI
     
     var width: CGFloat!
     
+    var portfoliaCollectionView: UICollectionView!
+    var layout: UICollectionViewFlowLayout!
+    
+    var portfolio = [UIImage]()
+    
+    var enlargedPortfolioImageView: UIImageView!
+
     override func viewDidLoad() {
       
         super.viewDidLoad()
         
         width = view.frame.width
         
+        layout = UICollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        layout.itemSize = CGSize(width: 60, height: 60)
+        layout.scrollDirection = .Horizontal
+
+        
+        portfoliaCollectionView = UICollectionView(frame: CGRect(x: 35, y: 20, width: width - 70, height: 140), collectionViewLayout: self.layout)
+        portfoliaCollectionView.dataSource = self
+        portfoliaCollectionView.delegate = self
+        portfoliaCollectionView.registerClass(UICollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
+        portfoliaCollectionView.backgroundColor = UIColor.whiteColor()
+
+        let portfolioQuery = PFQuery(className: "Portfolio")
+        portfolioQuery.whereKey("user", equalTo:PFUser.currentUser()!)
+        portfolioQuery.findObjectsInBackgroundWithBlock { (objects, error) in
+            
+            if error != nil {
+                
+                print(error?.localizedDescription)
+                
+            } else {
+                
+                if objects?.count > 0 {
+                    
+                    for object in objects! {
+                        
+                        
+                        let pictureFile = object["image"] as? PFFile
+                        pictureFile?.getDataInBackgroundWithBlock({ (data, error) in
+                            
+                            if error != nil {
+                                
+                                print(error?.localizedDescription)
+                                
+                            } else {
+                                
+                                let image = UIImage(data: data!)
+                                self.portfolio.append(image!)
+                                
+                                self.portfoliaCollectionView.reloadData()
+                            }
+                        })
+                        
+                        
+                    }
+                }
+                
+            }
+        }
+
 
     }
     
     override func viewWillAppear(animated: Bool) {
     
-        
-//        let query = PFQuery(className: "UserRating")
-//        query.whereKey("user", equalTo: PFUser.currentUser()!)
-//        query.getFirstObjectInBackgroundWithBlock({ (object , error ) -> Void in
-//            
-//            if error != nil {
-//                
-//                print(error?.localizedDescription)
-//            } else {
-//                                
-//                self.ratingView = FloatRatingView(frame: CGRect(x: 0, y: 0, width: 200, height: 60))
-//
-//                let rating = object!["rating"] as! NSNumber
-//                self.ratingView.rating = Float(rating)
-//                self.ratingView.center = CGPointMake(self.view.center.x,  200)
-//                self.ratingView.editable = false
-//                self.ratingView.minRating = 1
-//                self.ratingView.maxRating = 5
-//                self.ratingView.fullImage = UIImage(named: "starFull")
-//                self.ratingView.emptyImage = UIImage(named: "starEmpty")
-//                
-//                self.view.addSubview(self.ratingView)
-//
-//            }
-//        })
-//
     }
     
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
         return 9
     }
     
@@ -167,6 +199,18 @@ class helpSeekerProfileViewController: UIViewController, UITableViewDelegate, UI
             cell.textLabel?.text = "Berichten"
             cell.imageView?.image = UIImage(named: "messages")
 
+        } else if indexPath.row == 6 {
+            
+            let nameLabel = UILabel(frame: CGRect(x: 35.0, y: 10.0, width: width - 70, height: 50))
+            nameLabel.text = "Portfolio"
+            nameLabel.textAlignment = .Left
+            nameLabel.font = UIFont(name: "OpenSans", size: 32)
+            nameLabel.textColor = UIColor.darkGrayColor()
+            
+            cell.addSubview(portfoliaCollectionView)
+            cell.addSubview(nameLabel)
+
+            
         } else if indexPath.row == 7 {
           
             
@@ -300,4 +344,73 @@ class helpSeekerProfileViewController: UIViewController, UITableViewDelegate, UI
 
     }
     
+    
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
+        return 15
+    }
+    
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath)
+        cell.backgroundColor = UIColor.lightGrayColor()
+        
+        cell.layer.cornerRadius = 6
+        
+        if indexPath.row < portfolio.count {
+        
+            let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
+            imageView.image = portfolio[indexPath.row]
+            imageView.layer.cornerRadius = 6
+            imageView.layer.masksToBounds = true
+            cell.addSubview(imageView)
+
+        
+        } else {
+            
+            let imageView = UIImageView(frame: CGRect(x: 20, y: 20, width: 20, height: 20))
+            imageView.image = UIImage(named: "addPort")
+            imageView.layer.cornerRadius = 6
+            imageView.layer.masksToBounds = true
+            imageView.backgroundColor = UIColor.clearColor()
+            
+            cell.addSubview(imageView)
+        }
+        
+        
+        return cell
+    }
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        
+        
+        if indexPath.row < portfolio.count {
+            
+            let tapgesture = UITapGestureRecognizer()
+            tapgesture.numberOfTapsRequired  = 1
+            tapgesture.addTarget(self, action: #selector(dismissEnlargedPortfolioImageView))
+            
+            
+            enlargedPortfolioImageView = UIImageView(frame: self.view.frame)
+            enlargedPortfolioImageView.image = self.portfolio[indexPath.row]
+            enlargedPortfolioImageView.userInteractionEnabled = true
+            enlargedPortfolioImageView.addGestureRecognizer(tapgesture)
+            enlargedPortfolioImageView.contentMode = .ScaleAspectFit
+            enlargedPortfolioImageView.backgroundColor = UIColor.blackColor()
+            
+            self.view.addSubview(enlargedPortfolioImageView)
+            
+        } else {
+            
+            print("open image picker")
+        }
+
+    }
+    
+    
+    func dismissEnlargedPortfolioImageView() {
+        
+        enlargedPortfolioImageView.removeFromSuperview()
+    }
+
 }
