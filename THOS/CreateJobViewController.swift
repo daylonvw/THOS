@@ -342,6 +342,7 @@ class CreateJobViewController: UIViewController, UITextViewDelegate, UITextField
         job["jobTypeNumber"] = self.jobType
         job["jobSubTypeNumber"] = self.jobSubType
         job["isPaid"] = false
+        job["price"] = price
         
         
         job.saveInBackgroundWithBlock { (succes, error) -> Void in

@@ -179,7 +179,7 @@ class SelectNewJobTypeViewController: UIViewController, PayPalPaymentDelegate, U
         if indexPath.row != 0 {
             
             jobTypeNumber = indexPath.section
-            jobSubTypeNumber = indexPath.row
+            jobSubTypeNumber = indexPath.row - 1
             
             let cell = collectionView.cellForItemAtIndexPath(indexPath)
             

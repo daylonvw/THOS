@@ -8,7 +8,7 @@
 
 import UIKit
 
-class helpSeekerProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class helpSeekerProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
     
     @IBOutlet var tableView: UITableView!
@@ -45,6 +45,16 @@ class helpSeekerProfileViewController: UIViewController, UITableViewDelegate, UI
         portfoliaCollectionView.registerClass(UICollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
         portfoliaCollectionView.backgroundColor = UIColor.whiteColor()
 
+       getPortfolio()
+
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+    
+    }
+    
+    func  getPortfolio() {
+       
         let portfolioQuery = PFQuery(className: "Portfolio")
         portfolioQuery.whereKey("user", equalTo:PFUser.currentUser()!)
         portfolioQuery.findObjectsInBackgroundWithBlock { (objects, error) in
@@ -83,11 +93,6 @@ class helpSeekerProfileViewController: UIViewController, UITableViewDelegate, UI
             }
         }
 
-
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-    
     }
     
     
@@ -357,6 +362,11 @@ class helpSeekerProfileViewController: UIViewController, UITableViewDelegate, UI
         
         cell.layer.cornerRadius = 6
         
+        for subview in cell.subviews {
+            
+            subview.removeFromSuperview()
+        }
+        
         if indexPath.row < portfolio.count {
         
             let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
@@ -402,11 +412,67 @@ class helpSeekerProfileViewController: UIViewController, UITableViewDelegate, UI
             
         } else {
             
-            print("open image picker")
+            openImagePicker()
+        
         }
 
     }
     
+    func openImagePicker() {
+        
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        
+        if UIImagePickerController.isSourceTypeAvailable(.PhotoLibrary) {
+            
+            imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+            self.presentViewController(imagePicker, animated: true, completion: nil)
+            
+        } else if UIImagePickerController.isSourceTypeAvailable(.SavedPhotosAlbum) {
+            
+            imagePicker.sourceType = UIImagePickerControllerSourceType.SavedPhotosAlbum
+            self.presentViewController(imagePicker, animated: true, completion: nil)
+            
+        }
+        
+
+    }
+    
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
+        
+        portfolio.append(image)
+        self.portfoliaCollectionView.reloadData()
+        
+        let imageData = UIImageJPEGRepresentation(image, 1.0)
+    
+        let imageFile = PFFile(data: imageData!)
+        
+        let imageObject = PFObject(className: "Portfolio")
+        imageObject["user"] = PFUser.currentUser()
+        imageObject["image"] = imageFile
+        
+        imageObject.saveInBackgroundWithBlock { (succeded, error) in
+            
+            if error != nil {
+                
+                print(error?.localizedDescription)
+                
+            } else {
+                
+                if succeded == true {
+                    
+//                    self.getPortfolio()
+                    
+                }
+            }
+        }
+       
+        dismissViewControllerAnimated(true, completion: nil)
+        
+        
+        
+    }
+
     
     func dismissEnlargedPortfolioImageView() {
         

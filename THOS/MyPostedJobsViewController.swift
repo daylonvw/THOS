@@ -15,6 +15,8 @@ class MyPostedJobsCell: UITableViewCell {
     @IBOutlet var acceptedDateLbel: UILabel!
     @IBOutlet var GoToChatButton: UIButton!
     
+    @IBOutlet var typeImageView: UIImageView!
+    @IBOutlet var subjectLabel: UILabel!
     
     var jobInfoTuppleArray = [(user: PFUser,image: UIImage, job: PFObject)]()
     
@@ -111,7 +113,6 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
         
         
         payPalConfig.payPalShippingAddressOption = .PayPal;
-
         
     }
     
@@ -253,6 +254,7 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
         querie.whereKey("acceptedUser", equalTo: PFUser.currentUser()!)
         querie.whereKey("open", equalTo: false)
         querie.whereKey("jobTypeNumber", lessThan: 3)
+        querie.includeKey("user")
 
         querie.findObjectsInBackgroundWithBlock { (jobs, error ) -> Void in
             
@@ -301,6 +303,17 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
         
         cell.descriptionTV.attributedText = getColoredText(text)
         cell.descriptionTV.font = UIFont.systemFontOfSize(18, weight: UIFontWeightSemibold)
+        
+        let jobtype = object["jobTypeNumber"] as! NSNumber
+        let jobSubType = object["jobSubTypeNumber"] as! NSNumber
+
+        cell.typeImageView.image = getJotTypeMedia(jobtype, subtype: jobSubType).0
+        
+        cell.subjectLabel.text = object["jobSubject"] as? String
+        
+        cell.GoToChatButton.contentHorizontalAlignment = .Left
+        cell.GoToChatButton.contentEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0)
+        cell.GoToChatButton.titleLabel?.adjustsFontSizeToFitWidth = true
 
         if self.segmentedControl.selectedSegmentIndex == 0 {
             
@@ -320,14 +333,27 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
             cell.GoToChatButton.hidden = false
             
             if object["isPaid"] as! Bool == false {
-                    
-                cell.GoToChatButton.setImage(UIImage(named: "paypalicon"), forState: .Normal)
+                
+                
+                let user = object["acceptedUser"] as! PFUser
+                let userName = user["displayName"] as! String
+
+                let underlineCreateAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.ThosColor(),NSFontAttributeName: UIFont(name: "OpenSans", size: 24.0)!]
+                let underlineCreateAttributedString = NSAttributedString(string: "Betaal \(userName) nu met Paypal", attributes: underlineCreateAttribute)
+                cell.GoToChatButton.setAttributedTitle(underlineCreateAttributedString, forState: .Normal)
+
+                
               
                 cell.GoToChatButton.addTarget(self, action: #selector(MyPostedJobsViewController.buttonPressed(_:)), forControlEvents: .TouchUpInside)
                     
             } else if object["isPaid"] as! Bool == true {
+                
+                let user = object["acceptedUser"] as! PFUser
+                let userName = user["displayName"] as! String
                     
-                cell.GoToChatButton.setImage(UIImage(named: "toolIcon"), forState: .Normal)
+                let underlineCreateAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.ThosColor(),NSFontAttributeName: UIFont(name: "OpenSans", size: 24.0)!]
+                let underlineCreateAttributedString = NSAttributedString(string: "Chat met \(userName)", attributes: underlineCreateAttribute)
+                cell.GoToChatButton.setAttributedTitle(underlineCreateAttributedString, forState: .Normal)
                 
                 cell.GoToChatButton.addTarget(self, action: #selector(MyPostedJobsViewController.buttonPressed(_:)), forControlEvents: .TouchUpInside)
             }
@@ -340,7 +366,6 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
             
         } else if self.segmentedControl.selectedSegmentIndex == 1 {
             
-            cell.GoToChatButton.setImage(UIImage(named: "toolIcon"), forState: .Normal)
             cell.GoToChatButton.hidden = true
             
             cell.acceptedDateLbel.text = ""
@@ -363,10 +388,16 @@ class MyPostedJobsViewController: UIViewController, UITableViewDelegate, UITable
             
             if object["isPaid"] as! Bool == false {
                 
-                cell.GoToChatButton.setImage(UIImage(named: "toolIcon"), forState: .Normal)
                 cell.GoToChatButton.hidden = true
                 
             } else if object["isPaid"] as! Bool == true {
+                
+                let user = object["user"] as! PFUser
+                let userName = user["displayName"] as! String
+                
+                let underlineCreateAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.ThosColor(),NSFontAttributeName: UIFont(name: "OpenSans", size: 24.0)!]
+                let underlineCreateAttributedString = NSAttributedString(string: "Chat met \(userName)", attributes: underlineCreateAttribute)
+                cell.GoToChatButton.setAttributedTitle(underlineCreateAttributedString, forState: .Normal)
                 
                 cell.GoToChatButton.addTarget(self, action: #selector(MyPostedJobsViewController.buttonPressed(_:)), forControlEvents: .TouchUpInside)
                 cell.GoToChatButton.hidden = false

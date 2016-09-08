@@ -147,7 +147,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         
         if userImageView.highlighted == true {
             
-            let file = PFFile(data: UIImageJPEGRepresentation(self.userImageView.image!, 0.3)!)
+            let file = PFFile(data: UIImageJPEGRepresentation(self.userImageView.image!, 0.9)!)
             user["userImgage"] = file
 
         } else {
