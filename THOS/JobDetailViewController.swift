@@ -70,6 +70,13 @@ class JobDetailViewController: UIViewController, UITextViewDelegate, UITableView
 
     
     }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(true)
+        
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage.fromColor(UIColor.whiteColor()), forBarMetrics: .Default)
+        self.navigationController?.navigationBar.shadowImage = UIImage.fromColor(UIColor.whiteColor())
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

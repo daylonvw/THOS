@@ -20,6 +20,7 @@ class SearchForJobsViewController: UIViewController, UISearchBarDelegate, UITabl
 // IBOutlets
     
     @IBOutlet var tableView: UITableView!
+    @IBOutlet var jobSearchBar: UISearchBar!
     
     var jobsArray = [PFObject]()
     
@@ -39,16 +40,56 @@ class SearchForJobsViewController: UIViewController, UISearchBarDelegate, UITabl
         
         showCatagories = true
         
+        
+        jobSearchBar.delegate = self
+        jobSearchBar.barTintColor  = UIColor.ThosColor()
+        let button = jobSearchBar.valueForKey("cancelButton") as! UIButton
+        button.setTitle("Annuleer", forState: UIControlState.Normal)
+        button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        button.hidden = true
+        
+        let subview = jobSearchBar.subviews[0]
+        
+        for subv in subview.subviews {
+            
+            if subv.isKindOfClass(UITextField) {
+                
+                let textF = subv as! UITextField
+                textF.backgroundColor = UIColor.ThosColor()
+                textF.textColor = UIColor.whiteColor()
+
+                textF.attributedPlaceholder = NSAttributedString(string:"Zoek op trefwoord", attributes:[NSForegroundColorAttributeName: UIColor.whiteColor()])
+                textF.textAlignment = .Left
+                textF.font = UIFont(name: "OpenSans", size: 26.0)
+                textF.adjustsFontSizeToFitWidth = true
+
+                let glassIconView = textF.leftView as? UIImageView
+                
+                glassIconView!.image = glassIconView!.image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+                glassIconView!.tintColor = UIColor.whiteColor()
+                glassIconView?.transform = CGAffineTransformMakeScale(1.2, 1.2)
+
+                }
+        }
+        
+        
         centerX = view.center.x
         centerY = view.center.y
         
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarMetrics: .Default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage.fromColor(UIColor.ThosColor()), forBarMetrics: .Default)
+        self.navigationController?.navigationBar.shadowImage = UIImage.fromColor(UIColor.ThosColor())
         // set on previous controller
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.Plain, target:nil, action:nil)
         
-        self.tableView.contentInset = UIEdgeInsetsMake(-64.0, 0.0, 0.0, 0.0)
+//        self.tableView.contentInset = UIEdgeInsetsMake(-64.0, 0.0, 0.0, 0.0)
 
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(true)
+        
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage.fromColor(UIColor.ThosColor()), forBarMetrics: .Default)
+        self.navigationController?.navigationBar.shadowImage = UIImage.fromColor(UIColor.ThosColor())
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -98,11 +139,71 @@ class SearchForJobsViewController: UIViewController, UISearchBarDelegate, UITabl
                         self.tableView.reloadData()
                         
                     }
+                    
+                } else {
+                    
+                    self.showNoJobsAllertcontroller()
                 }
             }
             
         }
 
+    }
+    
+    func getJobsWithText(text: String) {
+        
+        let querie = PFQuery(className: "Job")
+        querie.includeKey("user")
+        querie.whereKey("user", notEqualTo: PFUser.currentUser()!)
+        querie.whereKey("open", equalTo: true)
+        querie.whereKey("finished", equalTo: false)
+        querie.whereKey("jobDescription", containsString: text)
+        
+        if PFUser.currentUser()!["jobsAppliedToArray"] != nil {
+            
+            querie.whereKey("objectId", notContainedIn: PFUser.currentUser()!["jobsAppliedToArray"] as! [AnyObject])
+            
+        }
+        
+        querie.findObjectsInBackgroundWithBlock { (jobs, error ) -> Void in
+            
+            if error != nil {
+                
+                print(error?.localizedDescription)
+                
+            } else {
+                
+                if ((jobs?.count) > 0) {
+                    
+                    self.showCatagories = false
+                    
+                    for job in jobs! {
+                        
+                        self.jobsArray.append(job)
+                        
+                        self.tableView.reloadData()
+                        
+                    }
+                    
+                } else {
+                    
+                    self.showNoJobsAllertcontroller()
+                }
+            }
+            
+        }
+
+    }
+    
+    func showNoJobsAllertcontroller() {
+        
+        let alertcontroller = UIAlertController(title: "Helaas", message: "Er zijn geen opdrachten gevonden, probeer het later nog eens", preferredStyle: .Alert)
+        
+        let action = UIAlertAction(title: "Oke", style: .Default, handler: nil)
+        
+        alertcontroller.addAction(action)
+        
+        self.presentViewController(alertcontroller, animated: true, completion: nil)
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -227,23 +328,38 @@ class SearchForJobsViewController: UIViewController, UISearchBarDelegate, UITabl
     
     func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
         
-        searchBar.backgroundColor = UIColor.whiteColor()
+        
+        let button = jobSearchBar.valueForKey("cancelButton") as! UIButton
+        button.hidden = false
+        
+        jobsArray.removeAll(keepCapacity: true)
+        showCatagories = false
+        tableView.reloadData()
     
     }
 
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
         
-        searchBar.text = ""
         searchBar.resignFirstResponder()
-        searchBar.backgroundColor = UIColor.clearColor()
+        
+        getJobsWithText(searchBar.text!)
+        
+        let button = jobSearchBar.valueForKey("cancelButton") as! UIButton
+        button.hidden = true
+
 
     }
     
     func searchBarCancelButtonClicked(searchBar: UISearchBar) {
      
+        let button = jobSearchBar.valueForKey("cancelButton") as! UIButton
+        button.hidden = true
+        
         searchBar.text = ""
         searchBar.resignFirstResponder()
         searchBar.backgroundColor = UIColor.clearColor()
+        showCatagories = true
+        tableView.reloadData()
         
     }
     
@@ -255,4 +371,17 @@ class SearchForJobsViewController: UIViewController, UISearchBarDelegate, UITabl
         tableView.reloadData()
     }
     
+}
+
+extension UIImage {
+    static func fromColor(color: UIColor) -> UIImage {
+        let rect = CGRect(x: 0, y: 0, width: 1, height: 1)
+        UIGraphicsBeginImageContext(rect.size)
+        let context = UIGraphicsGetCurrentContext()
+        CGContextSetFillColorWithColor(context, color.CGColor)
+        CGContextFillRect(context, rect)
+        let img = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return img
+    }
 }

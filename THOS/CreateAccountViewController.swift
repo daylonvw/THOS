@@ -80,14 +80,27 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         
         dismissViewControllerAnimated(true, completion: nil)
         
+        let canBeUpLoaded = checkImageSizeForUpload(image)
+                
+        if canBeUpLoaded == false {
+            
+            let controller = UIAlertController(title: "Fout bij uploaden", message: "De foto is te groot, kies een andere foto aub", preferredStyle: .Alert)
+            let action = UIAlertAction(title: "Oke", style: .Default, handler: nil)
+            controller.addAction(action)
+            self.presentViewController(controller, animated: true, completion: nil)
+            
+            
+        } else if canBeUpLoaded == true {
+            
             self.userImageView.highlighted = true
             self.addImageIcon.hidden = true
             self.addImageButton.setTitle("Kies een andere foto", forState: .Normal)
-        
+            
             let circleCropController = KACircleCropViewController(withImage: image)
             circleCropController.delegate = self
             presentViewController(circleCropController, animated: true, completion: nil)
-
+            
+        }
         
     }
     

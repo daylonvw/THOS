@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		033BEAAF1D870B5400241F1A /* CheckImageSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033BEAAE1D870B5400241F1A /* CheckImageSize.swift */; };
 		035E8F9B1D6F5CC600A22F2B /* OpenSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 035E8F971D6F5CC600A22F2B /* OpenSans-Bold.ttf */; };
 		035E8F9C1D6F5CC600A22F2B /* OpenSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 035E8F981D6F5CC600A22F2B /* OpenSans-Light.ttf */; };
 		035E8F9D1D6F5CC600A22F2B /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 035E8F991D6F5CC600A22F2B /* OpenSans-Regular.ttf */; };
@@ -137,6 +138,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		033BEAAE1D870B5400241F1A /* CheckImageSize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CheckImageSize.swift; path = ../CheckImageSize.swift; sourceTree = "<group>"; };
 		035E8F971D6F5CC600A22F2B /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Bold.ttf"; sourceTree = "<group>"; };
 		035E8F981D6F5CC600A22F2B /* OpenSans-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Light.ttf"; sourceTree = "<group>"; };
 		035E8F991D6F5CC600A22F2B /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Regular.ttf"; sourceTree = "<group>"; };
@@ -420,6 +422,7 @@
 				03CB447A1CA5CBF50040D770 /* MyPostedJobsViewController.swift */,
 				03CB447C1CA5CBF50040D770 /* JobChatViewController.swift */,
 				03E071811D7F4D060085009A /* SetJobtypeMedia.swift */,
+				033BEAAE1D870B5400241F1A /* CheckImageSize.swift */,
 			);
 			name = "User View Controllers";
 			sourceTree = "<group>";
@@ -937,6 +940,7 @@
 				03CB452B1CA5CCBB0040D770 /* userPopUpView.swift in Sources */,
 				03CB45541CA5CCBB0040D770 /* JSQMessagesLabel.m in Sources */,
 				03CB452A1CA5CCBB0040D770 /* ThosColor.swift in Sources */,
+				033BEAAF1D870B5400241F1A /* CheckImageSize.swift in Sources */,
 				03CB45621CA5CCBB0040D770 /* JSQSystemSoundPlayer.m in Sources */,
 				03CB455A1CA5CCBB0040D770 /* JSQMessagesTypingIndicatorFooterView.m in Sources */,
 				03CB451F1CA5CCBB0040D770 /* FBAnnotationClusterView.swift in Sources */,

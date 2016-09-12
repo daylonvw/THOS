@@ -221,6 +221,7 @@ class SHowUserProfileViewController: UIViewController, UITableViewDelegate, UITa
         imageView.image = portfolio[indexPath.row]
         imageView.layer.cornerRadius = 6
         imageView.layer.masksToBounds = true
+        imageView.contentMode = .ScaleAspectFill
         cell.addSubview(imageView)
         
         return cell

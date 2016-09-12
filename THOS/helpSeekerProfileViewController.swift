@@ -26,7 +26,7 @@ class helpSeekerProfileViewController: UIViewController, UITableViewDelegate, UI
     var portfolio = [UIImage]()
     
     var enlargedPortfolioImageView: UIImageView!
-
+    
     override func viewDidLoad() {
       
         super.viewDidLoad()
@@ -373,6 +373,7 @@ class helpSeekerProfileViewController: UIViewController, UITableViewDelegate, UI
             imageView.image = portfolio[indexPath.row]
             imageView.layer.cornerRadius = 6
             imageView.layer.masksToBounds = true
+            imageView.contentMode = .ScaleAspectFill
             cell.addSubview(imageView)
 
         
@@ -440,11 +441,34 @@ class helpSeekerProfileViewController: UIViewController, UITableViewDelegate, UI
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
         
+        dismissViewControllerAnimated(true, completion: nil)
+
+        let canBeUpLoaded = checkImageSizeForUpload(image)
+                
+        if canBeUpLoaded == false {
+            
+            let controller = UIAlertController(title: "Fout bij uploaden", message: "De foto is te groot, kies een andere foto aub", preferredStyle: .Alert)
+            let action = UIAlertAction(title: "Oke", style: .Default, handler: nil)
+            controller.addAction(action)
+            self.presentViewController(controller, animated: true, completion: nil)
+
+            
+        } else if canBeUpLoaded == true {
+            
+            self.upDatePortfolioWithImage(image)
+
+        }
+       
+        
+    }
+    
+    func upDatePortfolioWithImage(image: UIImage) {
+        
+        let imageData = UIImageJPEGRepresentation(image, 1.0)
+
         portfolio.append(image)
         self.portfoliaCollectionView.reloadData()
         
-        let imageData = UIImageJPEGRepresentation(image, 1.0)
-    
         let imageFile = PFFile(data: imageData!)
         
         let imageObject = PFObject(className: "Portfolio")
@@ -461,16 +485,10 @@ class helpSeekerProfileViewController: UIViewController, UITableViewDelegate, UI
                 
                 if succeded == true {
                     
-//                    self.getPortfolio()
-                    
                 }
             }
         }
-       
-        dismissViewControllerAnimated(true, completion: nil)
-        
-        
-        
+
     }
 
     

@@ -666,12 +666,19 @@
                         <viewControllerLayoutGuide type="bottom" id="p2G-cs-39o"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="0Ex-R3-iGw">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="60" sectionHeaderHeight="1" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Q6W-lE-5Aa">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="sectionIndexTrackingBackgroundColor" red="0.054901960780000002" green="0.54901960780000003" blue="0.79607843140000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <searchBar key="tableHeaderView" contentMode="redraw" placeholder="Zoek op trefwoord" showsCancelButton="YES" translucent="NO" id="XyG-Bp-tdK">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" red="0.058823529409999999" green="0.5568627451" blue="0.85882352939999995" alpha="1" colorSpace="calibratedRGB"/>
+                                    <textInputTraits key="textInputTraits" returnKeyType="search"/>
+                                </searchBar>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="cell" rowHeight="60" id="qnM-PO-Nyk" customClass="jobCell" customModule="THOS" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -712,7 +719,8 @@
                                                             <exclude reference="Klo-a0-XxX"/>
                                                         </mask>
                                                     </variation>
-                                                    <variation key="heightClass=regular">
+                                                    <variation key="heightClass=regular" misplaced="YES">
+                                                        <rect key="frame" x="60" y="10" width="160" height="40"/>
                                                         <mask key="constraints">
                                                             <include reference="Klo-a0-XxX"/>
                                                         </mask>
@@ -801,13 +809,14 @@
                     </view>
                     <navigationItem key="navigationItem" id="h7g-iL-Los">
                         <barButtonItem key="leftBarButtonItem" systemItem="refresh" id="uhC-3k-yEi">
-                            <color key="tintColor" red="0.054901960780000002" green="0.54901960780000003" blue="0.79607843140000001" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
                                 <action selector="resetSearchButtonPressed:" destination="uR8-Nk-LMm" id="o3V-Cp-WQa"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="jobSearchBar" destination="XyG-Bp-tdK" id="kZE-t0-X2r"/>
                         <outlet property="tableView" destination="Q6W-lE-5Aa" id="NyT-bg-RXT"/>
                         <segue destination="EaC-ME-lUX" kind="show" identifier="searchToDetailSegue" id="22j-vT-dGY"/>
                     </connections>
@@ -825,7 +834,7 @@
                         <viewControllerLayoutGuide type="bottom" id="2yq-rv-26j"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="dVl-Cz-s2z">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="UqX-7J-ARX">
@@ -895,7 +904,7 @@
                         <viewControllerLayoutGuide type="bottom" id="4sw-B7-3ur"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="3ki-I4-7qq">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="qya-UG-Ip0">
@@ -976,7 +985,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="oKa-2t-AS3" id="1YV-aP-xJT">
-                                            <rect key="frame" x="0.0" y="0.0" width="240" height="142.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="240" height="289.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="M3I-ic-kf8">
@@ -1102,20 +1111,20 @@
                                                     <exclude reference="6e7-yB-QhW"/>
                                                 </mask>
                                                 <mask key="constraints">
-                                                    <exclude reference="ije-BQ-vtn"/>
-                                                    <exclude reference="kLP-5T-hPE"/>
-                                                    <exclude reference="VP3-3q-di0"/>
-                                                    <exclude reference="gHM-Gl-9Vu"/>
-                                                    <exclude reference="u7N-nw-YlD"/>
-                                                    <exclude reference="RSs-Lm-2Q1"/>
-                                                    <exclude reference="TEJ-7R-ytm"/>
-                                                    <exclude reference="mmf-Mf-Oh8"/>
                                                     <exclude reference="FDw-Qn-hbk"/>
                                                     <exclude reference="GZ8-4D-XC8"/>
                                                     <exclude reference="HzC-Mg-jK0"/>
                                                     <exclude reference="7Wh-y3-I5H"/>
                                                     <exclude reference="Q5K-dB-Db8"/>
                                                     <exclude reference="eGg-eL-rfO"/>
+                                                    <exclude reference="RSs-Lm-2Q1"/>
+                                                    <exclude reference="TEJ-7R-ytm"/>
+                                                    <exclude reference="mmf-Mf-Oh8"/>
+                                                    <exclude reference="ije-BQ-vtn"/>
+                                                    <exclude reference="kLP-5T-hPE"/>
+                                                    <exclude reference="VP3-3q-di0"/>
+                                                    <exclude reference="gHM-Gl-9Vu"/>
+                                                    <exclude reference="u7N-nw-YlD"/>
                                                 </mask>
                                             </variation>
                                             <variation key="heightClass=regular">
@@ -1127,20 +1136,20 @@
                                                     <include reference="6e7-yB-QhW"/>
                                                 </mask>
                                                 <mask key="constraints">
-                                                    <include reference="ije-BQ-vtn"/>
-                                                    <include reference="kLP-5T-hPE"/>
-                                                    <include reference="VP3-3q-di0"/>
-                                                    <include reference="gHM-Gl-9Vu"/>
-                                                    <include reference="u7N-nw-YlD"/>
-                                                    <include reference="RSs-Lm-2Q1"/>
-                                                    <include reference="TEJ-7R-ytm"/>
-                                                    <include reference="mmf-Mf-Oh8"/>
                                                     <include reference="FDw-Qn-hbk"/>
                                                     <include reference="GZ8-4D-XC8"/>
                                                     <include reference="HzC-Mg-jK0"/>
                                                     <include reference="7Wh-y3-I5H"/>
                                                     <include reference="Q5K-dB-Db8"/>
                                                     <include reference="eGg-eL-rfO"/>
+                                                    <include reference="RSs-Lm-2Q1"/>
+                                                    <include reference="TEJ-7R-ytm"/>
+                                                    <include reference="mmf-Mf-Oh8"/>
+                                                    <include reference="ije-BQ-vtn"/>
+                                                    <include reference="kLP-5T-hPE"/>
+                                                    <include reference="VP3-3q-di0"/>
+                                                    <include reference="gHM-Gl-9Vu"/>
+                                                    <include reference="u7N-nw-YlD"/>
                                                 </mask>
                                             </variation>
                                         </tableViewCellContentView>
@@ -1669,11 +1678,11 @@
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <tabBarItem key="tabBarItem" title="Zoeken" image="searchIcon" id="kbw-R8-Wqo"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="ahW-hU-JdZ">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="ahW-hU-JdZ">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                        <color key="barTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="barTintColor" red="0.054901960780000002" green="0.54901960780000003" blue="0.79607843140000001" alpha="1" colorSpace="calibratedRGB"/>
                         <textAttributes key="titleTextAttributes">
                             <fontDescription key="fontDescription" type="system" weight="light" pointSize="20"/>
                         </textAttributes>
